@@ -1,0 +1,57 @@
+.dialog-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #d32f2f; /* Red color for the title to indicate danger */
+}
+
+.dialog-content {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.dialog-content p {
+    margin: 0;
+}
+
+.dialog-content strong {
+    color: #d32f2f; /* Highlight the product name */
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.dialog-actions .btn {
+    font-size: 1rem;
+    padding: 5px 15px;
+}
+
+.dialog-actions .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.dialog-actions .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.dialog-actions .btn-danger {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.dialog-actions .btn-danger:hover {
+    background-color: #c62828;
+}

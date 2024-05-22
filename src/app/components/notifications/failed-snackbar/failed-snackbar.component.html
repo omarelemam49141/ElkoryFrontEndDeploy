@@ -1,0 +1,10 @@
+<div class="snackbar-content">
+    <span class="failed-header" matSnackBarLabel>
+        {{data}}
+    </span>
+    <span matSnackBarActions>
+        <button mat-button matSnackBarAction (click)="snackBarRef.dismissWithAction()">
+            <i class="fas fa-thumbs-down"></i>
+        </button>
+    </span>
+</div>

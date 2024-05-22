@@ -1,1 +1,9 @@
-<p>admin-delete-product works!</p>
+<h2 mat-dialog-title class="dialog-title">تأكيد حذف {{data}}</h2>
+<mat-dialog-content class="dialog-content">
+    <p>هل أنت متأكد من أنك تريد حذف المنتج <strong>{{data}}</strong>؟</p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">لا تحذف</button>
+    <button mat-button [mat-dialog-close]="true" class="btn btn-danger" cdkFocusInitial>نعم متأكد</button>
+</mat-dialog-actions>
+

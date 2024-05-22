@@ -1,0 +1,12 @@
+.snackbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.failed-header {
+    color: red;
+}
+
+* {
+    font-family: 'Cairo', sans-serif !important;
+}

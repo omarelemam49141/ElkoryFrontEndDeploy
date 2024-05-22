@@ -5,6 +5,7 @@ import { AdminEditProductComponent } from "./admin-edit-product/admin-edit-produ
 import { AdminDeleteProductComponent } from "./admin-delete-product/admin-delete-product.component";
 
 export const routes: Routes = [
+    {path: "", redirectTo: "/admin-products/admin-products-list", pathMatch: "full"},
     {path: "admin-products-list", component: AdminProductsListComponent},
     {path: "admin-add-product", component: AdminAddProductComponent},
     {path: "admin-edit-product/:id", component: AdminEditProductComponent},
