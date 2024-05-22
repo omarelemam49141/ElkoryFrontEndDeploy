@@ -6,7 +6,7 @@ import { NotFoundComponent } from './components/main-components/not-found/not-fo
 
 export const routes: Routes = [
     {path: "", redirectTo: "/home", pathMatch: "full"},
-    {path: "Home", component: HomeComponent},
+    {path: "home", component: HomeComponent},
     {path: "top-header", component: TopHeaderComponent},
     {path: "navbar",component: NavbarComponent},
     {path: "admin-offers", loadChildren:()=>import('./components/admin-offers/adminOffers.routes').then(m=>m.routes)},

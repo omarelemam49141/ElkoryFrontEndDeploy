@@ -1,1 +1,76 @@
-<p>admin-products-list works!</p>
+<div dir="rtl">
+    <div class="row">
+        <div class="col mb-3 d-flex flex-wrap">
+            <a class="btn btn-success" role="button" routerLink="/admin-products/admin-add-product">
+                    أضف منتج جديد
+            </a>
+        </div>
+        <div class="col mb-3 d-flex justify-content-between align-items-center gap-3">
+            <label for="sorting">الترتيب</label>
+            <select class="form-select" id="sorting" (change)="getProductsPaginated(pageNumber+1, pageSize)" [(ngModel)]="sortingOption">
+                <option value="all">الكل</option>
+                <option value="price_des">الأعلى سعرا</option>
+                <option value="price_asc">الأقل سعرا</option>
+                <option value="amount_des">ألأكثر كمية</option>
+                <option value="amount_asc">ألأقل كمية</option>
+                <option value="discount_des">الأعلى خصما</option>
+                <option value="discount_asc">الأقل خصما</option>
+            </select>
+        </div>
+    </div>
+
+    <div>
+        @for (product of products; let i= $index; track product.productId;) {
+            <div class="card rounded-3 mb-4">
+                <div class="card-body p-4">
+                    <div class="row d-flex justify-content-between align-items-center">
+                        <div class="col-lg-2 text-center mb-3 mb-md-0">
+                            <img
+                            src="{{images[i] ? images[i][0] : ''}}"
+                            class="img-fluid rounded-3 image image-admin" alt="image">
+                        </div>
+                        <div class="col-lg-3">
+                            <p class="lead fw-normal mb-2 proTitle"></p>
+                            <p><span class="text-muted">سعر المنتج: </span><span class="badge text-bg-success">{{product.finalPrice | currency: "ج.م"}}</span></p>
+                            @if (product.originalPrice != product.finalPrice) {
+                                <p><span class="text-muted">السعر قبل الخصم: </span><span class="badge text-bg-danger">{{product.originalPrice | currency: "ج.م"}}</span></p>
+                            }
+                        </div>
+            
+                        <div class="amount d-flex col-lg-2">
+                            <p>
+                                <span class="text-muted">الكمية: </span>
+                                <ng-container [ngSwitch]="product.amount">
+                                    <span class="fw-bold ms-1 text-danger" *ngSwitchCase="0">نفذ من المخزون</span>
+                                    <span class="fw-bold ms-1 text-warning" *ngSwitchCase="1">اخر قطعة</span>
+                                    <span class="fw-bold ms-1" *ngSwitchDefault>{{product.amount}}</span>
+                                </ng-container>
+                            </p>
+                        </div>
+
+                        <div class="amount d-flex col-lg-2">
+                            <p><span class="text-muted">الفئة</span><span class="fw-bold ms-1">: {{product.categoryName}}</span></p>
+                        </div>
+            
+                        <div class="col-lg-3 mt-2 mt-lg-0 d-flex flex-wrap justify-content-around my-btns">
+                            <button class="btn btn-warning w-50" style="color: white;" >تعديل</button>
+                            <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)">حذف</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div>
+        <mat-paginator [length]="productsTotalAmount"
+                [pageSize]="pageSize"
+                [showFirstLastButtons]="true"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                [pageIndex]="pageNumber"
+                (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)"
+                aria-label="Select page">
+        </mat-paginator>
+    </div>
+    
+</div>
