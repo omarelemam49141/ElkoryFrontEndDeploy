@@ -1,0 +1,103 @@
+
+
+footer {
+  background-color:  rgb(59, 56, 62);
+  margin: -.7rem;
+  color:  #f1f1f1;
+  position: fixed;
+   bottom: 0;
+    width: 100%;
+:dir(rtl) {
+    text-align: right;
+  }
+}
+
+footer ul {
+  list-style: none;
+}
+
+footer li {
+  line-height: 200%;
+  /* font-weight: 500; */
+}
+
+footer h3 {
+  text-transform: uppercase;
+}
+
+footer a,
+footer a:hover {
+  text-decoration: none;
+  color:#979393;
+  text-decoration: underline;
+}
+
+.about,
+.links,
+.contacts {
+  text-align: left;
+}
+
+@media all and (max-width:1000px) {
+
+  .about,
+  .links,
+  .contacts {
+      text-align: center;
+  }
+}
+
+footer .cpyright {
+  border-top: 2px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+footer .cpyright .social {
+  text-decoration: none;
+//shadowing the social media icons as they are text
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  
+
+
+  padding: 10px;
+  font-size: 1rem;
+  color: inherit;
+  line-height: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+footer .cpyright p,
+footer .contacts li {
+  color: var(--lightGray);
+}
+
+.logo {
+  height: 25px;
+  vertical-align:top;
+  margin-right: 10px;
+ 
+}
+.social{
+  margin-top: -50px;
+}
+
+.headfont {
+  font-size: 1.5em;
+  line-height: 1em;
+  font-family: 'Yeseva One', serif;
+  color: #f1f1f1;
+}
+.textfont {
+  font-size: 1.2em;
+  color: #f1f1f1;
+  font-family: 'Poppins', sans-serif;;
+  font-weight: 300;
+}
+.designer{
+  color: blue;
+  font-size: 1.2em;
+}

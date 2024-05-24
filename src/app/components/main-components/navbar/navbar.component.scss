@@ -1,0 +1,40 @@
+.categories {
+  background-color: #000; /* Black background */
+  padding: 10px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.col-md-6 {
+  display: flex;
+  flex: 1;
+}
+
+.col-md-3 {
+  flex: 1;
+  text-align: center;
+}
+
+p {
+  font-family: 'Arial', sans-serif;
+  color: #fff; /* White text color */
+  font-size: 16px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.home, .mobiles, .cases, .headphones, .cables, .memory, .watches, .others {
+  text-decoration: none;
+}
+
+p:hover {
+  text-decoration: underline;
+}
