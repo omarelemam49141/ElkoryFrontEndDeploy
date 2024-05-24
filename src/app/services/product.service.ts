@@ -26,7 +26,15 @@ export class ProductService {
   }
 
   public getById(id: number): Observable<IProduct> {
-    return this.genericService.getById('products', id);
+    return this.http.get<IProduct>(`${environment.apiUrl}/${id}`);
+  }
+
+  public getPictures(id: number): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}/products/pictures?productId=${id}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    );
   }
 
   public insert(entity: IAddProduct): Observable<any> {
@@ -34,20 +42,12 @@ export class ProductService {
     return this.genericService.insert<IAddProduct>('product', entity);
   }
 
-  public update(id: number, entity: IProduct): Observable<any> {
+  public update(id: number, entity: IAddProduct): Observable<any> {
     this.genericService.addHeaders("Content-Type", "application/json");
-    return this.genericService.update('products', id, entity);
+    return this.http.put<IAddProduct>(`${environment.apiUrl}/product?Id=${id}`, entity);
   }
 
   public delete(id: number): Observable<any> {
     return this.genericService.delete('product', id);
-  }
-
-  public getImages(id: number): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}/products/pictures?productId=${id}`)
-    .pipe(
-      retry(2),
-      catchError(this.genericService.handlingErrors)
-    );
   }
 }
