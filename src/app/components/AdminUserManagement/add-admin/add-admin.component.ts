@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './add-admin.component.scss'
 })
 export class AddAdminComponent {
-
+  userName:string = '';
 }

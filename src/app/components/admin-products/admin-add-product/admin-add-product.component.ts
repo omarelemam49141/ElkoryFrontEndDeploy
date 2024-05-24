@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { IProduct } from '../../../Models/iproduct';
 import { ICategory } from '../../../Models/icategory';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 import { IAddProduct } from '../../../Models/iadd-product';
 import { Subscription } from 'rxjs';
@@ -12,18 +12,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-admin-add-product',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './admin-add-product.component.html',
   styleUrl: './admin-add-product.component.scss'
 })
 export class AdminAddProductComponent implements OnDestroy, OnInit {
+  /*start form properties*/
   productForm: FormGroup;
   allCategories: ICategory[] = [];
-  subscriptions?: Subscription[];
+  
+  /*start edit product properties*/
+  productToEdit?: IProduct;
 
   /*images properties*/
   imageIndex: number = 0;
@@ -34,11 +38,15 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   //notifications properties
   snackBarDurationInSeconds = 5;
 
+  //start subscription properties
+  subscriptions?: Subscription[] = [];
+
   constructor(private fb: FormBuilder,
     private productService: ProductService,
     private categoryService: CategoryService,
     private snackBar: MatSnackBar,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private activatedRoute: ActivatedRoute
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -56,14 +64,26 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*observers*/
   productsObserver = {
     next: (data: void) => {
-      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-        data: 'تم اضافة المنتج بنجاح!',
-      });
+      if(!this.productToEdit) {
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+            data: 'تم اضافة المنتج بنجاح!',
+        });
+      } else {
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: 'تم تحديث المنتج بنجاح!',
+        });
+      }
     },
     error: (err: Error) => {
-      this.snackBar.openFromComponent(FailedSnackbarComponent, {
-        data: 'تعذر اضافة المنتج!',
-      });
+      if(!this.productToEdit) {
+        this.snackBar.openFromComponent(FailedSnackbarComponent, {
+            data: 'تعذر اضافة المنتج!',
+        });
+      } else {
+        this.snackBar.openFromComponent(FailedSnackbarComponent, {
+          data: 'تعذر تحديث المنتج!',
+        });
+      }
     }
   }
 
@@ -79,12 +99,31 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     }
   }
 
-
   ngOnInit(): void {
-    this.categoryService.getAll().subscribe(this.categoryObserver)
+    this.subscriptions?.push(this.categoryService.getAll().subscribe(this.categoryObserver));
+    this.populateEditForm();
   }
-  ngOnDestroy(): void {
-    this.subscriptions?.forEach(sub => sub.unsubscribe());
+
+  private populateEditForm() {
+    //if the id in the url is not null then get the product by id
+    this.subscriptions?.push(this.activatedRoute.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      if (id) {
+        //get the product by id and patch the form with the product values
+        this.subscriptions?.push(this.productService.getById(id).subscribe(product => {
+          this.productToEdit = product;
+          this.productForm.patchValue(this.productToEdit);
+          this.subscriptions?.push(this.productService.getPictures(id).subscribe(images => {
+            this.imagesArray = images;
+            this.imageIndex = images.length-1;
+            //patch the form images with the images
+            for (let i = 0; i < images.length; i++) {
+              this.images.at(i).patchValue(images[i]);
+            }
+          }));
+        }));
+      }
+    }))
   }
 
   /*start images function*/
@@ -104,6 +143,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     this.renderer.setProperty(fileInput, 'value', '');
   }
 
+  fun() {
+    console.log("lkjhgfd")
+  }
+
   onFileChange(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
     
@@ -121,15 +164,24 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       } else {
         // If the selected file is not an image, clear the file input
         input.value = ''; // Clear the file input
+        this.imagesArray[index] = '';
       }
     }
+
+   console.log(this.imageIndex) 
+   console.log(this.images.value)
+   console.log(this.imagesArray)
   }
   /*end images functions*/
 
   /*submit the form*/ 
-  addProduct(): void {
+  submitProduct(): void {
     let product: IAddProduct = this.productForm.value;
-    this.productService.insert(product).subscribe(this.productsObserver);
+    if (this.productToEdit) {
+      this.subscriptions?.push(this.productService.update(this.productToEdit.productId, product).subscribe(this.productsObserver));
+    } else {
+      this.subscriptions?.push(this.productService.insert(product).subscribe(this.productsObserver));
+    }
   }
   /*end submitting the form*/
   get name() {
@@ -153,5 +205,9 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   get images(): FormArray {
     return this.productForm.get("images") as FormArray;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
 }
