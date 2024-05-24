@@ -8,6 +8,6 @@ export const routes: Routes = [
     {path: "", redirectTo: "/admin-products/admin-products-list", pathMatch: "full"},
     {path: "admin-products-list", component: AdminProductsListComponent},
     {path: "admin-add-product", component: AdminAddProductComponent},
-    {path: "admin-edit-product/:id", component: AdminEditProductComponent},
+    {path: "admin-edit-product/:id", component: AdminAddProductComponent},
     {path: "admin-delete-product/:id", component: AdminDeleteProductComponent},
 ]

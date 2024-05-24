@@ -49,7 +49,7 @@ export class GenericService<TEntity> {
     );
   }
 
-  public update(url: string, id: number, entity: TEntity): Observable<any> {
+  public update<T>(url: string, id: number, entity: T): Observable<any> {
     return this.http.put<any>(`${environment.apiUrl}/${url}/${id}`, entity, this.httpOptions)
     .pipe(
       retry(2),

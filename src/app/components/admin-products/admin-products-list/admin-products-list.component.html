@@ -53,8 +53,8 @@
                         </div>
             
                         <div class="col-lg-3 mt-2 mt-lg-0 d-flex flex-wrap justify-content-around my-btns">
-                            <button class="btn btn-warning w-50" style="color: white;" >تعديل</button>
-                            <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)">حذف</a>
+                            <a class="btn btn-warning w-50" style="color: white;" [routerLink]="['/admin-products/admin-edit-product', product.productId]">تعديل</a>
+                            <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)" style="cursor: pointer;"><i class="fa-solid fa-trash"></i></a>
                         </div>
                     </div>
                 </div>
