@@ -14,7 +14,7 @@ import { IAddProduct } from '../Models/iadd-product';
 export class ProductService {
 
   constructor(private genericService: GenericService<IProduct>,
-              private http: HttpClient
+    private http: HttpClient
   ) { }
 
   public getAllWithPagination(pageNumber: number, pageSize: number): Observable<ProductsPagination> {
@@ -26,7 +26,23 @@ export class ProductService {
   }
 
   public getById(id: number): Observable<IProduct> {
-    return this.genericService.getById('products', id);
+    return this.http.get<IProduct>(`${environment.apiUrl}/${id}`);
+  }
+
+  public getPictures(productId: number): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}/products/pictures?productId=${productId}`)
+      .pipe(
+        retry(2),
+        catchError(this.genericService.handlingErrors)
+      );
+  }
+
+  public deletePicture(productId:number, pictureUrl:string) {
+    return this.http.delete(`${environment.apiUrl}/products/pictures?productId=${productId}&url=${pictureUrl}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    );
   }
 
   public insert(entity: IAddProduct): Observable<any> {
@@ -34,20 +50,26 @@ export class ProductService {
     return this.genericService.insert<IAddProduct>('product', entity);
   }
 
-  public update(id: number, entity: IProduct): Observable<any> {
+  public insertPictures(id: number, pictures: FileList): Observable<any> {
+    const formData = new FormData();
+    for (let index = 0; index < pictures.length; index++) {
+      formData.append(`Pictures`, pictures[index], pictures[index].name);
+    }
+
+    this.genericService.addHeaders("Content-Type", "multipart/form-data");
+    return this.http.post<any>(`${environment.apiUrl}/products/pictures?productId=${id}`, formData)
+      .pipe(
+        retry(2),
+        catchError(this.genericService.handlingErrors)
+      );
+  }
+
+  public update(id: number, entity: IAddProduct): Observable<any> {
     this.genericService.addHeaders("Content-Type", "application/json");
-    return this.genericService.update('products', id, entity);
+    return this.http.put<IAddProduct>(`${environment.apiUrl}/product?Id=${id}`, entity);
   }
 
   public delete(id: number): Observable<any> {
     return this.genericService.delete('product', id);
-  }
-
-  public getImages(id: number): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}/products/pictures?productId=${id}`)
-    .pipe(
-      retry(2),
-      catchError(this.genericService.handlingErrors)
-    );
   }
 }

@@ -30,7 +30,7 @@
                             class="img-fluid rounded-3 image image-admin" alt="image">
                         </div>
                         <div class="col-lg-3">
-                            <p class="lead fw-normal mb-2 proTitle"></p>
+                            <p class="lead fw-normal mb-2 proTitle">{{product.name}}</p>
                             <p><span class="text-muted">سعر المنتج: </span><span class="badge text-bg-success">{{product.finalPrice | currency: "ج.م"}}</span></p>
                             @if (product.originalPrice != product.finalPrice) {
                                 <p><span class="text-muted">السعر قبل الخصم: </span><span class="badge text-bg-danger">{{product.originalPrice | currency: "ج.م"}}</span></p>
@@ -53,8 +53,8 @@
                         </div>
             
                         <div class="col-lg-3 mt-2 mt-lg-0 d-flex flex-wrap justify-content-around my-btns">
-                            <button class="btn btn-warning w-50" style="color: white;" >تعديل</button>
-                            <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)">حذف</a>
+                            <a class="btn btn-warning w-50" style="color: white;" [routerLink]="['/admin-products/admin-edit-product', product.productId]">تعديل</a>
+                            <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)" style="cursor: pointer;"><i class="fa-solid fa-trash"></i></a>
                         </div>
                     </div>
                 </div>

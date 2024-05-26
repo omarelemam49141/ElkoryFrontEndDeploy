@@ -48,7 +48,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
     next: (data: ProductsPagination) => {
       this.products = data.items;
       for (let i = 0; i < this.products.length; i++) {
-        this.productService.getImages(this.products[i].productId).subscribe((images: string[]) => {
+        this.productService.getPictures(this.products[i].productId).subscribe((images) => {
           this.images.push(images);
         });
       }

@@ -7,6 +7,7 @@ import { ViewProfileComponent } from "./view-profile/view-profile.component";
 import { EditProfileComponent } from "./edit-profile/edit-profile.component";
 
 export const routes: Routes = [
+    {path: "", redirectTo: "/customer-account/register", pathMatch: "full"},
     {path: "login", component: LoginComponent},
     {path: "register", component: SignupComponent},
     {path: "forgot-password", component: ForgetPasswordComponent},

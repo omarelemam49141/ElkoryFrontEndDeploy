@@ -1,1 +1,66 @@
-<p>edit-profile works!</p>
+<div class="register-container">
+    <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()" class="register-form">
+        <div class="form-header">
+            <img src="assets/images/logo.png" alt="Form Image" class="form-image">
+            <h2 class="form-title">تعديل بيانات الحساب</h2>
+        </div>
+        <div class="form-group">
+            <label class="label">الاسم الأول</label>
+            <input formControlName="fName" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!fName?.valid && fName?.touched">
+                <span *ngIf="fName?.errors?.['required']">الاسم الأول مطلوب</span>
+                <span *ngIf="fName?.errors?.['minlength']">الاسم الأول لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="fName?.errors?.['maxlength']">الاسم الأول لا يمكن أن يزيد عن 30 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">الاسم الأخير</label>
+            <input formControlName="lName" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!lName?.valid && lName?.touched">
+                <span *ngIf="lName?.errors?.['required']">الاسم الأخير مطلوب</span>
+                <span *ngIf="lName?.errors?.['minlength']">الاسم الأخير لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="lName?.errors?.['maxlength']">الاسم الأخير لا يمكن أن يزيد عن 30 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <input formControlName="email" class="form-control" type="email" hidden/>
+        </div>
+        <div class="form-group">
+            <label class="label">رقم الهاتف</label>
+            <input formControlName="phone" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!phone?.valid && phone?.touched">
+                <span *ngIf="phone?.errors?.['required']">رقم الهاتف مطلوب</span>
+                <span *ngIf="phone?.errors?.['pattern']">رقم الهاتف يجب أن لا يقل عن 11 رقم ويبدأ ب (010,011,012,015)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">المحافظة</label>
+            <input formControlName="governorate" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!governorate?.valid && governorate?.touched">
+                <span *ngIf="governorate?.errors?.['minlength']">اسم المحافظة لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="governorate?.errors?.['maxlength']">اسم المحافظة لا يمكن أن يزيد عن 50 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">المدينة</label>
+            <input formControlName="city" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!city?.valid && city?.touched">
+                <span *ngIf="city?.errors?.['minlength']">اسم المدينة لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="city?.errors?.['maxlength']">اسم المدينة لا يمكن أن يزيد عن 50 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">الشارع</label>
+            <input formControlName="street" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!street?.valid && street?.touched">
+                <span *ngIf="street?.errors?.['minlength']">اسم الشارع لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="street?.errors?.['maxlength']">اسم الشارع لا يمكن أن يزيد عن 50 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">الرقم البريدى</label>
+            <input formControlName="postalCode" class="form-control" type="text"/>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="editProfileForm.invalid">حفظ البيانات</button>
+    </form>
+</div>
