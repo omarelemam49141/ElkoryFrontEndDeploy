@@ -6,5 +6,6 @@ export interface IProduct {
     amount: number;
     description: string;
     categoryName: string;
-    finalPrice: number
+    finalPrice: number;
+    categoryId: number;
 }
