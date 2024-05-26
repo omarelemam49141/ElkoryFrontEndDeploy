@@ -15,6 +15,7 @@ import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '../../../services/file.service';
 
+
 @Component({
   selector: 'app-admin-add-product',
   standalone: true,
@@ -174,7 +175,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             }).catch(error => {
               console.error('Error processing images:', error);
             });
-
           }));
         }));
       }
@@ -196,6 +196,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     // Clear the file input element
     const fileInput = this.fileInputs.toArray()[index].nativeElement;
     this.renderer.setProperty(fileInput, 'value', '');
+  }
+
+  fun() {
+    console.log("lkjhgfd")
   }
 
   onFileChange(event: Event, index: number): void {
@@ -224,6 +228,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.imagesArray[index] = '';
       }
     }
+
+   console.log(this.imageIndex) 
+   console.log(this.images.value)
+   console.log(this.imagesArray)
   }
   /*end images functions*/
 
