@@ -14,7 +14,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './view-admins.component.scss'
 })
 export class ViewAdminsComponent {
+
   adminsList:IAdmin[]=[];
+
   constructor(private adminService:AdminService){}
 
   ngOnInit(): void {

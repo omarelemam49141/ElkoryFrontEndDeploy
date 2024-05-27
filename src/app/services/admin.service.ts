@@ -15,4 +15,8 @@ export class AdminService {
   GetAllAdmins():Observable<IAdmin[]>{
     return this.http.get<IAdmin[]>(`${environment.apiUrl}/admin`);
   }
+
+  AddAdmin(admin:IAdmin):Observable<IAdmin>{
+    return this.http.post<IAdmin>(`${environment.apiUrl}/admin`,admin);
+  }
 }

@@ -8,8 +8,6 @@ export interface IAdmin {
   city: string;
   street: string;
   postalCode: number;
-  /*
   isDeleted:boolean;
   role:number;
-  */
 }
