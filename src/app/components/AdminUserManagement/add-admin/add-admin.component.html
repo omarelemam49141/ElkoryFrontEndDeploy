@@ -1,1 +1,34 @@
-<p>add-admin works!</p>
+
+  <table class="text-center table table-hovered table-bordered">
+    <thead>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.fName" placeholder="First Name">
+        </td>
+        <td>First Name</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.lName" placeholder="Last Name">
+        </td>
+        <td>Last Name</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.email" placeholder="email">
+        </td>
+        <td>Email</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.phone" placeholder="Phone Number">
+        </td>
+        <td>Phone</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <a class="btn btn-success w-25" (click)="AddNewAdmin()">Add Admin</a>
+        </td>
+      </tr>
+    </thead>
+  </table>
