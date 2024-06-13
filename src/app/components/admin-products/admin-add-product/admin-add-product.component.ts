@@ -14,6 +14,7 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
 import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '../../../services/file.service';
+import { GenericService } from '../../../services/generic.service';
 
 @Component({
   selector: 'app-admin-add-product',
@@ -26,7 +27,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*start form properties*/
   productForm: FormGroup;
   allCategories: ICategory[] = [];
-  
+
   /*start edit product properties*/
   productToEdit?: IProduct;
 
@@ -50,7 +51,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private renderer: Renderer2,
     private activatedRoute: ActivatedRoute,
-    private fileService: FileService
+    private fileService: FileService,
+    private genericService: GenericService<ICategory>
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -68,8 +70,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*observers*/
   productsObserver = {
     next: (data: any) => {
-      if(!this.productToEdit) {
-        console.log(this.images.value);
+      if (!this.productToEdit) {
         this.productService.insertPictures(data.productId, this.images.value).subscribe({
           next: data => {
             this.snackBar.openFromComponent(SuccessSnackbarComponent, {
@@ -80,43 +81,52 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             this.imagesArray = [];
             this.imageIndex = 0;
           },
-          error: (err:Error) => {
+          error: (err: Error) => {
             this.snackBar.openFromComponent(FailedSnackbarComponent, {
               data: 'تعذر اضافة المنتج!',
               duration: this.snackBarDurationInSeconds * 1000
             });
           }
         });
-        
+
       } else {
-        //delete the old pictures
-        this.imagesToDeleteWhenUpdate.forEach((image, index) => {
-          this.productService.deletePicture(this.productToEdit!.productId, image).subscribe(data=>{
-            if (this.imagesToDeleteWhenUpdate.length-1 == index) {
-              this.productService.insertPictures(this.productToEdit!.productId, this.images.value).subscribe({
-                next: data => {
-                  this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-                    data: 'تم تحديث المنتج بنجاح!',
-                    duration: this.snackBarDurationInSeconds * 1000
-                  });
-                  this.populateEditForm();
-                },
-                error: (err:Error) => {
-                  this.snackBar.openFromComponent(FailedSnackbarComponent, {
-                    data: 'تعذر تحديث المنتج!',
-                    duration: this.snackBarDurationInSeconds * 1000
-                  });
-                }
-              });
-            }
+        //if there are images to update
+        if (this.imagesToDeleteWhenUpdate.length > 0) {
+          //delete the old pictures
+          this.imagesToDeleteWhenUpdate.forEach((image, index) => {
+            this.productService.deletePicture(this.productToEdit!.productId, image).subscribe(data => {
+              if (this.imagesToDeleteWhenUpdate.length - 1 == index) {
+                this.productService.insertPictures(this.productToEdit!.productId, this.images.value).subscribe({
+                  next: data => {
+                    this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                      data: 'تم تحديث المنتج بنجاح!',
+                      duration: this.snackBarDurationInSeconds * 1000
+                    });
+                    this.populateEditForm();
+                  },
+                  error: (err: Error) => {
+                    this.snackBar.openFromComponent(FailedSnackbarComponent, {
+                      data: 'تعذر تحديث المنتج!',
+                      duration: this.snackBarDurationInSeconds * 1000
+                    });
+                  }
+                });
+              }
+            });
           });
-        });
+        //if there are no images to update
+        } else {
+          this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+            data: 'تم تحديث المنتج بنجاح!',
+            duration: this.snackBarDurationInSeconds * 1000
+          });
+        }
       }
     },
     error: (err: Error) => {
-      if(!this.productToEdit) {
+      if (!this.productToEdit) {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
-            data: 'تعذر اضافة المنتج!',
+          data: 'تعذر اضافة المنتج!',
         });
       } else {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -139,7 +149,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.subscriptions?.push(this.categoryService.getAll().subscribe(this.categoryObserver));
+    this.subscriptions?.push(this.genericService.getAll('category/all').subscribe(this.categoryObserver));
     this.populateEditForm();
   }
 
@@ -155,7 +165,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
           this.subscriptions?.push(this.productService.getPictures(id).subscribe(imagesUrls => {
             this.imagesArray = imagesUrls;
             this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
-            this.imageIndex = imagesUrls.length-1;
+            this.imageIndex = imagesUrls.length - 1;
             //patch the form images with the images
             //empty the images array control
             this.images.clear();
@@ -164,7 +174,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
               const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
               const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
               const mimeType = `image/${extension}`;
-  
+
               return this.fileService.urlToFile(imageUrl, imageName, mimeType);
             });
             Promise.all(filePromises).then(files => {
@@ -205,11 +215,11 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     }
 
     const input = event.target as HTMLInputElement;
-    
+
     // Check if any file is selected
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      
+
       // Check if the selected file is an image
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
@@ -227,7 +237,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
   /*end images functions*/
 
-  /*submit the form*/ 
+  /*submit the form*/
   submitProduct(): void {
     let product: IAddProduct = this.productForm.value;
     if (this.productToEdit) {

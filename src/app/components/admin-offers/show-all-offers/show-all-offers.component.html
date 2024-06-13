@@ -1,1 +1,24 @@
-<p>show-all-offers works!</p>
+<div class="container">
+    <a class="btn btn-success mb-3" [routerLink]="['/admin-offers/add-offer']">اضافة عرض جديد</a>
+    <hr>
+
+    <div class="row">
+        @for (offer of offers; track offer.offerId) {
+            <ng-container *ngIf="!offerIsExpired(offer.offerDate, offer.duration)">
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card">
+                        <img src="{{offer.image}}"
+                            alt="offer image" class="card-img-top img-fluid">
+                        <div class="card-body">
+                            <h5 class="card-title">{{offer.title}}</h5>
+                            <p class="card-text">{{offer.description}}</p>
+                            <p class="card-text text-danger">-{{offer.packageDiscount | currency: "ج.م"}}</p>
+                            <a class="btn btn-outline-success btn-sm ms-3 mb-2" [routerLink]="['/admin-offers/offer-details', offer.offerId]" routerLinkActive="router-link-active">تفاصيل العرض</a>
+                            <a class="btn btn-outline-danger btn-sm mb-2">حذف العرض</a>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        }
+    </div>
+</div>
