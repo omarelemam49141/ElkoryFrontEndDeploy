@@ -13,6 +13,8 @@ import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/s
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
 import { ActivatedRoute } from '@angular/router';
+import { FileService } from '../../../services/file.service';
+
 
 @Component({
   selector: 'app-admin-add-product',
@@ -32,6 +34,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*images properties*/
   imageIndex: number = 0;
   imagesArray: string[] = [];
+  originalImagesOfTheProductToUpdate: string[] = [];
+  imagesToDeleteWhenUpdate: string[] = [];
   // QueryList to access file input elements
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
@@ -46,7 +50,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     private categoryService: CategoryService,
     private snackBar: MatSnackBar,
     private renderer: Renderer2,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private fileService: FileService
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -63,14 +68,49 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   /*observers*/
   productsObserver = {
-    next: (data: void) => {
+    next: (data: any) => {
       if(!this.productToEdit) {
-        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-            data: 'تم اضافة المنتج بنجاح!',
+        console.log(this.images.value);
+        this.productService.insertPictures(data.productId, this.images.value).subscribe({
+          next: data => {
+            this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+              data: 'تم اضافة المنتج بنجاح!',
+              duration: this.snackBarDurationInSeconds * 1000
+            });
+            this.productForm.reset();
+            this.imagesArray = [];
+            this.imageIndex = 0;
+          },
+          error: (err:Error) => {
+            this.snackBar.openFromComponent(FailedSnackbarComponent, {
+              data: 'تعذر اضافة المنتج!',
+              duration: this.snackBarDurationInSeconds * 1000
+            });
+          }
         });
+        
       } else {
-        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-          data: 'تم تحديث المنتج بنجاح!',
+        //delete the old pictures
+        this.imagesToDeleteWhenUpdate.forEach((image, index) => {
+          this.productService.deletePicture(this.productToEdit!.productId, image).subscribe(data=>{
+            if (this.imagesToDeleteWhenUpdate.length-1 == index) {
+              this.productService.insertPictures(this.productToEdit!.productId, this.images.value).subscribe({
+                next: data => {
+                  this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+                    data: 'تم تحديث المنتج بنجاح!',
+                    duration: this.snackBarDurationInSeconds * 1000
+                  });
+                  this.populateEditForm();
+                },
+                error: (err:Error) => {
+                  this.snackBar.openFromComponent(FailedSnackbarComponent, {
+                    data: 'تعذر تحديث المنتج!',
+                    duration: this.snackBarDurationInSeconds * 1000
+                  });
+                }
+              });
+            }
+          });
         });
       }
     },
@@ -113,13 +153,28 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.subscriptions?.push(this.productService.getById(id).subscribe(product => {
           this.productToEdit = product;
           this.productForm.patchValue(this.productToEdit);
-          this.subscriptions?.push(this.productService.getPictures(id).subscribe(images => {
-            this.imagesArray = images;
-            this.imageIndex = images.length-1;
+          this.subscriptions?.push(this.productService.getPictures(id).subscribe(imagesUrls => {
+            this.imagesArray = imagesUrls;
+            this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
+            this.imageIndex = imagesUrls.length-1;
             //patch the form images with the images
-            for (let i = 0; i < images.length; i++) {
-              this.images.at(i).patchValue(images[i]);
-            }
+            //empty the images array control
+            this.images.clear();
+
+            const filePromises = imagesUrls.map(imageUrl => {
+              const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+              const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
+              const mimeType = `image/${extension}`;
+  
+              return this.fileService.urlToFile(imageUrl, imageName, mimeType);
+            });
+            Promise.all(filePromises).then(files => {
+              files.forEach(file => {
+                this.images.push(this.fb.control(file));
+              });
+            }).catch(error => {
+              console.error('Error processing images:', error);
+            });
           }));
         }));
       }
@@ -136,7 +191,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   removeImage(index: number): void {
     this.images.removeAt(index);
-    this.imagesArray.splice(index, 1);
+    this.imagesArray[index] = '';
     this.imageIndex--;
     // Clear the file input element
     const fileInput = this.fileInputs.toArray()[index].nativeElement;
@@ -148,6 +203,11 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   onFileChange(event: Event, index: number): void {
+    //if the user changed an image that is existed in the original images array then add the original image to be deleted when updating the product
+    if (this.imagesArray[index] == this.originalImagesOfTheProductToUpdate[index]) {
+      this.imagesToDeleteWhenUpdate.push(this.imagesArray[index]);
+    }
+
     const input = event.target as HTMLInputElement;
     
     // Check if any file is selected
@@ -157,10 +217,11 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       // Check if the selected file is an image
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
+        reader.readAsDataURL(file);
         reader.onload = (e: any) => {
           this.imagesArray[index] = e.target.result;
+          this.images.at(index).patchValue(file);
         };
-        reader.readAsDataURL(file);
       } else {
         // If the selected file is not an image, clear the file input
         input.value = ''; // Clear the file input

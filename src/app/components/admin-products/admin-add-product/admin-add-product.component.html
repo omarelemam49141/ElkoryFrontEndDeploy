@@ -1,5 +1,5 @@
 <section class="get-in-touch">
-    <h1 class="title">اضافة منتج جديد</h1>
+    <h1 class="title">{{productToEdit ? 'تعديل المنتج ' + productToEdit.name : 'اضافة منتج جديد'}}</h1>
     <form class="contact-form row" [formGroup]="productForm" (ngSubmit)="submitProduct()">
         <div class="form-field col-lg-6">
             <input id="name" formControlName="name" class="input-text js-input" type="text">
@@ -61,7 +61,7 @@
                 @for (image of images.controls; track i; let i =$index) {
                     <div class="form-group mb-2 d-flex justify-content-between align-items-center flex-wrap">
                         <div class="buttons">
-                            <input #fileInput type="file" (change)="onFileChange($event, i)" (close)="fun()"/>
+                            <input #fileInput type="file" (change)="onFileChange($event, i)"/>
                             <input [value]="imagesArray[i]" formControlName="{{i}}" type="text" hidden/>
                             <button (click)="removeImage(i)" type="button" class="btn btn-danger" *ngIf="i > 0">
                                 <i class="fa-solid fa-xmark"></i>
@@ -77,7 +77,7 @@
                     <span *ngIf="images?.errors?.['required']">يجب اختيار صورة واحدة على الأقل</span>
                 </div>
             </div>
-            <button class="btn btn-primary" type="button" (click)="addImage()" [disabled]="this.images.at(this.imageIndex).value==''">
+            <button class="btn btn-primary" type="button" (click)="addImage()" [disabled]="this.images.at(this.imageIndex)? this.images.at(this.imageIndex).value==''? true : false : true">
                 أضف صورة جديدة
             </button>
         </div>

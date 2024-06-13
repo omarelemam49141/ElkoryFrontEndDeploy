@@ -1,1 +1,34 @@
-<p>product-details works!</p>
+<div class="product-details-container" *ngIf="product">
+    <div class="product-main-details">
+      <div class="product-image">
+        <img [src]="image" alt="{{ product?.name }}" />
+      </div>
+      <div class="product-info">
+        <h2>{{ product?.name }}</h2>
+        <p>{{ product?.description }}</p>
+        <p><span class="text-muted">Price: </span><span class="badge text-bg-success">{{ product?.finalPrice | currency: 'USD' }}</span></p>
+        <p *ngIf="product.originalPrice !== product.finalPrice"><span class="text-muted">Original Price: </span><span class="badge text-bg-danger">{{ product.originalPrice | currency: 'USD' }}</span></p>
+        <p><span class="text-muted">Quantity: </span><span class="fw-bold">{{ product?.amount }}</span></p>
+        <p><span class="text-muted">Category: </span><span class="fw-bold">{{ product?.categoryName }}</span></p>
+      </div>
+    </div>
+  
+    <div class="related-products">
+      <h3>Related Products</h3>
+      <div class="product-list-container">
+        <div *ngFor="let relatedProduct of relatedProducts; let i=index" class="product-card">
+          <div class="related-product-image">
+            <img src="{{images[i] ? images[i][0] : ''}}" alt="{{ relatedProduct.name }}" />
+          </div>
+          <div class="related-product-details">
+            <h4>{{ relatedProduct.name }}</h4>
+            <p class="price">{{ relatedProduct.finalPrice | currency: 'USD' }}</p>
+            <button [routerLink]="['/customer-products/product-details', relatedProduct.productId]" class="view-details-button">View Details</button>
+ 
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

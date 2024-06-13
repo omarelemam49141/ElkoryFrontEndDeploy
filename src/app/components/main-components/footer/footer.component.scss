@@ -4,8 +4,8 @@ footer {
   background-color:  rgb(59, 56, 62);
   margin: -.7rem;
   color:  #f1f1f1;
-  position: fixed;
-   bottom: 0;
+  
+   margin-top: 20px;
     width: 100%;
 :dir(rtl) {
     text-align: right;
@@ -101,3 +101,6 @@ footer .contacts li {
   color: blue;
   font-size: 1.2em;
 }
+
+
+
