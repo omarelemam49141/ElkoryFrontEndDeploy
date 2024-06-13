@@ -51,9 +51,6 @@ export class AccountService {
       'Authorization': token
     })
 
-    console.log(resetPasswordModel)
-    console.log(headers)
-
     return this.http.patch<any>(`${environment.apiUrl}/Account/resetpassword`, resetPasswordModel, {headers})
     .pipe(
       retry(2),

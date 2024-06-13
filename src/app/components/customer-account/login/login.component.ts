@@ -44,6 +44,7 @@ export class LoginComponent {
       this.router.navigate(["/customer-account/view-profile"])
     },
     error: (err: Error) => {
+      console.log(err)
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تسجيل الدخول',
         duration: this.snackBarDurationInSeconds * 1000

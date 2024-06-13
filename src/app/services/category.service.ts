@@ -13,8 +13,4 @@ export class CategoryService {
   constructor(private genericService: GenericService<ICategory>,
     private http: HttpClient
   ) { }
-
-  public getAll(): Observable<ICategory[]> {
-    return this.http.get<ICategory[]>(`${environment.apiUrl}/category/all`);
-  }
 }
