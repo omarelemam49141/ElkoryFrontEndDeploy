@@ -53,7 +53,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     if (this.product?.categoryId) {
       const subscription = this.CategoryService.getCategoryProducts(this.product.categoryId).subscribe({
         next: (products: IProduct[]) => {
-          this.relatedProducts = products.slice(0, 8);
+          this.relatedProducts = products.slice(0, 4);
           for (let i = 0; i < this.relatedProducts.length; i++) {
             this.productService.getPictures(this.relatedProducts[i].productId).subscribe({
               next: (images: string[]) => this.images[i] = images,

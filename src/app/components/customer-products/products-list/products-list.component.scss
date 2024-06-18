@@ -8,6 +8,7 @@
   flex: 1 1 calc(33.333% - 16px);
   box-sizing: border-box;
   max-width: calc(33.333% - 16px);
+ 
 }
 
 .card {
@@ -70,3 +71,8 @@ h5 {
   }
 }
 
+.product-card:hover{
+  transform: scale(1.02);
+  //scale smothy
+  transition: transform 0.5s;
+}

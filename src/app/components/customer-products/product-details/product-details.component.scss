@@ -121,4 +121,8 @@
       }
     }
   }
-  
+  .product-card:hover{
+    transform: scale(1.05);
+    //scale smothy
+    transition: transform 0.5s;
+  }

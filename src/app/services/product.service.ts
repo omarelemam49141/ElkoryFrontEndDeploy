@@ -70,14 +70,7 @@ export class ProductService {
   public delete(id: number): Observable<any> {
     return this.genericService.delete('product', id);
   }
-// Add this method to your ProductService class
-// public getRelatedProductsByCategory(categoryId: number, excludeProductId: number): Observable<IProduct[]> {
-//   return this.http.get<IProduct[]>(`${environment.apiUrl}/products/related?categoryId=${categoryId}&excludeProductId=${excludeProductId}`)
-//     .pipe(
-//       retry(2),
-//       catchError(this.genericService.handlingErrors)
-//     );
-// }
+
 
 
 

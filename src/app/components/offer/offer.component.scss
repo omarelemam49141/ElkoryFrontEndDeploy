@@ -1,0 +1,44 @@
+// .custom-carousel-img {
+//     height: 300px; /* Change this value to your desired height */
+//     object-fit: cover; /* Ensure the image covers the specified height */
+    
+//   }
+//   .carousel-caption {
+//    // padding: 15px; /* Add padding for better readability */
+//     background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a background for better contrast */
+//    // color: #fff; /* Optional: Set text color */
+//   //  text-align: center; /* Center align the text */
+//   }
+
+.custom-carousel-img {
+    height: 300px; /* Change this value to your desired height */
+    object-fit: cover; /* Ensure the image covers the specified height */
+    width: 100%; /* Ensure the image width is 100% of the container */
+  }
+
+  .carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5); /* Optional: Add a background for better contrast */
+  }
+
+  /* Responsive adjustments for smaller screens */
+  @media (max-width: 768px) {
+    .custom-carousel-img {
+      height: 200px; /* Adjust the height for smaller screens */
+    }
+
+    .carousel-caption {
+      padding: 10px; /* Reduce padding for smaller screens */
+      font-size: 14px; /* Adjust font size for better readability on small screens */
+    }
+  }
+
+  @media (max-width: 576px) {
+    .custom-carousel-img {
+      height: 150px; /* Further adjust the height for very small screens */
+    }
+
+    .carousel-caption {
+      padding: 5px; /* Further reduce padding for very small screens */
+      font-size: 12px; /* Further adjust font size for very small screens */
+    }
+  }
