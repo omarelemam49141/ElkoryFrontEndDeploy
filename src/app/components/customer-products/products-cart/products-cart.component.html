@@ -1,0 +1,151 @@
+<div class="h-100">
+    <section class="h-100 mt-5" style="background-color: #eee;">
+        <div class="container h-100 py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-10 text-center" *ngIf="cart.productsAmounts && cart.productsAmounts.length == 0">
+                    <h3 class="text-muted">لم يتم اضافة منتجات الى العربة!</h3>
+                    <a routerLink="/" class="btn btn-primary btn-lg w-80 mt-3">أضف بعض
+                        المنتجات</a>
+                </div>
+
+                <div class="col-10" *ngIf="cart?.productsAmounts?.length != 0">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-normal mb-0 text-black">عربة التسوق - عدد
+                            المنتجات : {{cart.productsAmounts.length}}</h3>
+                        <div>
+                            <button class="btn btn-danger" (click)="clearCart()">ازالة كل المنتجات</button>
+                        </div>
+                    </div>
+
+                    <div class="card rounded-3 mb-4" *ngFor="let product of cart.productsAmounts">
+                        <div class="card-body p-4">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-lg-2 col-xl-2 text-center">
+                                    <img [src]="product.productImages![0]?.imageUri??'assets/images/no-image.png'" class="img-fluid rounded-3 image"
+                                        alt="image">
+                                </div>
+                                <div class="col-lg-3 col-xl-3">
+                                    <p class="lead fw-normal mb-2">{{product.name}}</p>
+                                    <p><span class="text-muted ms-1">سعر المنتج</span><span
+                                            class="badge text-bg-success">{{product.finalPrice}}ج.م</span></p>
+                                </div>
+
+                                <div class="amount d-flex col-lg-3 col-xl-2">
+                                    <input type="button" value="-" class="button-minus btn changing-amount"
+                                        (click)="product.amount=product.amount-1; decreaseCartPrice(product.productId);"
+                                        [disabled]="product.amount <= 1">
+                                    <input type="number" inputmode="numeric" class="form-control" min="1"
+                                        max="{{product.allAmount}}"
+                                        (change)="updateProductAmount(product, $event)"
+                                        [(ngModel)]="product.amount">
+                                    <input type="button" value="+" class="button-plus btn changing-amount"
+                                        (click)="product.amount=product.amount+1; increaseCartPrice(product.productId);"
+                                        [disabled]="product.amount >= product.allAmount!">
+                                </div>
+
+                                <div class="col-lg-2 col-xl-2 offset-lg-1 mt-2 mt-lg-0">
+                                    <h5 class="mb-0 fw-bold">{{(product.amount * product.finalPrice).toFixed(2)}}ج.م</h5>
+                                </div>
+                                <div class="col-lg-1 col-xl-1 text-end">
+                                    <a (click)="deleteProductFromCart(product.productId)" class="text-danger fs-3" style="cursor: pointer;">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-4">
+                        <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                            <h5>اجمالى التكلفة</h5>
+                            <h5 class="fw-bold">{{cart.finalPrice}} ج.م</h5>
+                        </div>
+                    </div>
+
+                    <!-- <div class="card">
+                        <div class="card-body p-4">
+                            <button type="button" class="btn btn-warning btn-lg w-100 text-uppercase light h4"
+                                (click)="openSendOrder(infoModal, 'lg')">{{currentLanguage=='arabic'?'اطلب الان':'Order
+                                Now'}}</button>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- <ng-template #infoModal let-modal id="adding-form">
+    <div class="modal-header">
+        <h4 class="modal-title">Your information</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click');"
+            [disabled]="orderLoading"></button>
+    </div>
+    <div class="modal-body" *ngIf="!formLoading">
+        <form (ngSubmit)="makeOrder()" [formGroup]="myForm">
+            <div class="row mb-3">
+                <div class="col">
+
+                    <div class="form-outline">
+                        <label class="form-label" for="name">Name</label>
+                        <input type="text" formControlName="customerName" id="name" class="form-control">
+                    </div>
+                    <div style="color: red;" class="mt-1"
+                        *ngIf="!myForm.get('customerName').valid && myForm.get('customerName').touched">
+                        <p>Can't be empty</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+
+                    <div class="form-outline">
+                        <label class="form-label" for="phone">Phone number</label>
+                        <input type="tel" formControlName="customerPhone" id="phone" class="form-control">
+                    </div>
+                    <div style="color: red;" class="mt-1"
+                        *ngIf="!myForm.get('customerPhone').valid && myForm.get('customerPhone').touched">
+                        <p>Can't be empty</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+
+                    <div class="form-outline">
+                        <label class="form-label" for="address">Address</label>
+                        <input type="text" formControlName="customerAddress" id="address" class="form-control">
+                    </div>
+                    <div style="color: red;" class="mt-1"
+                        *ngIf="!myForm.get('customerAddress').valid && myForm.get('customerAddress').touched">
+                        <p>Can't be empty</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+
+                    <div class="card mt-3">
+                        <div class="card-body p-4 d-flex flex-wrap flex-column">
+                            <button type="submit" class="btn btn-success w-100 btn-lg"
+                                [disabled]="!myForm.valid || orderLoading">
+                                Send order
+                                <app-notification-spinner *ngIf="orderLoading"></app-notification-spinner>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click');"
+            [disabled]="orderLoading">Close</button>
+    </div>
+</ng-template> -->

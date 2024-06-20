@@ -27,28 +27,18 @@ export class CartService{
     return userEmail;
   }
 
-  public displayCart(): Observable<ICart> {
-    let userEmail = this.getLoggedInUserEmail();
-    if (!userEmail) {
-      return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
-    }
+  public displayCart(userId: string): Observable<ICart> {
     //get the cart
-    return this.http.get<ICart>(`${environment.apiUrl}/cart/${userEmail}`)
+    return this.http.get<ICart>(`${environment.apiUrl}/cart/${+userId}`)
     .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)
     );
   }
   
-  public deleteCart(): Observable<any> {
-    //get the token and decode it
-    let userEmail = this.getLoggedInUserEmail();
-    if (!userEmail) {
-      return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
-    }
-
+  public deleteCart(userId: string): Observable<any> {
     //get the cart
-    return this.http.delete<any>(`${environment.apiUrl}/cart/${userEmail}`)
+    return this.http.delete<any>(`${environment.apiUrl}/Cart/${userId}`)
     .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)
