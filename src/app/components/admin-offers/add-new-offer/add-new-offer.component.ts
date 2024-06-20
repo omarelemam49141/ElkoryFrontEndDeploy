@@ -10,6 +10,7 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
 import { ActivatedRoute, Router } from '@angular/router';
 import { OfferService } from '../../../services/offer.service';
 import { IEditOffer } from '../../../Models/iedit-offer';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-add-new-offer',
@@ -35,7 +36,8 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private offerService: OfferService
+    private offerService: OfferService,
+    private fileService: FileService
   ) {
     this.addOfferForm = this.fb.group({
       title: [this.offerToEdit?.title?? "", [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -111,19 +113,27 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
     this.selectedImage = this.offerToEdit?.image??"";
     this.addOfferForm.patchValue(data);
 
+    //convert the image url to a file
+    if (data.image) {
+      //get the image name from the image url
+      let imageName: string = data.image.split('/').pop()!;
+      this.fileService.urlToFile(data.image, imageName, 'image/png').then(file=> {
+        this.addOfferForm.get("image")?.setValue(file);
+      });
+    }
+
     let offerDate: Date = new Date(data.offerDate);
     this.addOfferForm.patchValue({
       offerDate: {
         year: offerDate?.getFullYear(),
         month: offerDate?.getMonth(),
-        day: offerDate?.getDay()
+        day: offerDate?.getDate()
       }
     })
   }
 
   //functions
   onFileSelected(event: any): void {
-
     //convert the file to binary
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -156,10 +166,10 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
         formData.append('packageDiscount', offerData.packageDiscount);
         formData.append('image', offerData.image);
       if (this.offerToEdit) {
+        console.log(this.addOfferForm.value);
         formData.append('offerId', this.offerToEdit.offerId.toString());
         this.subscriptions.push(this.offerService.updateOffer(formData).subscribe(this.addOfferObserver));
       } else {
-        
         this.subscriptions.push(this.genericService.insert('Offers', formData).subscribe(this.addOfferObserver));
       }
     }

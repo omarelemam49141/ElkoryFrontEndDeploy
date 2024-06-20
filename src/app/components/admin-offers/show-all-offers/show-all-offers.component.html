@@ -14,7 +14,7 @@
                             <p class="card-text">{{offer.description}}</p>
                             <p class="card-text text-danger">-{{offer.packageDiscount | currency: "ج.م"}}</p>
                             <a class="btn btn-outline-success btn-sm ms-3 mb-2" [routerLink]="['/admin-offers/offer-details', offer.offerId]" routerLinkActive="router-link-active">تفاصيل العرض</a>
-                            <a class="btn btn-outline-danger btn-sm mb-2">حذف العرض</a>
+                            <a class="btn btn-outline-danger btn-sm mb-2" (click)="confirmOfferDelete(offer.offerId, offer.title)">حذف العرض</a>
                         </div>
                     </div>
                 </div>
