@@ -64,9 +64,8 @@ export class AccountService {
     if (!token) {
       return throwError(()=> new Error("قم باعادة تسجيل الدخول مرة أخرى"))
     }
-    //decode the token and get the email from it
-    let user: {} = jwtDecode.jwtDecode(token??'');
-    const email = Object.values(user)[0];
+
+    const email = this.getEmailFromToken(token);
 
     //prepare the headers
     const headers = new HttpHeaders({
@@ -98,6 +97,19 @@ export class AccountService {
       retry(2),
       catchError(this.genericService.handlingErrors)
     )
+  }
+
+  public getEmailFromToken(token: string) {
+    //decode the token and get the email from it
+    let user: {} = jwtDecode.jwtDecode(token??'');
+    const email = Object.values(user)[1];
+    return email;
+  }
+  public getIdFromToken(token: string): any {
+    //decode the token and get the email from it
+    let user: {} = jwtDecode.jwtDecode(token??'');
+    const id = Object.values(user)[0];
+    return id;
   }
 
   public logout(): void {

@@ -147,14 +147,7 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
 
   addOffer(): void {
     if(this.addOfferForm.valid){
-      if (this.offerToEdit) {
-        let offerToUpdate:IEditOffer = this.addOfferForm.value as IEditOffer;
-        offerToUpdate.offerId = this.offerToEdit.offerId;
-        offerToUpdate.offerDate.dayOfWeek = 0;
-        console.log(offerToUpdate)
-        this.subscriptions.push(this.offerService.updateOffer(offerToUpdate).subscribe(this.addOfferObserver));
-      } else {
-        let formData = new FormData();
+      let formData = new FormData();
         let offerData = this.addOfferForm.value;
         formData.append('title', offerData.title);
         formData.append('description', offerData.description);
@@ -162,6 +155,11 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
         formData.append('duration', offerData.duration);
         formData.append('packageDiscount', offerData.packageDiscount);
         formData.append('image', offerData.image);
+      if (this.offerToEdit) {
+        formData.append('offerId', this.offerToEdit.offerId.toString());
+        this.subscriptions.push(this.offerService.updateOffer(formData).subscribe(this.addOfferObserver));
+      } else {
+        
         this.subscriptions.push(this.genericService.insert('Offers', formData).subscribe(this.addOfferObserver));
       }
     }
