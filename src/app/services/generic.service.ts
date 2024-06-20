@@ -31,6 +31,14 @@ export class GenericService<TEntity> {
     return throwError(()=>err);
   }
 
+  public getAll(url: string): Observable<TEntity[]> {
+    return this.http.get<TEntity[]>(`${environment.apiUrl}/${url}`)
+          .pipe(
+            retry(2),
+            catchError(this.handlingErrors)
+          )
+  }
+
   public getAllWithPagination(url: string, pageNumber: number, pageSize: number): Observable<TEntity[]> {
     return this.http.get<TEntity[]>(`${environment.apiUrl}/${url}?page=${pageNumber}&pageSize=${pageSize}`, this.httpOptions)
     .pipe(

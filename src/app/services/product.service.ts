@@ -68,7 +68,19 @@ export class ProductService {
   }
 
   public delete(id: number): Observable<any> {
-    return this.genericService.delete('product', id);
+    return this.genericService.delete('product', id)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    );
+  }
+
+  public searchByProductName(name: string, pageNumber: number, pageSize: number) : Observable<ProductsPagination> {
+    return this.http.options<ProductsPagination>(`${environment.apiUrl}/products/search?Name=${name}&page=${+pageNumber}&pageSize=${+pageSize}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    )
   }
 
 

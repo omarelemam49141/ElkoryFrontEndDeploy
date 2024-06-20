@@ -31,7 +31,7 @@
             </div>
             <h5 class="mt-3">{{ product.name }}</h5>
             <p>
-              <span class="text-muted">السعر بعد الخصم: </span>
+              <span class="text-muted">السعر </span>
               <span class="price">{{ product.finalPrice | currency: "USD" }}</span>
             </p>
             <p *ngIf="product.originalPrice !== product.finalPrice">
@@ -40,6 +40,10 @@
               <span class="badge bg-danger ms-2">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
             </p>
             <button [routerLink]="['/customer-products/product-details', product.productId]" class="btn btn-primary w-100 mt-2">تفاصيل</button>
+          <!-- Add to Cart Button -->
+          <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2">
+            <i class="fas fa-shopping-cart"></i> &nbsp;أضف إلى السلة</button>
+        
           </div>
         </div>
       </div>

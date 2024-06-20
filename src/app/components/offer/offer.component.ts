@@ -8,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './offer.component.scss'
 })
 export class OfferComponent {
+  
 
 }

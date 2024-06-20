@@ -1,55 +1,4 @@
-<!-- 
-<nav class="navbar-container">
-    <ul class="navbar-list">
-      <li class="navbar-item"><a href="#">الرئيسية</a></li>
-      <li class="navbar-item"><a href="#">هواتف</a></li>
-      <li class="navbar-item"><a href="#">جرابات</a></li>
-      <li class="navbar-item"><a href="#">سماعات</a></li>
-      <li class="navbar-item"><a href="#">فلاشات و كروت ميموري</a></li>
-      <li class="navbar-item"><a href="#">أجهزة ذكية</a></li>
-      <li class="navbar-item"><a href="#">أخرى</a></li>
-    </ul>
-  </nav>
-   -->
-<!-- 
-   <div class="categories sticky-top">
-    <div class="container">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <p class="home">الرئيسية</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="mobiles" routerlink="/categoryDetails/mobiles" tabindex="0">هواتف</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="cases" routerlink="/categoryDetails/cases" tabindex="0">جرابات</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="headphones" routerlink="/categoryDetails/headphones" style="padding-left: 15px;" tabindex="0">سماعات</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <p class="cables" routerlink="/categoryDetails/cables" tabindex="0">كابلات</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="memory" routerlink="/categoryDetails/flash" tabindex="0">فلاشات و كروت ميموري</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="watches" routerlink="/categoryDetails/smart" tabindex="0" style="padding-left: 15px;">أجهزة ذكية</p>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="others">أخرى</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
+
 
 <div class="categories sticky-top">
     <div class="container">
@@ -117,3 +66,101 @@
         </div>
     </div>
 </div>
+
+<!-- <div class="categories sticky-top">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            
+            <div class="col-md-6">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <a class="home" [routerLink]="['/home']">الرئيسية</a>
+                    </div>
+                   
+                        <div class="col-md-3" *ngFor="let category of Categories">
+                            <a class="{{category.name}}" [routerLink]="['/', category.name]" tabindex="0">{{category.name}}</a>
+                            <ul class="subcategories">
+                                <li *ngFor="let subcategory of category.subCategories"><a href="#">{{subcategory.name}}</a></li>
+                            </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Burger button moved to the left side -->
+            <button class="navbar-toggler me-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+   
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="row justify-content-center align-items-center w-100">
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <p class="home">الرئيسية</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="mobiles" routerlink="/categoryDetails/mobiles" tabindex="0">هواتف</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="cases" routerlink="/categoryDetails/cases" tabindex="0">جرابات</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="headphones" routerlink="/categoryDetails/headphones" style="padding-left: 15px;" tabindex="0">سماعات</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <p class="cables" routerlink="/categoryDetails/cables" tabindex="0">كابلات</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="memory" routerlink="/categoryDetails/flash" tabindex="0">فلاشات و كروت ميموري</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="watches" routerlink="/categoryDetails/smart" tabindex="0" style="padding-left: 15px;">أجهزة ذكية</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="others">أخرى</p>
+                            <ul class="subcategories">
+                                <li><a href="#">Subcategory 1</a></li>
+                                <li><a href="#">Subcategory 2</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

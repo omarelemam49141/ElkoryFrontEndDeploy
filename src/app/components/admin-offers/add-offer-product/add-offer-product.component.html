@@ -1,0 +1,48 @@
+<h2 mat-dialog-title class="dialog-title" *ngIf="!productToEdit">اضافة منتج الى العرض <span class="font-bold text-success">{{data.offerTitle}}</span></h2>
+<h2 mat-dialog-title class="dialog-title" *ngIf="productToEdit">تعديل المنتج {{productToEdit.name}} فى العرض <span class="font-bold text-success">{{data.offerTitle}}</span></h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <!--create a form that will add a search input to search for the product by its name and get its id-->
+    <form [formGroup]="addProductForm">
+        <div class="form-group mb-3" *ngIf="!data.productId">
+            <mat-form-field appearance="fill">
+                <mat-label>ابحث عن اسم المنتج</mat-label>
+                <input #productName matInput type="search" placeholder="ادخل اسم المنتج" (input)="searchProductByName(productName.value)">
+                <mat-error *ngIf="!productId?.valid && productId?.touched">
+                    <span *ngIf="productId?.errors?.['required']">الاسم مطلوب</span>
+                </mat-error>
+            </mat-form-field>
+            <div class="searchedProducts">
+                <app-product-card *ngFor="let product of searchedProducts" [product]="product" [offerId]="data.offerId" [editProduct]="false" (productAddedToOffer)="addProductToForm($event)"></app-product-card>
+            </div>
+        </div>
+        <div class="form-group mb-3" *ngIf="data.productId && productToEdit">
+            <div class="searchedProducts">
+                <app-product-card [product]="productToEdit" [offerId]="data.offerId" [editProduct]="true"></app-product-card>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>أقل كمية لتفعيل العرض</mat-label>
+                <input matInput formControlName="productAmount" type="number" placeholder="ادخل كمية المنتج" min="1">
+                <mat-error *ngIf="!productAmount?.valid && productAmount?.touched">
+                    <span *ngIf="productAmount?.errors?.['required']">الكمية مطلوبة</span>
+                    <span *ngIf="productAmount?.errors?.['min']">الكمية يجب الا تقل عن صفر</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field appearance="fill">
+                <mat-label>الخصم (%)</mat-label>
+                <input matInput formControlName="discount" type="number" placeholder="ادخل الخصم" min="0" max="100">
+                <mat-error *ngIf="!discount?.valid && discount?.touched">
+                    <span *ngIf="discount?.errors?.['required']">الخصم مطلوب</span>
+                    <span *ngIf="discount?.errors?.['min']">الخصم لا يمكن أن يقل عن صفر%</span>
+                    <span *ngIf="discount?.errors?.['max']">الخصم لا يمكن أن يزيد عن 100%</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+</mat-dialog-actions>

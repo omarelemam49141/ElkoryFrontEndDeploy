@@ -1,0 +1,14 @@
+<div
+    class="card border-primary"
+>
+    <img class="card-img-top" [src]="productImage" alt="Title"/>
+    <div class="card-body">
+        <h4 class="card-title">{{product.name}}</h4>
+        <p class="card-text">category: {{product.categoryName}}</p>
+        <p class="card-text">price: {{product.finalPrice}}</p>
+        <p class="card-text">discount: <span class="text-danger">-{{product.discount}}</span></p>
+    </div>
+    <div class="card-footer" *ngIf="!editProduct">
+        <button class="btn btn-outline-success btn-sm ms-3 mb-2" (click)="addProductToOffer()">اضافة</button>
+    </div>
+</div>
