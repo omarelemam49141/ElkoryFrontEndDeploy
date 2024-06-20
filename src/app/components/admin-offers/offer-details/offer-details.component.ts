@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { OfferService } from '../../../services/offer.service';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { DeleteOfferComponent } from '../delete-offer/delete-offer.component';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-offer-details',
@@ -21,6 +22,7 @@ import { DeleteOfferComponent } from '../delete-offer/delete-offer.component';
 })
 export class OfferDetailsComponent implements OnDestroy, OnInit{
   offer!: IOffer;
+  productsImage: string[] = [];
   //subscription properties
   subscriptions: Subscription[] = [];
   //notifications properties
@@ -30,7 +32,8 @@ export class OfferDetailsComponent implements OnDestroy, OnInit{
     private snackBar: MatSnackBar,
     private activatedRoute: ActivatedRoute,
     private dialog: MatDialog,
-    private offerService: OfferService
+    private offerService: OfferService,
+    private productService: ProductService
   ) {
   }
 
@@ -38,9 +41,13 @@ export class OfferDetailsComponent implements OnDestroy, OnInit{
   private offerDetailsObserver = {
     next: (data: IOffer) => {
       this.offer = data;
+      this.offer.productOffers.forEach(product => {
+        this.productService.getPictures(product.productId).subscribe(images => {
+          this.productsImage.push(images[0]);
+        });
+      })
     },
     error: (error: any) => {
-      console.log(error)
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تحميل العرض!',
         duration: this.notificationDurationInSeconds * 1000
