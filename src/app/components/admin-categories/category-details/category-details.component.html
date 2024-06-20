@@ -1,1 +1,9 @@
-<p>category-details works!</p>
+<h2 mat-dialog-title class="dialog-title">
+    <span>{{data.categoryName}}</span>
+</h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <img class="img-fluid" width="400" [src]="data.categoryImage ? data.categoryImage : 'assets/images/no-image.png'" alt="image">
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">إغلاق</button>
+</mat-dialog-actions>

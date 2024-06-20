@@ -48,7 +48,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   constructor(private fb: FormBuilder,
     private productService: ProductService,
-    private categoryService: CategoryService,
     private snackBar: MatSnackBar,
     private renderer: Renderer2,
     private activatedRoute: ActivatedRoute,
@@ -208,10 +207,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     this.renderer.setProperty(fileInput, 'value', '');
   }
 
-  fun() {
-    console.log("lkjhgfd")
-  }
-
   onFileChange(event: Event, index: number): void {
     //if the user changed an image that is existed in the original images array then add the original image to be deleted when updating the product
     if (this.imagesArray[index] == this.originalImagesOfTheProductToUpdate[index]) {
@@ -238,10 +233,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.imagesArray[index] = '';
       }
     }
-
-   console.log(this.imageIndex) 
-   console.log(this.images.value)
-   console.log(this.imagesArray)
   }
   /*end images functions*/
 
