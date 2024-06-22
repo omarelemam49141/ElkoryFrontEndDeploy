@@ -12,7 +12,11 @@ export class AdminService {
 
   constructor(private genericService:GenericService<IAdmin>, private http:HttpClient) {}
 
-  GetAllAdmins():Observable<IAdmin[]>{
+  // GetAllAdmins():Observable<IAdmin[]>{
+  //   return this.http.get<IAdmin[]>(`${environment.apiUrl}/admin`);
+  // }
+
+  GetAllUsers():Observable<IAdmin[]>{
     return this.http.get<IAdmin[]>(`${environment.apiUrl}/admin`);
   }
 

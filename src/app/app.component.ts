@@ -5,11 +5,12 @@ import { NavbarComponent } from './components/main-components/navbar/navbar.comp
 import { FooterComponent } from './components/main-components/footer/footer.component';
 import { ViewAdminsComponent } from './components/AdminUserManagement/view-admins/view-admins.component';
 import { AddAdminComponent } from './components/AdminUserManagement/add-admin/add-admin.component';
+import { WhatsappButtonComponent } from './components/whatsapp-button/whatsapp-button.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, ViewAdminsComponent,AddAdminComponent],
+  imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, ViewAdminsComponent,AddAdminComponent, WhatsappButtonComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

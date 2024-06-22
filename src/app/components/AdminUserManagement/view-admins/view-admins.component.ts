@@ -20,8 +20,8 @@ export class ViewAdminsComponent {
   constructor(private adminService:AdminService){}
 
   ngOnInit(): void {
-    this.adminService.GetAllAdmins().subscribe( (data) => {
-      this.adminsList = data;
+    this.adminService.GetAllUsers().subscribe( (data) => {
+      this.adminsList = data.filter(admin => admin.role === 0);
     })
 
   }
