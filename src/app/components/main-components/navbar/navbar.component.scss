@@ -1,0 +1,285 @@
+// .categories {
+//   background-color: #000; /* Black background */
+//   padding: 10px;
+// }
+
+// .container {
+//   display: flex;
+//   justify-content: center;
+// }
+
+// .row {
+//   display: flex;
+//   width: 100%;
+// }
+
+// .col-md-6 {
+//   display: flex;
+//   flex: 1;
+// }
+
+// .col-md-3 {
+//   flex: 1;
+//   text-align: center;
+// }
+
+// p {
+//   font-family: 'Arial', sans-serif;
+//   color: #fff; /* White text color */
+//   font-size: 16px;
+//   margin: 0;
+//   cursor: pointer;
+// }
+
+// .home, .mobiles, .cases, .headphones, .cables, .memory, .watches, .others {
+//   text-decoration: none;
+// }
+
+// p:hover {
+//   text-decoration: underline;
+// }
+
+
+//////////////////
+///
+//  .categories {
+// background-color: #000; /* Black background */
+// padding: 10px;
+// }
+
+// .container {
+// display: flex;
+// justify-content: center;
+// }
+
+// .row {
+// display: flex;
+// width: 100%;
+// }
+
+// .col-md-6 {
+// display: flex;
+// flex: 1;
+// }
+
+// .col-md-3 {
+// flex: 1;
+// text-align: center;
+// position: relative; /* For positioning the subcategories */
+// }
+
+// p {
+// font-family: 'Arial', sans-serif;
+// color: #fff; /* White text color */
+// font-size: 16px;
+// margin: 0;
+// cursor: pointer;
+// }
+
+// .home, .mobiles, .cases, .headphones, .cables, .memory, .watches, .others {
+// text-decoration: none;
+// }
+
+// p:hover {
+// text-decoration: underline;
+// }
+
+// .subcategories {
+// display: none; /* Hidden by default */
+// position: absolute;
+// top: 100%; /* Position below the category */
+// left: 0;
+// background-color: #333; /* Dark background for subcategories */
+// padding: 10px;
+// list-style: none;
+// margin: 0;
+// width: 100%;
+// text-align: left; /* Align text to the left */
+// }
+
+// .subcategories li {
+// margin: 5px 0;
+// }
+
+// .subcategories li a {
+// color: #fff; /* White text color */
+// text-decoration: none;
+// }
+
+// .subcategories li a:hover {
+// text-decoration: underline;
+// }
+
+// .col-md-3:hover .subcategories {
+// display: block; /* Display subcategories on hover */
+// }
+
+// /* Responsive adjustments */
+// @media (max-width: 768px) {
+// .col-md-3 p {
+//     font-size: 14px; /* Smaller font size for tablets */
+// }
+
+// .subcategories {
+//     font-size: 14px; /* Smaller font size for subcategories */
+// }
+// }
+
+// @media (max-width: 576px) {
+// .col-md-3 p {
+//     font-size: 12px; /* Smaller font size for phones */
+// }
+
+// .subcategories {
+//     font-size: 12px; /* Smaller font size for subcategories */
+// }
+// }
+
+
+
+
+
+.categories {
+    background-color: #000; /* Black background */
+    padding: 10px;
+    position: relative; /* Ensure the parent container is positioned */
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .row {
+    display: flex;
+    width: 100%;
+  }
+  
+  .col-md-6 {
+    display: flex;
+    flex: 1;
+  }
+  
+  .col-md-3 {
+    flex: 1;
+    text-align: center;
+    position: relative; /* For positioning the subcategories */
+  }
+  
+  a,p {
+    font-family: 'Cairo', sans-serif;
+    color: #fff; /* White text color */
+    font-size: 16px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .home, .mobiles, .cases, .headphones, .cables, .memory, .watches, .others {
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  .subcategories {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%; /* Position below the category */
+    left: 0;
+    background-color: #fff; /* White background for subcategories */
+    padding: 10px;
+    list-style: none;
+    margin: 0;
+    width: 100%; /* Full width */
+    text-align: left; /* Align text to the left */
+    z-index: 1000; /* Ensure it is above other content */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+  }
+  
+  .subcategories li {
+    margin: 5px 0;
+  }
+  
+  .subcategories li a {
+    color: #000; /* Black text color */
+    text-decoration: none;
+  }
+  
+  .subcategories li a:hover {
+    text-decoration: underline;
+  }
+  
+  .col-md-3:hover .subcategories {
+    display: block; /* Display subcategories on hover */
+  }
+  
+  @media (max-width: 768px) {
+    .col-md-3 a {
+      font-size: 14px; /* Smaller font size for tablets */
+    }
+  
+    .subcategories {
+      font-size: 14px; /* Smaller font size for subcategories */
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .col-md-3 a {
+      font-size: 12px; /* Smaller font size for phones */
+    }
+  
+    .subcategories {
+      font-size: 12px; /* Smaller font size for subcategories */
+    }
+  }
+/* Ensure the burger button appears on the left in mobile view */
+@media (max-width: 991.98px) {
+  .navbar-toggler {
+      margin-right: auto;
+  }
+}
+
+/* CSS for subcategories */
+.categories .subcategories {
+  display: none; /* Hide subcategories by default */
+  position: absolute;
+  top: 83%; /* Position subcategories below the parent */
+  left: 0; /* Align subcategories with the left edge of parent */
+  background-color: #fff; /* Optional: Background color for subcategories */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Optional: Box shadow for subcategories */
+  z-index: 1000; /* Optional: Adjust z-index to ensure subcategories appear above content */
+  min-width: 200px; /* Optional: Minimum width of subcategories */
+}
+
+.categories .nav-item:hover .subcategories {
+  display: block; /* Show subcategories on hover */
+}
+
+/* Ensure subcategories remain visible when hovering over them */
+.categories .subcategories:hover {
+  display: block;
+}
+
+/* Optional: Style subcategory links */
+.categories .subcategories li {
+  padding: 8px 12px;
+}
+
+.categories .subcategories li a {
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+
+.categories .subcategories li a:hover {
+  background-color: #f0f0f0;
+}
+
+
+
+p:hover{
+  color:   #b51cb0; 
+  font-weight: bolder;
+}

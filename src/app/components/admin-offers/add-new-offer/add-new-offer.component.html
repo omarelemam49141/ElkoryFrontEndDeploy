@@ -1,1 +1,111 @@
-<p>add-new-offer works!</p>
+<section class="get-in-touch">
+    <h1 class="title">{{offerToEdit ? 'تعديل العرض ' + offerToEdit.title : 'اضافة عرض جديد'}}</h1>
+    <form class="contact-form row" [formGroup]="addOfferForm" (ngSubmit)="addOffer()">
+        <div class="form-field col-lg-6">
+            <label class="label" for="title">عنوان العرض</label>
+            <input type="text" class="form-control" id="title" class="input-text js-input" formControlName="title">
+            <div class="text-danger" *ngIf="!title?.valid && title?.touched">
+                <span *ngIf="title?.errors?.['required']">عنوان العرض مطلوب</span>
+                <span *ngIf="title?.errors?.['minlength']">عنوان العرض يجب الا يقل عن 3 حروف</span>
+                <span *ngIf="title?.errors?.['maxlength']">عنوان العرض يجب الا يزيد عن 100 حروف</span>
+            </div>
+        </div>
+
+        <div class="form-field col-lg-12">
+            <label for="offerDate">تاريخ العرض</label>
+            <div class="row" formGroupName="offerDate">
+                <div class="col-md-4 mb-3">
+                    <div class="form-field">
+                        <label class="label" for="year">السنة</label>
+                        <input type="number" formControlName="year" class="input-text js-input" id="year" min="2024" max="2100" placeholder="YYYY">                    
+                    </div>
+                    <div class="text-danger" *ngIf="!year?.valid && year?.touched">
+                        <span *ngIf="year?.errors?.['required']">السنة مطلوبة</span>
+                        <span *ngIf="year?.errors?.['min']">السنة يجب الا يقل عن 2024</span>
+                        <span *ngIf="year?.errors?.['max']">السنة يجب الا يزيد عن 2100</span>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="form-field">
+                        <label class="label" for="month">الشهر</label>
+                        <select formControlName="month" class="input-text js-input" id="month" style="height: 48px; padding: 0 10px;">
+                            <option value="1">يناير</option>
+                            <option value="2">فبراير</option>
+                            <option value="3">مارس</option>
+                            <option value="4">أبريل</option>
+                            <option value="5">مايو</option>
+                            <option value="6">يونيو</option>
+                            <option value="7">يوليو</option>
+                            <option value="8">أغسطس</option>
+                            <option value="9">سبتمبر</option>
+                            <option value="10">أكتوبر</option>
+                            <option value="11">نوفمبر</option>
+                            <option value="12">ديسمبر</option>
+                        </select>                
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-field">
+                        <label class="label" for="day">اليوم</label>
+                        <input type="number" formControlName="day" class="input-text js-input" id="day" min="1" max="31" placeholder="dd">                    
+                    </div>
+                    <div class="text-danger" *ngIf="!day?.valid && day?.touched">
+                        <span *ngIf="day?.errors?.['required']">اليوم مطلوب</span>
+                        <span *ngIf="day?.errors?.['min']">اليوم يجب الا يقل عن 1</span>
+                        <span *ngIf="day?.errors?.['max']">اليوم يجب الا يزيد عن 31</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-field col-lg-12">
+            <label class="label" for="description">وصف العرض</label>
+            <input type="text" class="form-control" id="description" formControlName="description"
+                class="input-text js-input">
+            <div class="text-danger" *ngIf="!description?.valid && description?.touched">
+                <span *ngIf="description?.errors?.['required']">وصف العرض مطلوب</span>
+                <span *ngIf="description?.errors?.['minlength']">وصف العرض يجب الا يقل عن 3 حروف</span>
+                <span *ngIf="description?.errors?.['maxlength']">وصف العرض يجب الا يزيد عن 500 حروف</span>
+            </div>
+        </div>
+
+        <div class="form-field col-lg-6">
+            <label class="label" for="duration">مدة العرض (بالأيام)</label>
+            <input type="number" class="form-control" id="duration" formControlName="duration"
+                class="input-text js-input">
+            <div class="text-danger" *ngIf="!duration?.valid && duration?.touched">
+                <span *ngIf="duration?.errors?.['required']">مدة العرض مطلوب</span>
+                <span *ngIf="duration?.errors?.['min']">مدة العرض يجب الا تقل عن 1</span>
+            </div>
+        </div>
+
+        <div class="form-field col-lg-6">
+            <label class="label" for="packageDiscount">قيمة العرض</label>
+            <input type="number" class="form-control" id="packageDiscount" formControlName="packageDiscount"
+                class="input-text js-input">
+            <div class="text-danger" *ngIf="!packageDiscount?.valid && packageDiscount?.touched">
+                <span *ngIf="packageDiscount?.errors?.['required']">قيمة العرض مطلوب</span>
+                <span *ngIf="packageDiscount?.errors?.['min']">قيمة العرض يجب الا تقل عن 0</span>
+            </div>
+        </div>
+
+        <div class="form-field col-lg-12">
+            <label class="label" for="image">صورة العرض</label>
+            <div class="form-group mb-2 d-flex justify-content-between align-items-center flex-wrap">
+                <input type="file" class="form-control" (change)="onFileSelected($event)">
+                <input type="hidden" id="image" formControlName="image">
+                @if (selectedImage) {
+                <img src="{{selectedImage}}" width="200" class="img-fluid rounded-1 my-2 mx-auto">
+                }
+            </div>
+            <div class="text-danger" *ngIf="!image?.valid && image?.touched">
+                <span *ngIf="image?.errors?.['required']">صورة العرض مطلوبة</span>
+            </div>
+        </div>
+
+        <div class="form-field col-lg-12">
+            <input type="submit" class="submit-btn" [disabled]="!addOfferForm.valid"
+                value="{{offerToEdit ? 'تحديث العرض' : 'أضف العرض'}}" />
+        </div>
+    </form>
+</section>

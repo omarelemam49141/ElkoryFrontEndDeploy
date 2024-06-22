@@ -16,5 +16,6 @@ export const routes: Routes = [
     {path: "customer-account", loadChildren:()=>import('./components/customer-account/customerAccount.routes').then(m=>m.routes)},
     {path: "customer-products", loadChildren:()=>import('./components/customer-products/customerProducts.routes').then(m=>m.routes)},
     {path: "website-info", loadChildren:()=>import('./components/website-info/websiteInfo.routes').then(m=>m.routes)},
+    {path: "admin-categories", loadChildren:()=>import('./components/admin-categories/adminCategories.routes').then(m=>m.routes)},
     {path: "**", component: NotFoundComponent}
 ];
