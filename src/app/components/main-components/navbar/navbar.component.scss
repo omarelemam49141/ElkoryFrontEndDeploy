@@ -167,11 +167,12 @@
   }
   
   a,p {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Cairo', sans-serif;
     color: #fff; /* White text color */
     font-size: 16px;
     margin: 0;
     cursor: pointer;
+    font-weight: bold;
   }
   
   .home, .mobiles, .cases, .headphones, .cables, .memory, .watches, .others {
@@ -238,4 +239,47 @@
   .navbar-toggler {
       margin-right: auto;
   }
+}
+
+/* CSS for subcategories */
+.categories .subcategories {
+  display: none; /* Hide subcategories by default */
+  position: absolute;
+  top: 83%; /* Position subcategories below the parent */
+  left: 0; /* Align subcategories with the left edge of parent */
+  background-color: #fff; /* Optional: Background color for subcategories */
+  box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Optional: Box shadow for subcategories */
+  z-index: 1000; /* Optional: Adjust z-index to ensure subcategories appear above content */
+  min-width: 200px; /* Optional: Minimum width of subcategories */
+}
+
+.categories .nav-item:hover .subcategories {
+  display: block; /* Show subcategories on hover */
+}
+
+/* Ensure subcategories remain visible when hovering over them */
+.categories .subcategories:hover {
+  display: block;
+}
+
+/* Optional: Style subcategory links */
+.categories .subcategories li {
+  padding: 8px 12px;
+}
+
+.categories .subcategories li a {
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+
+.categories .subcategories li a:hover {
+  background-color: #f0f0f0;
+}
+
+
+
+p:hover{
+  color:   #b51cb0; 
+  font-weight: bolder;
 }
