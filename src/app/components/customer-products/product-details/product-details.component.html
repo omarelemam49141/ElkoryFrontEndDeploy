@@ -1,1 +1,55 @@
-<p>product-details works!</p>
+<div class="container product-details-container" *ngIf="product">
+  <div class="row product-main-details">
+    <div class="col-md-6 product-image">
+      <img [src]="image" class="img-fluid rounded-3" alt="{{product.name}}" />
+    </div>
+    <div class="col-md-6 product-info">
+      <h2>{{ product.name }}</h2>
+      <h4 class="text-muted">{{ product.categoryName }}</h4>
+      <p class="price display-4">{{ product?.finalPrice | currency: 'USD' }}</p>
+    
+      <!-- <div class="d-flex align-items-center mb-3 quantity-section">
+        <button class="btn btn-outline-secondary quantity-button" type="button">-</button>
+        <input type="text" class="form-control quantity-input" value="1">
+        <button class="btn btn-outline-secondary quantity-button" type="button">+</button>
+        <button class="btn btn-primary add-to-cart-button ms-2">أضف إلى السلة</button>
+      </div> -->
+
+      <div class="d-flex align-items-center mb-3 quantity-section">
+        <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity()">-</button>
+        <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity" min="1">
+        <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity()">+</button>
+        <button (click)="addToCart(product)" class="btn btn-primary add-to-cart-button ms-2">أضف إلى السلة</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h3>الوصف</h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+        </li>
+        <li class="list-group-item">
+          <span class="text-end"> {{ product.description }} </span>
+        </li>
+        <li class="list-group-item">
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="related-products">
+    <h3>منتجات ذات صلة</h3>
+    <div class="row">
+      <div *ngFor="let relatedProduct of relatedProducts; let i=index" class="col-md-3 product-card">
+        <div class="card">
+          <img [src]="images[i] ? images[i][0] : ''" class="card-img-top img-fluid rounded-3" alt="{{ relatedProduct.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ relatedProduct.name }}</h5>
+            <p class="card-text">{{ relatedProduct.finalPrice | currency: 'USD' }}</p>
+            <a [routerLink]="['/customer-products/product-details', relatedProduct.productId]" class="btn btn-primary">عرض التفاصيل</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
