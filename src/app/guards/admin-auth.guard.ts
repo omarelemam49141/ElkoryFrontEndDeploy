@@ -7,7 +7,7 @@ import { FailedSnackbarComponent } from '../components/notifications/failed-snac
 export const adminAuthGuard: CanActivateFn = (route, state) => {
   const accountService = inject(AccountService);
   const snackBar = inject(MatSnackBar);
-  if (accountService.getTokenRole().toLowerCase() != "admin") {
+  if (accountService.decodedToken == null || accountService.getTokenRole().toLowerCase() != "admin") {
     snackBar.openFromComponent(FailedSnackbarComponent, {
       data: "غير مسموح لك بالدخول!",
       duration: 5000
