@@ -1,1 +1,30 @@
-<p>view-users works!</p>
+<div class="text-center">
+  <h1>Manage All users</h1>
+</div>
+
+<table class="table table-bordered table-hover text-center">
+  <thead>
+    <tr>
+      <th>Actions</th>
+      <th>Role</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th>Name</th>
+      <th>User Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of usersList; let i = index">
+      <td>
+        <button class="btn btn-danger">Delete</button>
+      </td>
+      <!-- <td>{{admin.role === 0 ? 'admin' : 'user'}}</td> -->
+      <td>user</td>
+      <td>{{user.phone}}</td>
+      <td>{{user.email}}</td>
+      <td>{{user.fName}}  {{user.lName}}</td>
+      <td>{{i+1}}</td>
+    </tr>
+  </tbody>
+</table>
+
