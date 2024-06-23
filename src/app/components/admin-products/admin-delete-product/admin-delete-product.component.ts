@@ -30,7 +30,7 @@ import {
 export class AdminDeleteProductComponent {
   constructor(
     public dialogRef: MatDialogRef<AdminDeleteProductComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: {name: string, id: number},
   ) {}
 
   onNoClick(): void {

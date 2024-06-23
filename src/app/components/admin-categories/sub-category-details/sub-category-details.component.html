@@ -1,0 +1,50 @@
+@if (subCategory) {
+    <section class="dark" dir="ltr">
+        <div class="container">
+            <h1 class="h1 text-center" id="pageHeaderTitle">{{subCategory.name}} تفاصيل القسم الفرعى</h1>
+            <article class="postcard dark blue">
+                <div class="postcard__text">
+                    <h1 class="postcard__title blue"><a href="#">{{subCategory.name}}</a></h1>
+                    <div class="postcard__bar"></div>
+                    <ul class="postcard__tagbox">
+                        <li class="tag__item play red">
+                            <a (click)="confirmSubCategoryDelete(subCategory.subCategoryId, subCategory.name)"><i class="fas fa-trash mr-2"></i>حذف العرض</a>
+                        </li>
+                        <li class="tag__item play blue">
+                            <a 
+                            (click)="editSubCategory(subCategory.subCategoryId, subCategory.name)"
+                            [routerLink]="['/admin-categories/subcategories-list', subCategory.subCategoryId]" ><i class="fas fa-edit mr-2"></i>تعديل القسم الفرعى</a>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+            
+            <div class="row mt-4" id="ads">
+                <button class="btn btn-primary w-50 m-auto" type="button" (click)="SubCategoryValueModal(subCategory.subCategoryId)">اضافة قيمة الى القسم الفرعى</button>
+                <!-- <h3 class="text-center text-light my-4">القيم التي يمتلكها القسم الفرعى</h3>
+                @for (value of offer.productOffers; track prod.productId;) {
+                    <div class="col-md-4 col-lg-3 mb-3">
+                        <div class="card rounded">
+                            <div class="card-image">
+                                <span class="card-notify-year">-{{prod.discount}}</span>
+                                <img class="img-fluid" [src]="!productsImage[$index] ? 'assets/images/no-image.png' : productsImage[$index]" alt="Alternate Text" />
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="ad-title m-auto">
+                                    <h4>{{prod.name}}</h4>
+                                    <h5>الكمية المطلوبة لتغعيل العرض: {{prod.productAmount}}</h5>
+                                </div>
+                                <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a>
+                                <a class="ad-btn" (click)="addOfferProduct(offer.offerId, offer.title, prod.productId, prod.productAmount, prod.discount)">تعديل</a>
+                            </div>
+                        </div>
+                    </div>
+                } -->
+            </div>
+        </div>
+    </section>
+}
+
+
+
+

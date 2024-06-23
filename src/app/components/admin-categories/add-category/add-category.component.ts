@@ -167,7 +167,6 @@ export class AddCategoryComponent implements OnDestroy, OnInit{
         this.selectedImage = '';
       }
     }
-
   }
 
   onNoClick(): void {

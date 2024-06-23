@@ -1,9 +1,9 @@
 
 <div class="resetPassword-container">
-    <form [formGroup]="forgetPasswordForm" (ngSubmit)="sendEmail()" class="resetPassword-form">
+    <form [formGroup]="verifyEmailForm" (ngSubmit)="verifyEmail()" class="resetPassword-form">
         <div class="form-header">
             <img src="assets/images/logo.png" alt="Form Image" class="form-image">
-            <h2 class="form-title">نسيت كلمة المرور</h2>
+            <h2 class="form-title">تفعيل الحساب</h2>
         </div>
         <div class="form-group">
             <label class="label">البريد الالكترونى</label>
@@ -14,9 +14,17 @@
                 <span *ngIf="email?.errors?.['maxlength']">البريد الالكترونى يجب أن لا يزيد عن 50 حرف</span>
             </div>
         </div>
+        <div class="form-group">
+            <label class="label">كود التحقق</label>
+            <input id="email" formControlName="code" class="form-control" type="email">
+            <div class="text-danger" *ngIf="!code?.valid && code?.touched">
+                <span *ngIf="code?.errors?.['required']">كود التحقق مطلوب</span>
+            </div>
+        </div>
 
         <div class="form-group">
-            <button type="submit" class="btn-submit" [disabled]="forgetPasswordForm.invalid">تحديث كلمة المرور</button>
+            <button type="submit" class="btn-submit" [disabled]="verifyEmailForm.invalid">تحديث كلمة المرور</button>
         </div>
     </form>
 </div>
+

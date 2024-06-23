@@ -8,6 +8,8 @@ import { ILoginModel } from '../Models/ilogin-model';
 import { IResetPassword } from '../Models/ireset-password';
 import { IEditProfile } from '../Models/iedit-profile';
 import * as jwtDecode  from 'jwt-decode';
+import { IVerifyEmail } from '../Models/iverify-email';
+import { IForgetPassword } from '../Models/iforget-password';
 
 @Injectable({
   providedIn: 'root'
@@ -115,5 +117,48 @@ export class AccountService {
   public logout(): void {
     localStorage.removeItem("token");
     this.isLoggedIn = false;
+  }
+
+  public verifyEmail(verifyEmail: IVerifyEmail): Observable<any> {
+    this.genericService.addHeaders("Content-Type", "application/json");
+    return this.http.post<any>(`${environment.apiUrl}/Account/verify-email`, verifyEmail, this.genericService.httpOptions)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    )
+  }
+
+  public forgetPasswordGettingCode(email: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/Account/forgot-password?email=${email}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    )
+  }
+
+  public resetPasswordForgetPassword(forgetPasswordModel: IForgetPassword) : Observable<any> {
+    this.genericService.addHeaders("Content-Type", "application/json");
+    return this.http.post<any>(`${environment.apiUrl}/Account/forgot-password`, forgetPasswordModel, this.genericService.httpOptions);
+  }
+
+  public get decodedToken() {
+    const token = localStorage.getItem("token");
+    return jwtDecode.jwtDecode(token??'');
+  }
+
+  public getTokenEmail() {
+    let decodedToken = this.decodedToken;
+    if (decodedToken) {
+      return Object.values(decodedToken)[1];
+    }
+    return '';
+  }
+
+  public getTokenRole() {
+    let decodedToken = this.decodedToken;
+    if (decodedToken) {
+      return Object.values(decodedToken)[2];
+    }
+    return '';
   }
 }

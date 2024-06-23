@@ -127,7 +127,7 @@ export class AddOfferProductComponent implements OnInit{
             data: "تمت اضافة المنتج بنجاح",
             duration: this.notificationDurationInSeconds * 1000
           })
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         },
         error: (error: Error) => {
           this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -152,7 +152,7 @@ export class AddOfferProductComponent implements OnInit{
           data: "تم تحديث المنتج بنجاح",
           duration: this.notificationDurationInSeconds * 1000
         })
-        this.dialogRef.close();
+        this.dialogRef.close(true);
       },
       error: (error: Error) => {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
