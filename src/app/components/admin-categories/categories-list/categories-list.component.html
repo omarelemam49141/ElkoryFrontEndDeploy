@@ -1,26 +1,37 @@
-<div
-    class="table-responsive"
->
-    <table
-        class="table table-hover table-striped"
-    >
-        <thead>
-            <tr>
-                <th scope="col">اسم القسم</th>
-                <th scope="col">الاجراءات</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (cat of categories; track cat.categoryId) {
-                <tr class="">
-                    <td>{{cat.name}}</td>
+<div class="container">
+    <button class="btn btn-primary mt-2" (click)="addNewCategory()">إضافة قسم جديد</button>
+    @if(categories && categories.length > 0) {
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">اسم القسم</th>
+                    <th scope="col">صورة القسم</th>
+                    <th scope="col">الاجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (cat of categories; track cat.categoryId) {
+                <tr>
                     <td>
-                        <a class="btn btn-primary" [routerLink]="['/admin-categoies/add-category', cat.categoryId]" >تعديل</a>
-                        <a class="btn btn-danger" [routerLink]="['/admin-categoies/delete-category', cat.categoryId]">حذف</a>
+                        <a (click)="viewDetails(cat.name, cat.imageUri)" class="viewDetailsBtn">{{cat.name}}</a>
+                    </td>
+                    <td>
+                        <img class="img-fluid" width="100"
+                            [src]="cat.imageUri ? cat.imageUri : 'assets/images/no-image.png'" alt="image">
+                    </td>
+                    <td>
+                        <a class="btn btn-primary ms-2"
+                            [routerLink]= "['/admin-categories/categories-list', cat.categoryId]"
+                            (click)="editCategory(cat.categoryId, cat.name, cat.imageUri)">تعديل</a>
+                        <a class="btn btn-danger" (click)="confirmDelete(cat.categoryId, cat.name)">حذف</a>
                     </td>
                 </tr>
-            }
-        </tbody>
-    </table>
+                }
+            </tbody>
+        </table>
+    </div>
+    } @else {
+    <div class="lead h2 text-center bg-light p-4 my-4">لا يوجد أقسام حتى الآن!</div>
+    }
 </div>
-

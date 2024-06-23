@@ -1,20 +1,22 @@
-import { Component } from '@angular/core';
-import { GenericService } from '../../../services/generic.service';
-import { ICategory } from '../../../Models/icategory';
-import { Observable } from 'rxjs';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-category-details',
   standalone: true,
-  imports: [],
+  imports: [MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,],
   templateUrl: './category-details.component.html',
   styleUrl: './category-details.component.scss'
 })
 export class CategoryDetailsComponent {
-  constructor(private genericService: GenericService<ICategory>) {    
+  constructor(public dialogRef: MatDialogRef<CategoryDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {categoryName: string, categoryImage: string}) {  
   }
 
-  public getById(categoryId: number): Observable<ICategory> {
-    return this.genericService.getById('category',categoryId);
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }

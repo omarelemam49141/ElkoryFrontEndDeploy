@@ -49,7 +49,6 @@ export class ProductService {
     this.genericService.addHeaders("Content-Type", "application/json");
     return this.genericService.insert<IAddProduct>('product', entity);
   }
-
   public insertPictures(id: number, pictures: FileList): Observable<any> {
     const formData = new FormData();
     for (let index = 0; index < pictures.length; index++) {
@@ -63,7 +62,6 @@ export class ProductService {
         catchError(this.genericService.handlingErrors)
       );
   }
-
   public update(id: number, entity: IAddProduct): Observable<any> {
     this.genericService.addHeaders("Content-Type", "application/json");
     return this.http.put<IAddProduct>(`${environment.apiUrl}/product?Id=${id}`, entity);

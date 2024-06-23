@@ -33,17 +33,18 @@
             <div class="row mt-4" id="ads">
                 <button class="btn btn-primary w-50 m-auto" type="button" (click)="addOfferProduct(offer.offerId, offer.title)">اضافة منتج الى العرض</button>
                 <h3 class="text-center text-light my-4">المنتجات التي يمتلكها العرض</h3>
-                @for (prod of offer.productOffers; track prod.productId) {
+                @for (prod of offer.productOffers; track prod.productId;) {
                     <div class="col-md-4 col-lg-3 mb-3">
                         <div class="card rounded">
-                            <div class="card-image" *ngIf="prod.image">
-                                <span class="card-notify-year">-{{prod.discount}}%</span>
-                                <img class="img-fluid" src="{{prod.image}}" alt="Alternate Text" />
+                            <div class="card-image">
+                                <span class="card-notify-year">-{{prod.discount}}</span>
+                                <img class="img-fluid" [src]="!productsImage[$index] ? 'assets/images/no-image.png' : productsImage[$index]" alt="Alternate Text" />
                             </div>
                             <div class="card-body text-center">
                                 <div class="ad-title m-auto">
                                     <h4>{{prod.name}}</h4>
                                     <h5>الكمية المطلوبة لتغعيل العرض: {{prod.productAmount}}</h5>
+                                    <!-- <h5 *ngIf="prod.discount"> الخصم: <span class="text-danger">-{{prod.discount | currency: "ج.م"}}</span></h5> -->
                                 </div>
                                 <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a>
                                 <a class="ad-btn" (click)="addOfferProduct(offer.offerId, offer.title, prod.productId, prod.productAmount, prod.discount)">تعديل</a>

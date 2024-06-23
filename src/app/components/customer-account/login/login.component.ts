@@ -34,7 +34,7 @@ export class LoginComponent {
 
   loginObserver = {
     next: (response: HttpResponse<any>) => {
-      const token = response.headers.get('Bearer-Token'); // Adjust header name as necessary
+      const token = response.headers.get('bearer-token'); // Adjust header name as necessary
       this.snackBar.openFromComponent(SuccessSnackbarComponent, {
         data: 'تم تسجيل الدخول بنجاح',
         duration: this.snackBarDurationInSeconds * 1000
@@ -44,7 +44,6 @@ export class LoginComponent {
       this.router.navigate(["/customer-account/view-profile"])
     },
     error: (err: Error) => {
-      console.log(err)
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تسجيل الدخول',
         duration: this.snackBarDurationInSeconds * 1000

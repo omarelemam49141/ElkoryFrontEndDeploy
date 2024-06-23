@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FileService } from '../../../services/file.service';
 import { GenericService } from '../../../services/generic.service';
 
+
 @Component({
   selector: 'app-admin-add-product',
   standalone: true,
@@ -193,7 +194,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             }).catch(error => {
               console.error('Error processing images:', error);
             });
-
           }));
         }));
       }

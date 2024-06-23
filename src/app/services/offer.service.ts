@@ -4,9 +4,6 @@ import { Observable, catchError, retry, throwError } from 'rxjs';
 import { IOfferProduct } from '../Models/ioffer-product';
 import { environment } from '../../environment/environment';
 import { GenericService } from './generic.service';
-import { IProduct } from '../Models/iproduct';
-import { IOffer } from '../Models/ioffer';
-import { IEditOffer } from '../Models/iedit-offer';
 
 @Injectable({
   providedIn: 'root'
@@ -25,9 +22,7 @@ export class OfferService {
 
   public addProductToOffer(offerId: number, offerProduct: IOfferProduct): Observable<any> {
     this.genericService.addHeaders("Content-Type", "application/json");
-    let offerProducts: IOfferProduct[]=[];
-    offerProducts.push(offerProduct);
-    return this.http.post<any>(`${environment.apiUrl}/offers/${offerId}/products`, offerProducts, this.genericService.getHeaders()).pipe(
+    return this.http.post<any>(`${environment.apiUrl}/offers/${offerId}`, offerProduct, this.genericService.getHeaders()).pipe(
       retry(2),
       catchError(this.handlingAddProductToOfferErrors)
     );
@@ -40,16 +35,16 @@ export class OfferService {
     );
   }
 
-  // public updateProductOffer(offerId: number, productId: number, product: IProduct): Observable<any> {
-  //   return this.http.put<any>(`${environment.apiUrl}/offers/${offerId}/products/${productId}`).pipe(
-  //     retry(2),
-  //     catchError(this.genericService.handlingErrors)
-  //   );
-  // }
+  public updateProductOffer(offerId: number, productId: number, product: IOfferProduct): Observable<any> {
+    return this.http.put<any>(`${environment.apiUrl}/offers/${offerId}/${productId}`, product).pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    );
+  }
 
-  public updateOffer(offerToUpdate: IEditOffer): Observable<any> {
-    this.genericService.addHeaders("Content-Type", "application/json");
-    return this.http.put<any>(`${environment.apiUrl}/Offers`, offerToUpdate, this.genericService.getHeaders()).pipe(
+  public updateOffer(offerToUpdate: FormData): Observable<any> {
+    this.genericService.addHeaders("Content-Type", "multipart/form-data");
+    return this.http.put<any>(`${environment.apiUrl}/Offers?offerId=${offerToUpdate.get("offerId")}`, offerToUpdate, this.genericService.getHeaders()).pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)
     )

@@ -1,7 +1,14 @@
+<div class="spinner" [ngClass]="{'show': loading, 'hidden': !loading}" class="spinner-container">
+    <app-main-spinner></app-main-spinner>
+</div>
+
 <app-top-header></app-top-header>
 <app-navbar></app-navbar>
 
 <router-outlet></router-outlet>
 
 <app-footer></app-footer>
+
+<!-- <app-view-admins></app-view-admins> -->
+<app-add-admin></app-add-admin>
 
