@@ -1,0 +1,8 @@
+<h2 mat-dialog-title class="dialog-title">حذف القسم <span class="font-bold text-danger">{{data.categoryName}}</span></h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <p class="lead">هل أنت متأكد من حذف القسم {{data.categoryName}}</p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button [mat-dialog-close]="true" (click)="confirmCategoryDelete()" class="btn btn-danger">حذف</button>
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+</mat-dialog-actions>

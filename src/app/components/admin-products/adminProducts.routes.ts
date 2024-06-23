@@ -1,7 +1,6 @@
 import { Routes } from "@angular/router";
 import { AdminProductsListComponent } from "./admin-products-list/admin-products-list.component";
 import { AdminAddProductComponent } from "./admin-add-product/admin-add-product.component";
-import { AdminEditProductComponent } from "./admin-edit-product/admin-edit-product.component";
 import { AdminDeleteProductComponent } from "./admin-delete-product/admin-delete-product.component";
 
 export const routes: Routes = [

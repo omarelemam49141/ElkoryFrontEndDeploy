@@ -13,6 +13,9 @@ export class GenericService<TEntity> {
 
   constructor(private http: HttpClient) { }
 
+  public getHeaders() {
+    return this.httpOptions;
+  }
   public addHeaders(key:string, value:string): void {
     this.httpOptions.headers.set(key, value);
   }
@@ -22,7 +25,18 @@ export class GenericService<TEntity> {
   }
 
   public handlingErrors(err: HttpErrorResponse) {
-    return throwError(()=>new Error("حدث خطأ ما برجاء المحاولة لاحقا"));
+    if(err.status == 400) {
+      return throwError(()=>err);
+    }
+    return throwError(()=>err);
+  }
+
+  public getAll(url: string): Observable<TEntity[]> {
+    return this.http.get<TEntity[]>(`${environment.apiUrl}/${url}`)
+          .pipe(
+            retry(2),
+            catchError(this.handlingErrors)
+          )
   }
 
   public getAllWithPagination(url: string, pageNumber: number, pageSize: number): Observable<TEntity[]> {
