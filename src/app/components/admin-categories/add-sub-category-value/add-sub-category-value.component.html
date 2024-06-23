@@ -1,0 +1,39 @@
+<h2 mat-dialog-title class="dialog-title" *ngIf="!data.categoryId">اضافة قيمة الى القسم الفرعى <span class="font-bold text-success">{{data.subCategoryName}}</span></h2>
+<h2 mat-dialog-title class="dialog-title" *ngIf="data.categoryId">تعديل القيمة {{data.valueName}} فى القسم الفرعى <span class="font-bold text-success">{{data.subCategoryName}}</span></h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <!--create a form that will add a search input to search for the product by its name and get its id-->
+    <form [formGroup]="subCategoryValueForm">
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>القسم الرئيسى</mat-label>
+                <select class="form-select" formControlName="categoryId">
+                    <option *ngFor="let cat of allCategories" [value]="cat.categoryId">{{cat.name}}</option>
+                </select>
+                <mat-error *ngIf="!categoryId?.valid && categoryId?.touched">
+                    <span *ngIf="categoryId?.errors?.['required']">القسم الرئيسى مطلوبة</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>اسم القيمة</mat-label>
+                <input matInput formControlName="value" type="text" placeholder="ادخل اسم القيمة">
+                <mat-error *ngIf="!value?.valid && value?.touched">
+                    <span *ngIf="value?.errors?.['required']">اسم القيمة مطلوب</span>
+                    <span *ngIf="value?.errors?.['min']">اسم القيمة يجب ان لا يقل عن حرفان</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group mb-3">
+            <input type="file" class="form-control" formControlName="image" (change)="onFileSelected($event)">
+            <mat-error *ngIf="!image?.valid && image?.touched">
+                <span *ngIf="image?.errors?.['required']">الصورة مطلوبة</span>
+            </mat-error>
+            <img class="img-fluid" [src]="selectedImage" *ngIf="selectedImage" width="100">
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+    <button mat-button (click)="submitForm()" class="btn btn-success" [disabled]="subCategoryValueForm.invalid">{{data.categoryId?'تعديل':'حفظ'}}</button>
+</mat-dialog-actions>
