@@ -4,7 +4,11 @@ import { ICategory } from '../Models/icategory';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, retry } from 'rxjs';
 import { environment } from '../../environment/environment';
+
 import { ISubCategoryValue } from '../Models/isub-category-value';
+
+import { IProduct } from '../Models/iproduct';
+import { ISubCategory } from '../Models/isub-category';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +39,15 @@ export class CategoryService {
       retry(2),
       catchError(this.genericService.handlingErrors)
     )
+  }
+
+  public getAll(): Observable<ICategory[]> {
+    return this.http.get<ICategory[]>(`${environment.apiUrl}/category/all`);
+  }
+  public getCategoryProducts(categoryId: number): Observable<IProduct[]> {
+    return this.http.get<IProduct[]>(`${environment.apiUrl}/category/${categoryId}`);
+  }
+  public getSubcategoriesbyCategoryID(categoryId:number):Observable<ISubCategory[]>{
+    return this.http.get<ISubCategory[]>(`${environment.apiUrl}/subCategoryFromCategory/${categoryId}`);
   }
 }
