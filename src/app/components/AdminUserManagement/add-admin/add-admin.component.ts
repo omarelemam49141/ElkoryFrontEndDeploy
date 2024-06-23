@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IAdmin } from '../../../Models/iadmin';
+import { IUser } from '../../../Models/iuser';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/admin.service';
 
@@ -13,7 +13,7 @@ import { AdminService } from '../../../services/admin.service';
 })
 export class AddAdminComponent {
 
-  newAdmin: IAdmin = {
+  newAdmin: IUser = {
     userId: 0,
     fName: '',
     lName: '',

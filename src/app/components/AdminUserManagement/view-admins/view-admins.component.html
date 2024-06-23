@@ -1,17 +1,26 @@
 <div class="text-center">
-  <h1>Manage Admins</h1>
+  <h1>Manage All admins</h1>
 </div>
 
 <table class="table table-bordered table-hover text-center">
   <thead>
     <tr>
-      <td>Email</td>
-      <td>Name</td>
-      <td>Id</td>
+      <th>Actions</th>
+      <th>Role</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th>Name</th>
+      <th>Admin Number</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let admin of adminsList; let i = index">
+      <td>
+        <button class="btn btn-danger" (click)="confirmDelete(admin.userId)">Delete</button>
+      </td>
+      <!-- <td>{{admin.role === 0 ? 'admin' : 'user'}}</td> -->
+      <td>admin</td>
+      <td>{{admin.phone}}</td>
       <td>{{admin.email}}</td>
       <td>{{admin.fName}}  {{admin.lName}}</td>
       <td>{{i+1}}</td>
@@ -22,7 +31,7 @@
 <div class="container">
   <div class="row">
     <div class="text-center W-25">
-      <a routerLink="add-admin" class="btn btn-primary">Add New Admin</a>
+      <a routerLink="/AdminUserManagement/app-add-admin" class="btn btn-outline-primary">Add New Admin</a>
     </div>
   </div>
 </div>
