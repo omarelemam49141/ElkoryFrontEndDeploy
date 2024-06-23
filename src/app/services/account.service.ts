@@ -143,6 +143,9 @@ export class AccountService {
 
   public get decodedToken() {
     const token = localStorage.getItem("token");
+    if (!token) {
+      return null;
+    }
     return jwtDecode.jwtDecode(token??'');
   }
 
