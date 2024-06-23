@@ -58,7 +58,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
-        data: 'تعذر تحميل المنتجات!',
+        data: 'تعذر تحميل المنتجات!'
       });
     }
   }

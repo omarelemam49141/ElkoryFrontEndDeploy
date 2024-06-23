@@ -80,7 +80,9 @@ export class OfferDetailsComponent implements OnDestroy, OnInit{
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (result == true) {
         this.loadOfferInfo();
+      }
     });
   }
 

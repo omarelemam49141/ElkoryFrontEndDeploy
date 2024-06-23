@@ -16,6 +16,7 @@ export const routes: Routes = [
     {path: "delete-category/:id", component: DeleteCategoryComponent},
     {path: "category-details/:id", component: CategoryDetailsComponent},
     {path: "subcategories-list", component: SubcategoriesListComponent},
+    {path: "subcategories-list/:id", component: SubcategoriesListComponent},
     {path: "add-subcategory", component: AddSubcategoryComponent},
     {path: "edit-subcategory/:id", component: AddSubcategoryComponent},
     {path: "delete-subcategory/:id", component: DeleteSubcategoryComponent}

@@ -60,6 +60,7 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
           data: 'تم تعديل العرض بنجاح',
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.loadOfferToEdit();
       } else {
         this.snackBar.openFromComponent(SuccessSnackbarComponent, {
           data: 'تم اضافة العرض بنجاح',
@@ -70,7 +71,6 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
       this.router.navigate(["/admin-offers/offer-details", data])
     },
     error: (err: Error) => {
-      console.log(err);
       if(this.offerToEdit) {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر تعديل العرض',
@@ -126,7 +126,7 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
     this.addOfferForm.patchValue({
       offerDate: {
         year: offerDate?.getFullYear(),
-        month: offerDate?.getMonth(),
+        month: offerDate?.getMonth()+1,
         day: offerDate?.getDate()
       }
     })
@@ -166,7 +166,6 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
         formData.append('packageDiscount', offerData.packageDiscount);
         formData.append('image', offerData.image);
       if (this.offerToEdit) {
-        console.log(this.addOfferForm.value);
         formData.append('offerId', this.offerToEdit.offerId.toString());
         this.subscriptions.push(this.offerService.updateOffer(formData).subscribe(this.addOfferObserver));
       } else {

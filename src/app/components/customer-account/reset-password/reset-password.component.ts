@@ -42,7 +42,6 @@ export class ResetPasswordComponent {
       this.router.navigate(["/customer-account/view-profile"])
     },
     error: (err:Error)=> {
-      console.log(err)
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تغيير كلمة المرور',
         duration: this.snackBarDurationInSeconds * 1000
