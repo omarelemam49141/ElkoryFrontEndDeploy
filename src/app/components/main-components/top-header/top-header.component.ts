@@ -5,11 +5,12 @@ import { faBars, faChevronDown, faUserTie, faShoppingCart } from '@fortawesome/f
 import { Subscription } from 'rxjs';
 import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { WebInfoService } from '../../../services/WebInfo.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-top-header',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, RouterLink],
   templateUrl: './top-header.component.html',
   styleUrls: ['./top-header.component.scss']
 })

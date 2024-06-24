@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './forget-password.component.html',
-  styleUrl: './forget-password.component.scss'
+  styleUrl: '../customer-account.scss'
 })
 export class ForgetPasswordComponent {
   //form properties

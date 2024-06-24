@@ -10,13 +10,13 @@ export const routes: Routes = [
     {path: "home", component: HomeComponent},
     {path: "top-header", component: TopHeaderComponent},
     {path: "navbar",component: NavbarComponent},
-    {path: "admin-offers", loadChildren:()=>import('./components/admin-offers/adminOffers.routes').then(m=>m.routes), canActivate: [adminAuthGuard]},
-    {path: "admin-orders", loadChildren:()=>import('./components/admin-orders/adminOrders.routes').then(m=>m.routes), canActivate: [adminAuthGuard]},
-    {path: "admin-products", loadChildren:()=>import('./components/admin-products/adminProducts.routes').then(m=>m.routes), canActivate: [adminAuthGuard]},
-    {path: "admin-user-management", loadChildren:()=>import('./components/AdminUserManagement/adminUserManagement.routes').then(m=>m.routes), canActivate: [adminAuthGuard]},
+    {path: "admin-offers", loadChildren:()=>import('./components/admin-offers/adminOffers.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},
+    {path: "admin-orders", loadChildren:()=>import('./components/admin-orders/adminOrders.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},
+    {path: "admin-products", loadChildren:()=>import('./components/admin-products/adminProducts.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},
+    {path: "admin-user-management", loadChildren:()=>import('./components/AdminUserManagement/adminUserManagement.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},
     {path: "customer-account", loadChildren:()=>import('./components/customer-account/customerAccount.routes').then(m=>m.routes)},
     {path: "customer-products", loadChildren:()=>import('./components/customer-products/customerProducts.routes').then(m=>m.routes)},
     {path: "website-info", loadChildren:()=>import('./components/website-info/websiteInfo.routes').then(m=>m.routes)},
-    {path: "admin-categories", loadChildren:()=>import('./components/admin-categories/adminCategories.routes').then(m=>m.routes), canActivate: [adminAuthGuard]},
+    {path: "admin-categories", loadChildren:()=>import('./components/admin-categories/adminCategories.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},
     {path: "**", component: NotFoundComponent}
 ];

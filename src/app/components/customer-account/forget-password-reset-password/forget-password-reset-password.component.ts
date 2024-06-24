@@ -14,7 +14,7 @@ import { IForgetPassword } from '../../../Models/iforget-password';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './forget-password-reset-password.component.html',
-  styleUrl: './forget-password-reset-password.component.scss'
+  styleUrl: '../customer-account.scss'
 })
 export class ForgetPasswordResetPasswordComponent {
   //form properties

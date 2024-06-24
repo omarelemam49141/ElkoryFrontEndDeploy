@@ -15,7 +15,7 @@ import { AdminProductsListComponent } from './components/admin-products/admin-pr
 
 @Component({
   selector: 'app-root',
-
+  standalone: true,
   imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
   CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, AdminProductsListComponent],

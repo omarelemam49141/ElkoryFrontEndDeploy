@@ -62,7 +62,7 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
     this.subCategoryValueForm = this.fb.group({
       subCategoryId: [this.data.subCategoryId, [Validators.required]],
       categoryId: [this.data.categoryId??'', [Validators.required]],
-      value: [this.data.valueName??'', [Validators.required, Validators.min(2)]],
+      newValue: [this.data.valueName??'', [Validators.required, Validators.min(2)]],
       image: [this.data.valueImage??'', [Validators.required]],
     })
   }
@@ -180,6 +180,7 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
   submitForm() {
     let subCategoyValueModel = this.subCategoryValueForm.value as ISubCategoryValue; 
     if (this.data.categoryId) {
+      subCategoyValueModel.value = this.data.valueName!;
       this.updateValue(subCategoyValueModel);
     }
     else

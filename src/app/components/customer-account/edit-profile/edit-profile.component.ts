@@ -31,22 +31,23 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private router: Router
   ) {
+    this.editProfileForm = this.fb.group({
+      fName: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      lName: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      email: ["", [Validators.required, Validators.email, Validators.maxLength(50)]],
+      phone: ["", [Validators.required, Validators.pattern("^(010|011|012|015)\\d{8}$")]],
+      governorate: ["", [Validators.minLength(2), Validators.maxLength(50)]],
+      city: ["", [Validators.minLength(2), Validators.maxLength(50)]],
+      street: ["", [Validators.minLength(2), Validators.maxLength(50)]],
+      postalCode: [""]
+    });
   }
 
   ngOnInit(): void {
     this.accountService.viewProfile().subscribe({
       next: (data: IEditProfile) => {
         this.profileInfo = data
-        this.editProfileForm = this.fb.group({
-          fName: [this.profileInfo.fName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-          lName: [this.profileInfo.lName, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-          email: [this.profileInfo.email, [Validators.required, Validators.email, Validators.maxLength(50)]],
-          phone: [this.profileInfo.phone, [Validators.required, Validators.pattern("^(010|011|012|015)\\d{8}$")]],
-          governorate: [this.profileInfo.governorate, [Validators.minLength(2), Validators.maxLength(50)]],
-          city: [this.profileInfo.city, [Validators.minLength(2), Validators.maxLength(50)]],
-          street: [this.profileInfo.street, [Validators.minLength(2), Validators.maxLength(50)]],
-          postalCode: [this.profileInfo.postalCode]
-        })
+        this.editProfileForm.patchValue(this.profileInfo);
       },
       error: (err: Error) => {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {

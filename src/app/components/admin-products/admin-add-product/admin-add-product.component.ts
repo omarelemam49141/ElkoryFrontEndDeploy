@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '../../../services/file.service';
 import { GenericService } from '../../../services/generic.service';
 
@@ -53,7 +53,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     private renderer: Renderer2,
     private activatedRoute: ActivatedRoute,
     private fileService: FileService,
-    private genericService: GenericService<ICategory>
+    private genericService: GenericService<ICategory>,
+    private router: Router
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -104,9 +105,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
               data: 'تم اضافة المنتج بنجاح!',
               duration: this.snackBarDurationInSeconds * 1000
             });
-            this.productForm.reset();
-            this.imagesArray = [];
-            this.imageIndex = 0;
+            this.router.navigate(["/admin-products"]);
           },
           error: (err: Error) => {
             this.snackBar.openFromComponent(FailedSnackbarComponent, {
