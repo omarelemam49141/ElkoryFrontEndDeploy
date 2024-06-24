@@ -19,10 +19,11 @@ export class AddAdminComponent {
     lName: '',
     email: '',
     phone: 0,
-    governorate: 'MMMM',
-    city: 'MMM',
-    street: 'MMM',
-    postalCode: 0,
+    password: '',
+    governorate: '',
+    city: '',
+    street: '',
+    postalCode: '',
     isDeleted: false,
     role: 0
   };

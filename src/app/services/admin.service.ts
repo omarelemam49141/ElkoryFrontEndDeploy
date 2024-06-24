@@ -17,7 +17,7 @@ export class AdminService {
   // }
 
   GetAllUsers():Observable<IUser[]>{
-    return this.http.get<IUser[]>(`${environment.apiUrl}/admin`);
+    return this.http.get<IUser[]>(`${environment.apiUrl}/admin/GetUsers`);
   }
 
   AddAdmin(admin:IUser):Observable<IUser>{
