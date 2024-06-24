@@ -1,0 +1,29 @@
+<h2 mat-dialog-title class="dialog-title" *ngIf="!categoryToEdit">اضافة قسم جديد</h2>
+<h2 mat-dialog-title class="dialog-title" *ngIf="categoryToEdit">تعديل بيانات القسم {{categoryToEdit.name}}<span class="font-bold text-success">{{categoryToEdit.name}}</span></h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <!--create a form that will add a search input to search for the product by its name and get its id-->
+    <form [formGroup]="categoryForm">
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>اسم القسم</mat-label>
+                <input matInput formControlName="name" type="text" placeholder="ادخل اسم القسم">
+                <mat-error *ngIf="!name?.valid && name?.touched">
+                    <span *ngIf="name?.errors?.['required']">اسم القسم مطلوب</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-label class="ms-2">صورة القسم</mat-label>
+            <input formControlName="Image" type="hidden">
+            <input type="file" accept="image/*" (change)="onFileSelected($event)"/>
+            <mat-error *ngIf="!image?.valid && image?.touched">
+                <span *ngIf="image?.errors?.['required']">الصورة مطلوبة</span>
+            </mat-error>
+            <img [src]="selectedImage" *ngIf="selectedImage" class="img-fluid" width="200">
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+    <button mat-button (click)="submitCategory()" class="btn btn-success" [disabled]="categoryForm.invalid">{{data.categoryId ? 'تعديل' : 'اضافة'}}</button>
+</mat-dialog-actions>

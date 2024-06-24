@@ -48,7 +48,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
     next: (data: ProductsPagination) => {
       this.products = data.items;
       for (let i = 0; i < this.products.length; i++) {
-        this.productService.getPictures(this.products[i].productId).subscribe((images: string[]) => {
+        this.productService.getPictures(this.products[i].productId).subscribe((images) => {
           this.images.push(images);
         });
       }
@@ -58,7 +58,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
-        data: 'تعذر تحميل المنتجات!',
+        data: 'تعذر تحميل المنتجات!'
       });
     }
   }
@@ -72,6 +72,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
       this.getProductsPaginated(1, this.pageSize);
     },
     error: (err: Error) => {
+      console.log(err)
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر حذف المنتج!',
         duration: this.snackBarDurationInSeconds * 1000

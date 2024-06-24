@@ -1,25 +1,13 @@
 #WAButton {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  opacity: 0.2;
-}
-#WAButton:hover {
-  opacity: 0.9;
-  transition: 0.7s all;
-}
+  direction: rtl;
+  text-align: right;
 
-#icon{
-  cursor: pointer;
-  background-color: green;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  .floating-wpp-popup-message {
+    text-align: right;
+  }
 
-}
-
-#icon:hover {
-  background-color: darkgreen;
+  .floating-wpp-header {
+    direction: rtl;
+    text-align: right;
+  }
 }

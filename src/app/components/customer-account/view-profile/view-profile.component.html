@@ -1,1 +1,39 @@
-<p>view-profile works!</p>
+<div *ngIf="profileInfo" class="row d-flex justify-content-center p-4">
+    <div class="col-md-7">
+        <div class="card p-3 py-4">
+            <div class="text-center">
+                <img src="https://i.imgur.com/bDLhJiP.jpg" width="100" class="rounded-circle">
+            </div>
+            <div class="text-center mt-3">
+                <span class="bg-secondary p-1 px-4 rounded text-white">عميل</span>
+                <h5 class="mt-2 mb-0">{{profileInfo.fName}} {{profileInfo.lName}}</h5>
+                <div class="px-4 mt-1">
+                    <p class="fonts">البريد الإلكتروني: {{profileInfo.email}}</p>
+                    <p class="fonts">الاسم الأول: {{profileInfo.fName}}</p>
+                    <p class="fonts">الاسم الأخير: {{profileInfo.lName}}</p>
+                    <p class="fonts">رقم الهاتف: {{profileInfo.phone}}</p>
+                    <div class="address">
+                        <h4 class="badge bg-info">العنوان</h4>
+                        <p class="fonts">المحافظة: 
+                            <span *ngIf="profileInfo.governorate; else NotRegistered">{{profileInfo.governorate}}</span>
+                        </p>
+                        <p class="fonts">المدينة: 
+                            <span *ngIf="profileInfo.city; else NotRegistered">{{profileInfo.city}}</span>
+                        </p>
+                        <p class="fonts">الرمز البريدي: 
+                            <span *ngIf="profileInfo.postalCode; else NotRegistered">{{profileInfo.postalCode}}</span>
+                        </p>
+                        <p class="fonts">الشارع: 
+                            <span *ngIf="profileInfo.street; else NotRegistered">{{profileInfo.street}}</span>
+                        </p>
+                        <ng-template #NotRegistered><span class="text-danger font-bold">غير مسجل</span></ng-template>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <a class="btn btn-outline-primary px-4" [routerLink]="['/customer-account/edit-profile']">تعديل الملف الشخصي</a>
+                    <a class="btn btn-outline-primary px-4" [routerLink]="['/customer-account/reset-password']">تغيير كلمة المرور</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,7 +4,9 @@ import { ShowAllOffersComponent } from "./show-all-offers/show-all-offers.compon
 import { OfferDetailsComponent } from "./offer-details/offer-details.component";
 
 export const routes: Routes = [ 
-    {path: "add-new-offer", component: AddNewOfferComponent},
+    {path: "", redirectTo: "/admin-offers/show-all-offers", pathMatch: "full"},
+    {path: "add-offer", component: AddNewOfferComponent},
+    {path: "edit-offer/:id", component: AddNewOfferComponent},
     {path: "show-all-offers", component: ShowAllOffersComponent},
     {path: "offer-details/:id", component: OfferDetailsComponent},
 ]

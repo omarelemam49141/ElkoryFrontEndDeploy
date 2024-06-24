@@ -1,1 +1,62 @@
-<p>signup works!</p>
+<div class="account-container">
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="account-form">
+        <div class="form-header">
+            <img src="assets/images/logo.png" alt="Form Image" class="form-image">
+            <h2 class="form-title">انشاء حساب</h2>
+        </div>
+        <div class="form-group">
+            <label class="label">الاسم الأول</label>
+            <input formControlName="fName" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!fName?.valid && fName?.touched">
+                <span *ngIf="fName?.errors?.['required']">الاسم الأول مطلوب</span>
+                <span *ngIf="fName?.errors?.['minlength']">الاسم الأول لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="fName?.errors?.['maxlength']">الاسم الأول لا يمكن أن يزيد عن 30 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">الاسم الأخير</label>
+            <input formControlName="lName" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!lName?.valid && lName?.touched">
+                <span *ngIf="lName?.errors?.['required']">الاسم الأخير مطلوب</span>
+                <span *ngIf="lName?.errors?.['minlength']">الاسم الأخير لا يمكن أن يقل عن حرفان</span>
+                <span *ngIf="lName?.errors?.['maxlength']">الاسم الأخير لا يمكن أن يزيد عن 30 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">البريد الالكترونى</label>
+            <input formControlName="email" class="form-control" type="email"/>
+            <div class="text-danger" *ngIf="!email?.valid && email?.touched">
+                <span *ngIf="email?.errors?.['required']">البريد الالكترونى مطلوب</span>
+                <span *ngIf="email?.errors?.['email']">البريد الالكترونى غير صالح</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">رقم الهاتف</label>
+            <input formControlName="phone" class="form-control" type="text"/>
+            <div class="text-danger" *ngIf="!phone?.valid && phone?.touched">
+                <span *ngIf="phone?.errors?.['required']">رقم الهاتف مطلوب</span>
+                <span *ngIf="phone?.errors?.['pattern']">رقم الهاتف يجب أن لا يقل عن 11 رقم ويبدأ ب (010,011,012,015)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">كلمة المرور</label>
+            <input formControlName="password" class="form-control" type="password" />
+            <div class="text-danger" *ngIf="!password?.valid && password?.touched">
+                <span *ngIf="password?.errors?.['required']">كلمة المرور مطلوبة</span>
+                <span *ngIf="password?.errors?.['minlength']">كلمة المرور يجب أن لا تقل عن 8 أحرف</span>
+                <span *ngIf="password?.errors?.['maxlength']">كلمة المرور يجب أن لا تزيد عن 50 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">تأكيد كلمة المرور</label>
+            <input formControlName="confirmPassword" class="form-control" type="password" />
+            <div class="text-danger" *ngIf="!confirmPassword?.valid && confirmPassword?.touched">
+                <span *ngIf="confirmPassword?.errors?.['required']">تأكيد كلمة المرور مطلوبة</span>
+            </div>
+            <div class="text-danger" *ngIf="!registerForm?.valid">
+                <span *ngIf="registerForm.errors?.['comparePassword']">كلمتى المرور غير متطابقتين</span>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">تسجيل</button>
+    </form>
+</div>

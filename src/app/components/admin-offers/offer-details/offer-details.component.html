@@ -1,1 +1,62 @@
-<p>offer-details works!</p>
+@if (offer) {
+    <section class="dark" dir="ltr">
+        <div class="container">
+            <h1 class="h1 text-center" id="pageHeaderTitle">{{offer.title}} تفاصيل العرض</h1>
+            <article class="postcard dark blue">
+                <a class="postcard__img_link">
+                    <img class="postcard__img" src="{{offer.image}}" alt="Image Title" />
+                </a>
+                <div class="postcard__text">
+                    <h1 class="postcard__title blue"><a href="#">{{offer.title}}</a></h1>
+                    <div class="postcard__subtitle small">
+                        <time datetime="2020-05-25 12:00:00">
+                            <i class="fas fa-calendar-alt mr-2"></i>{{offer.offerDate| date : 'dd/MM/yyyy'}}
+                        </time>
+                    </div>
+                    <div class="postcard__bar"></div>
+                    <div class="postcard__preview-txt">{{offer.description}}</div>
+                    <ul class="postcard__tagbox">
+                        <li class="tag__item"><i class="fas fa-dollar-sign mr-2"></i>
+                            -<span class="text-success font-bold">{{offer.packageDiscount | currency: "ج.م"}}</span>
+                        </li>
+                        <li class="tag__item"><i class="fas fa-clock mr-2"></i>{{offer.duration | date : 'dd'}} يوم</li>
+                        <li class="tag__item play red">
+                            <a (click)="confirmOfferDelete(offer.offerId, offer.title)"><i class="fas fa-trash mr-2"></i>حذف العرض</a>
+                        </li>
+                        <li class="tag__item play blue">
+                            <a [routerLink]="['/admin-offers/edit-offer', offer.offerId]" routerLinkActive="router-link-active" ><i class="fas fa-edit mr-2"></i>تعديل العرض</a>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+            
+            <div class="row mt-4" id="ads">
+                <button class="btn btn-primary w-50 m-auto" type="button" (click)="addOfferProduct(offer.offerId, offer.title)">اضافة منتج الى العرض</button>
+                <h3 class="text-center text-light my-4">المنتجات التي يمتلكها العرض</h3>
+                @for (prod of offer.productOffers; track prod.productId;) {
+                    <div class="col-md-4 col-lg-3 mb-3">
+                        <div class="card rounded">
+                            <div class="card-image">
+                                <span class="card-notify-year">-{{prod.discount}}</span>
+                                <img class="img-fluid" [src]="!productsImage[$index] ? 'assets/images/no-image.png' : productsImage[$index]" alt="Alternate Text" />
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="ad-title m-auto">
+                                    <h4>{{prod.name}}</h4>
+                                    <h5>الكمية المطلوبة لتغعيل العرض: {{prod.productAmount}}</h5>
+                                    <!-- <h5 *ngIf="prod.discount"> الخصم: <span class="text-danger">-{{prod.discount | currency: "ج.م"}}</span></h5> -->
+                                </div>
+                                <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a>
+                                <a class="ad-btn" (click)="addOfferProduct(offer.offerId, offer.title, prod.productId, prod.productAmount, prod.discount)">تعديل</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+
+
+

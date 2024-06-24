@@ -1,0 +1,20 @@
+<h2 mat-dialog-title class="dialog-title" *ngIf="!data.subCategoryId">اضافة قسم فرعى جديد</h2>
+<h2 mat-dialog-title class="dialog-title" *ngIf="data.subCategoryId">تعديل بيانات القسم الفرعى <span class="font-bold text-success">{{data.subCategoryName}}</span></h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <!--create a form that will add a search input to search for the product by its name and get its id-->
+    <form [formGroup]="subCategoryForm">
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>اسم القسم الفرعى</mat-label>
+                <input matInput formControlName="name" type="text" placeholder="ادخل اسم القسم الفرعى">
+                <mat-error *ngIf="!name?.valid && name?.touched">
+                    <span *ngIf="name?.errors?.['required']">اسم القسم الفرعى مطلوب</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+    <button mat-button (click)="submitSubCategory()" class="btn btn-success" [disabled]="subCategoryForm.invalid">{{data.subCategoryId ? 'تعديل' : 'اضافة'}}</button>
+</mat-dialog-actions>
