@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CategoryDetailsComponent } from './category-details.component';
+import { WhatsappButtonComponent } from './whatsapp-button.component';
 
-describe('CategoryDetailsComponent', () => {
-  let component: CategoryDetailsComponent;
-  let fixture: ComponentFixture<CategoryDetailsComponent>;
+describe('WhatsappButtonComponent', () => {
+  let component: WhatsappButtonComponent;
+  let fixture: ComponentFixture<WhatsappButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CategoryDetailsComponent]
+      imports: [WhatsappButtonComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(CategoryDetailsComponent);
+    fixture = TestBed.createComponent(WhatsappButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

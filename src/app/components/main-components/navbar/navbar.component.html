@@ -94,68 +94,72 @@
 
 
 
+
+
+
 <nav class="navbar navbar-expand-lg navbar-dark categories">
     <div class="container-fluid">
-        <!-- Burger button moved to the left side -->
-        <button class="navbar-toggler me-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse flex-column flex-md-row" id="navbarSupportedContent">
-            <ul class="navbar-nav w-100 justify-content-around">
-                <li class="nav-item">
-                    <p class="nav-link home">الرئيسية</p>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link mobiles" routerlink="/categoryDetails/mobiles" tabindex="0">هواتف</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory هاتف 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link cases" routerlink="/categoryDetails/cases" tabindex="0">جرابات</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link headphones" routerlink="/categoryDetails/headphones" style="padding-left: 15px;" tabindex="0">سماعات</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link cables" routerlink="/categoryDetails/cables" tabindex="0">كابلات</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link memory" routerlink="/categoryDetails/flash" tabindex="0">فلاشات و كروت ميموري</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link watches" routerlink="/categoryDetails/smart" tabindex="0" style="padding-left: 15px;">أجهزة ذكية</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <p class="nav-link others">أخرى</p>
-                    <ul class="subcategories">
-                        <li><a href="#">Subcategory 1</a></li>
-                        <li><a href="#">Subcategory 2</a></li>
-                    </ul>
-                </li>
+      <!-- Burger button moved to the left side -->
+      <button class="navbar-toggler me-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse flex-column flex-md-row" id="navbarSupportedContent">
+        <ul class="navbar-nav w-100 justify-content-around">
+          <li class="nav-item">
+            <p class="nav-link home" [routerLink]="['/']" [ngClass]="{'active-category': activeCategory === 'home'}" (click)="setActiveCategory('home')">الرئيسية</p>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link mobiles" [routerLink]="['/categoryDetails/mobiles']" [ngClass]="{'active-category': activeCategory === 'mobiles'}" (click)="setActiveCategory('mobiles')" tabindex="0">هواتف</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory هاتف 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
             </ul>
-        </div>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link cases" [routerLink]="['/categoryDetails/cases']" [ngClass]="{'active-category': activeCategory === 'cases'}" (click)="setActiveCategory('cases')" tabindex="0">جرابات</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link headphones" [routerLink]="['/categoryDetails/headphones']" [ngClass]="{'active-category': activeCategory === 'headphones'}" (click)="setActiveCategory('headphones')" style="padding-left: 15px;" tabindex="0">سماعات</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link cables" [routerLink]="['/categoryDetails/cables']" [ngClass]="{'active-category': activeCategory === 'cables'}" (click)="setActiveCategory('cables')" tabindex="0">كابلات</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link memory" [routerLink]="['/categoryDetails/flash']" [ngClass]="{'active-category': activeCategory === 'memory'}" (click)="setActiveCategory('memory')" tabindex="0">فلاشات و كروت ميموري</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link watches" [routerLink]="['/categoryDetails/smart']" [ngClass]="{'active-category': activeCategory === 'watches'}" (click)="setActiveCategory('watches')" tabindex="0" style="padding-left: 15px;">أجهزة ذكية</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <p class="nav-link others" [ngClass]="{'active-category': activeCategory === 'others'}" (click)="setActiveCategory('others')">أخرى</p>
+            <ul class="subcategories">
+              <li><a href="#">Subcategory 1</a></li>
+              <li><a href="#">Subcategory 2</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
-</nav>
+  </nav>
+  

@@ -43,12 +43,12 @@ export class SignupComponent implements OnDestroy{
   registerObserver = {
     next: (data: string) => {
       this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-        data: 'تم انشاء الحساب بنجاح',
+        data: 'تم انشاء الحساب, قم بتفقد حسابك',
         duration: this.snackBarDurationInSeconds * 1000
       });
       localStorage.setItem("token", "Bearer " + data);
       this.accountService.isLoggedIn = true;
-      this.router.navigate(["/customer-account/view-profile"])
+      this.router.navigate(["/customer-account/verify-email"])
     },
     error: (err:Error)=> {
       console.log(err)

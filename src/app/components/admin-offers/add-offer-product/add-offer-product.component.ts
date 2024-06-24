@@ -63,8 +63,6 @@ export class AddOfferProductComponent implements OnInit{
       productId: [this.data.productId??'', [Validators.required]],
       productAmount: [this.data.productAmount??'', [Validators.required, Validators.min(1)]],
       discount: [this.data.discount??'', [Validators.min(0), Validators.max(100)]],
-      image: ["", Validators.required],
-      name: ["",Validators.required]
     })
   }
   ngOnInit(): void {
@@ -115,16 +113,12 @@ export class AddOfferProductComponent implements OnInit{
     if (this.productAmount?.valid && this.discount?.valid) {
       this.addProductForm.patchValue({
         productId: productToAddToForm.productId,
-        name: productToAddToForm.name,
-        image: productToAddToForm.image
       });
 
       let offerProduct: IOfferProduct = {
         productId: this.addProductForm.value.productId,
         productAmount: this.addProductForm.value.productAmount,
-        discount: this.addProductForm.value.discount,
-        name: this.addProductForm.value.name,
-        image: this.addProductForm.value.image
+        discount: this.addProductForm.value.discount
       }
   
       this.offerService.addProductToOffer(+this.offerId?.value, offerProduct).subscribe({
@@ -133,7 +127,7 @@ export class AddOfferProductComponent implements OnInit{
             data: "تمت اضافة المنتج بنجاح",
             duration: this.notificationDurationInSeconds * 1000
           })
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         },
         error: (error: Error) => {
           this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -143,6 +137,30 @@ export class AddOfferProductComponent implements OnInit{
         }
       })
     }
+  }
+
+  updateOfferProduct(): void {
+    let offerProduct: IOfferProduct = {
+      productId: this.productToEdit.productId,
+      productAmount: this.addProductForm.value.productAmount,
+      discount: this.addProductForm.value.discount
+    }
+
+    this.offerService.updateProductOffer(+this.offerId?.value, +this.productId?.value, offerProduct).subscribe({
+      next: () => {
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: "تم تحديث المنتج بنجاح",
+          duration: this.notificationDurationInSeconds * 1000
+        })
+        this.dialogRef.close(true);
+      },
+      error: (error: Error) => {
+        this.snackBar.openFromComponent(FailedSnackbarComponent, {
+          data: error.message,
+          duration: this.notificationDurationInSeconds * 1000
+        })
+      }
+    })
   }
 
   get offerId() {

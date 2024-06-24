@@ -21,15 +21,19 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
     library.addIcons(faBars, faChevronDown, faUserTie, faShoppingCart);
   }
 
+  /**
+   * Fetches website information from a service and assigns it to the webInfo property of the TopHeaderComponent class.
+   * Manages the subscription to ensure proper cleanup.
+   */
   fetchWebInfo(): void {
     const subscription = this.webInfoService.getWebInfo().subscribe({
       next: (webInfo: IWebInfo) => {
-        console.log(this.webInfo)
+        console.log(this.webInfo);
         this.webInfo = webInfo;
-        console.log('Assigned webInfo:', this.webInfo);
+        // console.log('Assigned webInfo:', this.webInfo);
       },
       error: (error: any) => {
-        console.error('Error fetching web info', error);
+        // console.error('Error fetching web info', error);
       }
     });
     this.subscriptions.push(subscription);

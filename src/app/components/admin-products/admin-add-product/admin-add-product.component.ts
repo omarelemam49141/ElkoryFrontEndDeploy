@@ -37,6 +37,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   imagesArray: string[] = [];
   originalImagesOfTheProductToUpdate: string[] = [];
   imagesToDeleteWhenUpdate: string[] = [];
+  imagesToAddWhenUpdate: File[] = [];
   // QueryList to access file input elements
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
@@ -48,7 +49,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   constructor(private fb: FormBuilder,
     private productService: ProductService,
-    private categoryService: CategoryService,
     private snackBar: MatSnackBar,
     private renderer: Renderer2,
     private activatedRoute: ActivatedRoute,
@@ -60,6 +60,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       images: fb.array([
         ['', [Validators.required]]
       ], oneImageAtLeast),
+      imagesToAdd: fb.array([]),
       discount: ['0', [Validators.max(100), Validators.min(0)]],
       originalPrice: ['', [Validators.required, Validators.min(0)]],
       amount: ['', [Validators.required, Validators.min(0)]],
@@ -69,6 +70,31 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   /*observers*/
+  InsertNewImagesToProduct() {
+    if (this.imagesToAdd.length > 0) {
+      this.productService.insertPictures(this.productToEdit!.productId, this.imagesToAdd.value).subscribe({
+        next: data => {
+          this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+            data: 'تم تحديث المنتج بنجاح!',
+            duration: this.snackBarDurationInSeconds * 1000
+          });
+          this.populateEditForm();
+        },
+        error: (err: Error) => {
+          this.snackBar.openFromComponent(FailedSnackbarComponent, {
+            data: 'تعذر تحديث المنتج!',
+            duration: this.snackBarDurationInSeconds * 1000
+          });
+        }
+      });
+    } else {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: 'تم تحديث المنتج بنجاح!',
+        duration: this.snackBarDurationInSeconds * 1000
+      });
+    }
+  }
+
   productsObserver = {
     next: (data: any) => {
       if (!this.productToEdit) {
@@ -89,38 +115,19 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             });
           }
         });
-
-      } else {
-        //if there are images to update
+      } else {        //if there are images to update
         if (this.imagesToDeleteWhenUpdate.length > 0) {
           //delete the old pictures
           this.imagesToDeleteWhenUpdate.forEach((image, index) => {
             this.productService.deletePicture(this.productToEdit!.productId, image).subscribe(data => {
-              if (this.imagesToDeleteWhenUpdate.length - 1 == index) {
-                this.productService.insertPictures(this.productToEdit!.productId, this.images.value).subscribe({
-                  next: data => {
-                    this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-                      data: 'تم تحديث المنتج بنجاح!',
-                      duration: this.snackBarDurationInSeconds * 1000
-                    });
-                    this.populateEditForm();
-                  },
-                  error: (err: Error) => {
-                    this.snackBar.openFromComponent(FailedSnackbarComponent, {
-                      data: 'تعذر تحديث المنتج!',
-                      duration: this.snackBarDurationInSeconds * 1000
-                    });
-                  }
-                });
+              if (this.imagesToDeleteWhenUpdate.length == index + 1) {
+                  this.InsertNewImagesToProduct();
               }
             });
           });
         //if there are no images to update
         } else {
-          this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-            data: 'تم تحديث المنتج بنجاح!',
-            duration: this.snackBarDurationInSeconds * 1000
-          });
+          this.InsertNewImagesToProduct();
         }
       }
     },
@@ -155,6 +162,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   private populateEditForm() {
+    //empty the new images to add when editing the product
+    this.imagesToAdd.clear();
     //if the id in the url is not null then get the product by id
     this.subscriptions?.push(this.activatedRoute.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
@@ -200,24 +209,17 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   removeImage(index: number): void {
+    this.imagesToDeleteWhenUpdate.push(this.imagesArray[index]);
     this.images.removeAt(index);
-    this.imagesArray[index] = '';
+    this.imagesArray.splice(index, 1);
     this.imageIndex--;
+    this.productForm.get("images")?.patchValue(this.imagesArray);
     // Clear the file input element
     const fileInput = this.fileInputs.toArray()[index].nativeElement;
     this.renderer.setProperty(fileInput, 'value', '');
   }
 
-  fun() {
-    console.log("lkjhgfd")
-  }
-
   onFileChange(event: Event, index: number): void {
-    //if the user changed an image that is existed in the original images array then add the original image to be deleted when updating the product
-    if (this.imagesArray[index] == this.originalImagesOfTheProductToUpdate[index]) {
-      this.imagesToDeleteWhenUpdate.push(this.imagesArray[index]);
-    }
-
     const input = event.target as HTMLInputElement;
 
     // Check if any file is selected
@@ -230,7 +232,12 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         reader.readAsDataURL(file);
         reader.onload = (e: any) => {
           this.imagesArray[index] = e.target.result;
+          //if the user changed an image that is existed in the original images array then add the original image to be deleted when updating the product
+          if (this.imagesArray[index] == this.originalImagesOfTheProductToUpdate[index]) {
+            this.imagesToDeleteWhenUpdate.push(this.imagesArray[index]);
+          }
           this.images.at(index).patchValue(file);
+          this.imagesToAdd.push(this.fb.control(file));
         };
       } else {
         // If the selected file is not an image, clear the file input
@@ -238,10 +245,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.imagesArray[index] = '';
       }
     }
-
-   console.log(this.imageIndex) 
-   console.log(this.images.value)
-   console.log(this.imagesArray)
   }
   /*end images functions*/
 
@@ -276,6 +279,9 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   get images(): FormArray {
     return this.productForm.get("images") as FormArray;
+  }
+  get imagesToAdd(): FormArray {
+    return this.productForm.get("imagesToAdd") as FormArray;
   }
 
   ngOnDestroy(): void {

@@ -1,12 +1,17 @@
+import { IProductImage } from "./iproduct-image";
+
 export interface IwhishListProduct{
-    id:number;
+    productId:number;
     name:string;
+    ProductImages:IProductImage[];
 
     originalPrice: number;
-    finalPrice: number;
+    amount:number;
+    description:string;
+   
   
-    image:[];
    
     categoryId: number;
-    Category:string;
+    CategoryName:string;
+    finalPrice: number;
 }

@@ -1,10 +1,11 @@
 <!-- Top Header -->
 <div class="container">
   <a class="navbar-brand arabic" href="/">
-    <img [src]="webInfo?.WebLogo || '../../../../assets/images/Elkory-Phone-Logo-High-Quality.png'" alt="Ashraf-Logo" class="logo">
-    <span class="logo-text">{{ webInfo?.WebName || 'الكورى فون' }}</span>
+    <img [src]="webInfo?.webLogoImageUrl || '../../../../assets/images/Elkory-Phone-Logo-High-Quality.png'" alt="Ashraf-Logo" class="logo">
+    <span class="logo-text">{{ webInfo?.webName || 'الكورى فون' }}</span>
   </a>
-  <a [href]="'tel:' + (webInfo?.WepPhone || '+01023596074')" class="phone">{{ webInfo?.WepPhone || '+01023596074' }}</a>
+  
+  <a [href]="'tel:' + (webInfo?.webPhone)" class="phone">{{ webInfo?.webPhone || '+01023596074' }}</a>
   <div class="search__container">
     <input type="text" class="search__input" placeholder="ابحث">
   </div>
