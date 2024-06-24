@@ -1,34 +1,69 @@
 
+<div class="text-center">
+  <h1>Add new admin</h1>
+</div>
   <table class="text-center table table-hovered table-bordered">
     <thead>
       <tr>
         <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.fName" placeholder="First Name">
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.fName" placeholder="الاسم الاول">
         </td>
-        <td>First Name</td>
+        <td>الاسم الاول</td>
       </tr>
       <tr>
         <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.lName" placeholder="Last Name">
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.lName" placeholder="الاسم الاخير">
         </td>
-        <td>Last Name</td>
+        <td>الاسم الاخير</td>
       </tr>
       <tr>
         <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.email" placeholder="email">
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.email" placeholder="البريد الالكتروني">
         </td>
-        <td>Email</td>
+        <td>البريد الالكتروني</td>
       </tr>
       <tr>
         <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.phone" placeholder="Phone Number">
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.phone" placeholder="رقم الموبايل">
         </td>
-        <td>Phone</td>
+        <td>رقم الموبايل</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.governorate" placeholder="المحافظة">
+        </td>
+        <td>المحافظة</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.city" placeholder="المدينة">
+        </td>
+        <td>المدينة</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.street" placeholder="الشارع">
+        </td>
+        <td>الشارع</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.postalCode" placeholder="الرقم البريدي">
+        </td>
+        <td>الرقم البريدي</td>
+      </tr>
+      <tr>
+        <td>
+          <input class="form-control text-center" type="password" [(ngModel)]="newAdmin.password" placeholder="كلمة السر">
+        </td>
+        <td>كلمة السر</td>
       </tr>
       <tr>
         <td colspan="2">
-          <a class="btn btn-success w-25" (click)="AddNewAdmin()">Add Admin</a>
+          <a class="btn btn-primary" (click)="AddNewAdmin()">اضافة</a>
         </td>
       </tr>
     </thead>
   </table>
+
+

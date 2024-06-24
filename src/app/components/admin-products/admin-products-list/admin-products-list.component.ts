@@ -72,6 +72,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
       this.getProductsPaginated(1, this.pageSize);
     },
     error: (err: Error) => {
+      console.log(err)
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر حذف المنتج!',
         duration: this.snackBarDurationInSeconds * 1000

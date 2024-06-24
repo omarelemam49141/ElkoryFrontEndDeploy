@@ -17,7 +17,7 @@ export class AdminService {
   // }
 
   GetAllUsers():Observable<IUser[]>{
-    return this.http.get<IUser[]>(`${environment.apiUrl}/admin`);
+    return this.http.get<IUser[]>(`${environment.apiUrl}/admin/GetUsers`);
   }
 
   AddAdmin(admin:IUser):Observable<IUser>{
@@ -25,7 +25,7 @@ export class AdminService {
   }
 
 
-  DeleteAdmin(adminId:number):Observable<IUser>{
+  DeleteUser(adminId:number):Observable<IUser>{
     return this.http.delete<IUser>(`${environment.apiUrl}/admin/${adminId}`);
   }
 }

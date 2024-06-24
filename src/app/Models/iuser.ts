@@ -3,11 +3,12 @@ export interface IUser {
   fName: string;
   lName: string;
   email: string;
-  phone: number;
+  phone: string;
+  password: string;
   governorate: string;
   city: string;
   street: string;
-  postalCode: number;
+  postalCode: string;
   isDeleted:boolean;
   role:number;
 }

@@ -14,24 +14,32 @@ import { ViewUsersComponent } from './components/AdminUserManagement/view-users/
 import { AdminProductsListComponent } from './components/admin-products/admin-products-list/admin-products-list.component';
 import { ProductsWishListComponent } from './components/customer-products/products-wish-list/products-wish-list.component';
 
+import { AccountService } from './services/account.service';
+import { AdminMenuComponent } from './components/main-components/admin-menu/admin-menu.component';
+
 @Component({
   selector: 'app-root',
-
+  standalone: true,
   imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
   CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, AdminProductsListComponent,ProductsWishListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  standalone: true
+  
+
 })
-export class AppComponent{
+export class AppComponent {
   loading$ = this.loadingService.loading$;
   loading = false;
 
-  constructor(private loadingService: LoadingService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private loadingService: LoadingService,
+    private cdr: ChangeDetectorRef,
+    public accountService: AccountService
+  ) {}
 
   ngAfterViewInit() {
-    this.loading$.subscribe(isLoading => {
+    this.loading$.subscribe((isLoading) => {
       this.loading = isLoading;
       this.cdr.detectChanges(); // Manually trigger change detection
     });

@@ -16,12 +16,15 @@ import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/s
 import { ISubCategoryValue } from '../../../Models/isub-category-value';
 import { CategoryService } from '../../../services/category.service';
 import { FileService } from '../../../services/file.service';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-add-sub-category-value',
   standalone: true,
   imports: [MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatSelect,
     FormsModule,
     MatButtonModule,
     MatDialogTitle,
@@ -62,8 +65,8 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
     this.subCategoryValueForm = this.fb.group({
       subCategoryId: [this.data.subCategoryId, [Validators.required]],
       categoryId: [this.data.categoryId??'', [Validators.required]],
-      value: [this.data.valueName??'', [Validators.required, Validators.min(2)]],
-      image: [this.data.valueImage??'', [Validators.required]],
+      newValue: [this.data.valueName??'', [Validators.required, Validators.min(2)]],
+      image: ['', [Validators.required]],
     })
   }
 
@@ -123,7 +126,7 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
       const file: File = event.target.files[0];
       // Check if the selected file is an image
       if (file.type.startsWith('image/')) {
-        this.subCategoryValueForm.get("Image")?.setValue(file);
+        this.subCategoryValueForm.get("image")?.setValue(file);
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e: any) => {
@@ -180,6 +183,7 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
   submitForm() {
     let subCategoyValueModel = this.subCategoryValueForm.value as ISubCategoryValue; 
     if (this.data.categoryId) {
+      subCategoyValueModel.value = this.data.valueName!;
       this.updateValue(subCategoyValueModel);
     }
     else

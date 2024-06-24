@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '../../../services/file.service';
 import { GenericService } from '../../../services/generic.service';
 
@@ -53,7 +53,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     private renderer: Renderer2,
     private activatedRoute: ActivatedRoute,
     private fileService: FileService,
-    private genericService: GenericService<ICategory>
+    private genericService: GenericService<ICategory>,
+    private router: Router
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -104,9 +105,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
               data: 'تم اضافة المنتج بنجاح!',
               duration: this.snackBarDurationInSeconds * 1000
             });
-            this.productForm.reset();
-            this.imagesArray = [];
-            this.imageIndex = 0;
+            this.router.navigate(["/admin-products"]);
           },
           error: (err: Error) => {
             this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -172,28 +171,33 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.subscriptions?.push(this.productService.getById(id).subscribe(product => {
           this.productToEdit = product;
           this.productForm.patchValue(this.productToEdit);
+          this.productForm.get("images")?.setValue(this.fb.array([
+            ['', [Validators.required]]
+          ], oneImageAtLeast));
           this.subscriptions?.push(this.productService.getPictures(id).subscribe(imagesUrls => {
-            this.imagesArray = imagesUrls;
-            this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
-            this.imageIndex = imagesUrls.length - 1;
-            //patch the form images with the images
-            //empty the images array control
-            this.images.clear();
+            if (imagesUrls.length > 0) {
+              this.imagesArray = imagesUrls;
+              this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
+              this.imageIndex = imagesUrls.length - 1;
+              //patch the form images with the images
+              //empty the images array control
+              this.images.clear();
 
-            const filePromises = imagesUrls.map(imageUrl => {
-              const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-              const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
-              const mimeType = `image/${extension}`;
+              const filePromises = imagesUrls.map(imageUrl => {
+                const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+                const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
+                const mimeType = `image/${extension}`;
 
-              return this.fileService.urlToFile(imageUrl, imageName, mimeType);
-            });
-            Promise.all(filePromises).then(files => {
-              files.forEach(file => {
-                this.images.push(this.fb.control(file));
+                return this.fileService.urlToFile(imageUrl, imageName, mimeType);
               });
-            }).catch(error => {
-              console.error('Error processing images:', error);
-            });
+              Promise.all(filePromises).then(files => {
+                files.forEach(file => {
+                  this.images.push(this.fb.control(file));
+                });
+              }).catch(error => {
+                console.error('Error processing images:', error);
+              });
+            }
           }));
         }));
       }

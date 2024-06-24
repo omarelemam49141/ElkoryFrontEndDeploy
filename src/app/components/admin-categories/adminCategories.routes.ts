@@ -6,6 +6,7 @@ import { CategoryDetailsComponent } from "./category-details/category-details.co
 import { SubcategoriesListComponent } from "./subcategories-list/subcategories-list.component";
 import { AddSubcategoryComponent } from "./add-subcategory/add-subcategory.component";
 import { DeleteSubcategoryComponent } from "./delete-subcategory/delete-subcategory.component";
+import { SubCategoryDetailsComponent } from "./sub-category-details/sub-category-details.component";
 
 export const routes: Routes = [
     {path: "", redirectTo: "/admin-categories/categories-list", pathMatch: "full"},
@@ -19,5 +20,6 @@ export const routes: Routes = [
     {path: "subcategories-list/:id", component: SubcategoriesListComponent},
     {path: "add-subcategory", component: AddSubcategoryComponent},
     {path: "edit-subcategory/:id", component: AddSubcategoryComponent},
+    {path: "subcategory-details/:id", component: SubCategoryDetailsComponent},
     {path: "delete-subcategory/:id", component: DeleteSubcategoryComponent}
 ]

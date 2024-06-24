@@ -6,18 +6,18 @@
         <div class="form-group mb-3">
             <mat-form-field appearance="fill">
                 <mat-label>القسم الرئيسى</mat-label>
-                <select class="form-select" formControlName="categoryId">
-                    <option *ngFor="let cat of allCategories" [value]="cat.categoryId">{{cat.name}}</option>
-                </select>
+                <mat-select formControlName="categoryId">
+                  <mat-option *ngFor="let cat of allCategories" [value]="cat.categoryId">{{ cat.name }}</mat-option>
+                </mat-select>
                 <mat-error *ngIf="!categoryId?.valid && categoryId?.touched">
-                    <span *ngIf="categoryId?.errors?.['required']">القسم الرئيسى مطلوبة</span>
+                  <span *ngIf="categoryId?.errors?.['required']">القسم الرئيسى مطلوبة</span>
                 </mat-error>
-            </mat-form-field>
+            </mat-form-field>              
         </div>
         <div class="form-group mb-3">
             <mat-form-field appearance="fill">
                 <mat-label>اسم القيمة</mat-label>
-                <input matInput formControlName="value" type="text" placeholder="ادخل اسم القيمة">
+                <input matInput formControlName="newValue" type="text" placeholder="ادخل اسم القيمة">
                 <mat-error *ngIf="!value?.valid && value?.touched">
                     <span *ngIf="value?.errors?.['required']">اسم القيمة مطلوب</span>
                     <span *ngIf="value?.errors?.['min']">اسم القيمة يجب ان لا يقل عن حرفان</span>
@@ -25,7 +25,8 @@
             </mat-form-field>
         </div>
         <div class="form-group mb-3">
-            <input type="file" class="form-control" formControlName="image" (change)="onFileSelected($event)">
+            <input type="file" class="form-control" (change)="onFileSelected($event)">
+            <input type="hidden" formControlName="image">
             <mat-error *ngIf="!image?.valid && image?.touched">
                 <span *ngIf="image?.errors?.['required']">الصورة مطلوبة</span>
             </mat-error>

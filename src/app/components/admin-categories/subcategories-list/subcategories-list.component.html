@@ -13,7 +13,10 @@
                 @for (subCategory of subCategories; track subCategory.subCategoryId) {
                 <tr>
                     <td>
-                        <a class="viewDetailsBtn">{{subCategory.name}}</a>
+                        <a class="viewDetailsBtn"
+                        [routerLink]="['/admin-categories/subcategory-details', subCategory.subCategoryId]">
+                            {{subCategory.name}}
+                        </a>
                     </td>
                     <td>
                         <a class="btn btn-primary ms-2" 

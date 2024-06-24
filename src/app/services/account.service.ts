@@ -67,12 +67,14 @@ export class AccountService {
       return throwError(()=> new Error("قم باعادة تسجيل الدخول مرة أخرى"))
     }
 
-    const email = this.getEmailFromToken(token);
+    const email = this.getTokenEmail();
 
     //prepare the headers
     const headers = new HttpHeaders({
         'Authorization': token??''
     });
+
+    console.log(token)
 
     //send the request
     return this.http.get<IEditProfile>(`${environment.apiUrl}/Account/userInfo?email=${email}`, {headers})

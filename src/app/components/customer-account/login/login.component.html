@@ -1,5 +1,5 @@
-<div class="login-container">
-    <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
+<div class="account-container">
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="account-form">
         <div class="form-header">
             <img src="assets/images/logo.png" alt="Form Image" class="form-image">
             <h2 class="form-title">تسجيل الدخول</h2>
@@ -24,8 +24,8 @@
         <div class="form-group">
             <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">تسجيل الدخول</button>
         </div>
-        <p class="lead">ليس لديك حساب؟ <a href="/customer-account/register">سجل الان</a></p>
-        <p class="lead">هل نسيت كلمة المرور؟ <a href="/customer-account/forgot-password">اعادة تعيين كلمة المرور</a></p>
-        <p class="lead">لم تفعل حسابك؟ <a href="/customer-account/verify-email">تفعيل الحساب</a></p>
+        <p class="lead">ليس لديك حساب؟ <a [routerLink]="['/customer-account/register']">سجل الان</a></p>
+        <p class="lead">هل نسيت كلمة المرور؟ <a [routerLink]="['/customer-account/forgot-password']">اعادة تعيين كلمة المرور</a></p>
+        <p class="lead">لم تفعل حسابك؟ <a [routerLink]="['/customer-account/verify-email']">تفعيل الحساب</a></p>
     </form>
 </div>

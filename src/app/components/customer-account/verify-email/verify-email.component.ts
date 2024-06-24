@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './verify-email.component.html',
-  styleUrl: './verify-email.component.scss'
+  styleUrl: '../customer-account.scss'
 })
 export class VerifyEmailComponent {
   //form properties
