@@ -25,7 +25,7 @@ export class AdminService {
   }
 
 
-  DeleteAdmin(adminId:number):Observable<IUser>{
+  DeleteUser(adminId:number):Observable<IUser>{
     return this.http.delete<IUser>(`${environment.apiUrl}/admin/${adminId}`);
   }
 }

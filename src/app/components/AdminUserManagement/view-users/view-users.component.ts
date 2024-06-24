@@ -25,4 +25,18 @@ export class ViewUsersComponent {
 
   }
 
+  confirmDelete(userId: number): void {
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.deleteUser(userId);
+    }
+  }
+
+  deleteUser(userId: number): void {
+    this.AdminService.DeleteUser(userId).subscribe(() => {
+      this.usersList = this.usersList.filter(user => user.userId !== userId);
+      alert('User deleted successfully');
+    });
+
+  }
+
 }

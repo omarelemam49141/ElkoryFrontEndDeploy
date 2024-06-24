@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AdminService } from '../../../services/admin.service';
 import { IUser } from '../../../Models/iuser';
 import { CommonModule } from '@angular/common'
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class ViewAdminsComponent {
 
   adminsList:IUser[]=[];
 
-  constructor(private adminService:AdminService){}
+  constructor(private adminService:AdminService, private router: Router){}
 
   ngOnInit(): void {
     this.adminService.GetAllUsers().subscribe( (data) => {
@@ -32,10 +32,15 @@ export class ViewAdminsComponent {
   }
 
   deleteAdmin(adminId: number): void {
-    this.adminService.DeleteAdmin(adminId).subscribe(() => {
+    this.adminService.DeleteUser(adminId).subscribe(() => {
       this.adminsList = this.adminsList.filter(admin => admin.userId !== adminId);
       alert('Admin deleted successfully');
     });
 
   }
+
+  navigateToAddAdmin(): void {
+    this.router.navigate(['/add-admin']);
+  }
+
 }

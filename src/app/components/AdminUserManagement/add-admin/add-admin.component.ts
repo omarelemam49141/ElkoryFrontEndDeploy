@@ -1,3 +1,4 @@
+import { Router, Routes } from '@angular/router';
 import { Component } from '@angular/core';
 import { IUser } from '../../../Models/iuser';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +19,7 @@ export class AddAdminComponent {
     fName: '',
     lName: '',
     email: '',
-    phone: 0,
+    phone: '',
     password: '',
     governorate: '',
     city: '',
@@ -28,12 +29,23 @@ export class AddAdminComponent {
     role: 0
   };
 
-  constructor(public adminService: AdminService) {}
+  constructor(public adminService: AdminService, private router: Router) {}
+
+  onSubmit(){
+    this.adminService.AddAdmin(this.newAdmin).subscribe( (data) => {
+      console.log(data);
+    });
+    //redirect to view-admins
+    this.router.navigate(['/view-admins']);
+  }
 
   AddNewAdmin(){
     this.adminService.AddAdmin(this.newAdmin).subscribe( (data) => {
       console.log(data);
-    })
+    });
+    //redirect to view-admins with refreshed data
+    this.router.navigate(['/view-admins']);
+
   }
 
 
