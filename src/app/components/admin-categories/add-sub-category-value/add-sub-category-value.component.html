@@ -25,7 +25,8 @@
             </mat-form-field>
         </div>
         <div class="form-group mb-3">
-            <input type="file" class="form-control" formControlName="image" (change)="onFileSelected($event)">
+            <input type="file" class="form-control" (change)="onFileSelected($event)">
+            <input type="hidden" formControlName="image">
             <mat-error *ngIf="!image?.valid && image?.touched">
                 <span *ngIf="image?.errors?.['required']">الصورة مطلوبة</span>
             </mat-error>

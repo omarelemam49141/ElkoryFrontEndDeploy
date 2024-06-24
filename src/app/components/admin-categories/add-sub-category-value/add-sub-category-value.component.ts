@@ -66,7 +66,7 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
       subCategoryId: [this.data.subCategoryId, [Validators.required]],
       categoryId: [this.data.categoryId??'', [Validators.required]],
       newValue: [this.data.valueName??'', [Validators.required, Validators.min(2)]],
-      image: [this.data.valueImage??'', [Validators.required]],
+      image: ['', [Validators.required]],
     })
   }
 
@@ -126,7 +126,7 @@ export class AddSubCategoryValueComponent implements OnInit, OnDestroy{
       const file: File = event.target.files[0];
       // Check if the selected file is an image
       if (file.type.startsWith('image/')) {
-        this.subCategoryValueForm.get("Image")?.setValue(file);
+        this.subCategoryValueForm.get("image")?.setValue(file);
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e: any) => {

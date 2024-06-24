@@ -70,7 +70,7 @@ export class AddSubcategoryComponent implements OnInit{
   addSubCategoryObserver = {
     next: () => {
       this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-        data: "تم اضافة القسم القسم بنجاح!",
+        data: "تم اضافة القسم الفرعى بنجاح!",
         duration: this.notificationDurationInSeconds * 1000
       })
       this.dialogRef.close(true);

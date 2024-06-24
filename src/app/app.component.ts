@@ -12,13 +12,16 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { WhatsappButtonComponent } from './components/whatsapp-button/whatsapp-button.component';
 import { ViewUsersComponent } from './components/AdminUserManagement/view-users/view-users.component';
 import { AdminProductsListComponent } from './components/admin-products/admin-products-list/admin-products-list.component';
+import { AccountService } from './services/account.service';
+import { AdminMenuComponent } from './components/main-components/admin-menu/admin-menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
-  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, AdminProductsListComponent],
+  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent,
+  WhatsappButtonComponent, AdminProductsListComponent, AdminMenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -28,7 +31,8 @@ export class AppComponent {
 
   constructor(
     private loadingService: LoadingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public accountService: AccountService
   ) {}
 
   ngAfterViewInit() {

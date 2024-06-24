@@ -171,28 +171,33 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.subscriptions?.push(this.productService.getById(id).subscribe(product => {
           this.productToEdit = product;
           this.productForm.patchValue(this.productToEdit);
+          this.productForm.get("images")?.setValue(this.fb.array([
+            ['', [Validators.required]]
+          ], oneImageAtLeast));
           this.subscriptions?.push(this.productService.getPictures(id).subscribe(imagesUrls => {
-            this.imagesArray = imagesUrls;
-            this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
-            this.imageIndex = imagesUrls.length - 1;
-            //patch the form images with the images
-            //empty the images array control
-            this.images.clear();
+            if (imagesUrls.length > 0) {
+              this.imagesArray = imagesUrls;
+              this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
+              this.imageIndex = imagesUrls.length - 1;
+              //patch the form images with the images
+              //empty the images array control
+              this.images.clear();
 
-            const filePromises = imagesUrls.map(imageUrl => {
-              const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-              const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
-              const mimeType = `image/${extension}`;
+              const filePromises = imagesUrls.map(imageUrl => {
+                const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+                const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
+                const mimeType = `image/${extension}`;
 
-              return this.fileService.urlToFile(imageUrl, imageName, mimeType);
-            });
-            Promise.all(filePromises).then(files => {
-              files.forEach(file => {
-                this.images.push(this.fb.control(file));
+                return this.fileService.urlToFile(imageUrl, imageName, mimeType);
               });
-            }).catch(error => {
-              console.error('Error processing images:', error);
-            });
+              Promise.all(filePromises).then(files => {
+                files.forEach(file => {
+                  this.images.push(this.fb.control(file));
+                });
+              }).catch(error => {
+                console.error('Error processing images:', error);
+              });
+            }
           }));
         }));
       }
