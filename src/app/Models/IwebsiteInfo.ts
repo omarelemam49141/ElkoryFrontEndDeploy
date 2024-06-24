@@ -1,9 +1,8 @@
-export interface IWebInfo{
-    WebInfoId:number;
-    WepPhone:string;
-    WebName:string;
-    WebLogo:string;
-    InstagramAccount:string;
-    FacebookAccount:string;
-
+export interface IWebInfo {
+  webInfoId: number;
+  webPhone: string;
+  webName: string;
+  webLogoImageUrl: string;
+  instagramAccount: string;
+  facebookAccount: string;
 }
