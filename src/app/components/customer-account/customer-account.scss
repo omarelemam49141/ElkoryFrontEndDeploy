@@ -1,4 +1,5 @@
-.login-container {
+.account-container {
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,7 +18,7 @@
     animation: fadeInDown 1s ease-in-out;
 }
 
-.login-form {
+.account-form {
     background: white;
     padding: 2rem;
     border-radius: 12px;
@@ -29,7 +30,7 @@
     transition: transform 0.3s;
 }
 
-.login-form:hover {
+.account-form:hover {
     transform: translateY(-10px);
 }
 

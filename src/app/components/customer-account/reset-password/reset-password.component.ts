@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.scss'
+  styleUrl: '../customer-account.scss'
 })
 export class ResetPasswordComponent {
   //form properties

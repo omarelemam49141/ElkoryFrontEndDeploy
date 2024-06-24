@@ -15,26 +15,12 @@ import { AdminProductsListComponent } from './components/admin-products/admin-pr
 
 @Component({
   selector: 'app-root',
-
-  imports: [
-    RouterOutlet,
-    TopHeaderComponent,
-    NavbarComponent,
-    FooterComponent,
-    ViewAdminsComponent,
-    AddAdminComponent,
-    MainSpinnerComponent,
-    AsyncPipe,
-    CommonModule,
-    ViewAdminsComponent,
-    AddAdminComponent,
-    ViewUsersComponent,
-    WhatsappButtonComponent,
-    AdminProductsListComponent,
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
   standalone: true,
+  imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
+    ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
+  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, AdminProductsListComponent],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   loading$ = this.loadingService.loading$;

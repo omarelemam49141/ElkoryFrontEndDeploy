@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.scss'
+  styleUrl: '../customer-account.scss'
 })
 export class SignupComponent implements OnDestroy{
   //form properties
