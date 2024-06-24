@@ -3,5 +3,5 @@ export interface ISubCategoryValue {
     subCategoryId: number;
     value: string;
     newValue: string;
-    image: string;
+    image: File;
 }

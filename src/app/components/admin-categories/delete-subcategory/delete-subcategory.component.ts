@@ -39,6 +39,7 @@ export class DeleteSubcategoryComponent {
           data: "تم حذف القسم الفرعى بنجاح!",
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.dialogRef.close(true);
       },
       error: () => {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {

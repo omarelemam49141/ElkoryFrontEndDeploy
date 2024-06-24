@@ -23,7 +23,7 @@ export class CategoryService {
     this.genericService.addHeaders("Content-Type", "multipart/form-data");
     let formData = new FormData();
     formData.append("image", subCategoryValue.image);
-    return this.http.post(`${environment.apiUrl}/CategorySubCategoryValues?categoryId=${subCategoryValue.categoryId}&subCategoryId=${subCategoryValue.subCategoryId}&value=${subCategoryValue.value}`, formData, this.genericService.httpOptions)
+    return this.http.post(`${environment.apiUrl}/CategorySubCategoryValues?subCategoryId=${subCategoryValue.subCategoryId}&categoryId=${subCategoryValue.categoryId}&value=${subCategoryValue.newValue}`, formData, this.genericService.httpOptions)
     .pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)
@@ -34,7 +34,7 @@ export class CategoryService {
     this.genericService.addHeaders("Content-Type", "multipart/form-data");
     let formData = new FormData();
     formData.append("image", subCategoryValue.image);
-    return this.http.patch(`${environment.apiUrl}/subCategoryValue/${subCategoryValue.subCategoryId}?categoryId=${subCategoryValue.categoryId}&value=${subCategoryValue.value}`, formData, this.genericService.httpOptions)
+    return this.http.patch(`${environment.apiUrl}/subCategoryValue?subCategoryId=${subCategoryValue.subCategoryId}&categoryId=${subCategoryValue.categoryId}&value=${subCategoryValue.value}&newValue=${subCategoryValue.newValue}`, formData, this.genericService.httpOptions)
     .pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)
