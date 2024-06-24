@@ -1,19 +1,21 @@
 @if (subCategory) {
     <section class="dark" dir="ltr">
         <div class="container">
-            <h1 class="h1 text-center" id="pageHeaderTitle">{{subCategory.name}} تفاصيل القسم الفرعى</h1>
+            <h1 class="h1 text-center" id="pageHeaderTitle">تفاصيل القسم الفرعى {{subCategory.name}}</h1>
             <article class="postcard dark blue">
                 <div class="postcard__text">
-                    <h1 class="postcard__title blue"><a href="#">{{subCategory.name}}</a></h1>
+                    <h1 class="postcard__title blue"><a>{{subCategory.name}}</a></h1>
                     <div class="postcard__bar"></div>
                     <ul class="postcard__tagbox">
                         <li class="tag__item play red">
-                            <a (click)="confirmSubCategoryDelete(subCategory.subCategoryId, subCategory.name)"><i class="fas fa-trash mr-2"></i>حذف العرض</a>
+                            <a 
+                            style="cursor: pointer;"
+                            (click)="confirmSubCategoryDelete(subCategory.subCategoryId, subCategory.name)"><i class="fas fa-trash me-2"></i>حذف القسم الفرعى</a>
                         </li>
                         <li class="tag__item play blue">
                             <a 
                             (click)="editSubCategory(subCategory.subCategoryId, subCategory.name)"
-                            [routerLink]="['/admin-categories/subcategories-list', subCategory.subCategoryId]" ><i class="fas fa-edit mr-2"></i>تعديل القسم الفرعى</a>
+                            [routerLink]="['/admin-categories/subcategory-details', subCategory.subCategoryId]" ><i class="fas fa-edit me-2"></i>تعديل القسم الفرعى</a>
                         </li>
                     </ul>
                 </div>

@@ -83,7 +83,9 @@ export class SubCategoryDetailsComponent implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe(data=>{
-      this.router.navigate(['/admin-categories/subcategories-list']);
+      if (data) {
+        this.router.navigate(['/admin-categories/subcategories-list']);
+      }
     })
   }
 

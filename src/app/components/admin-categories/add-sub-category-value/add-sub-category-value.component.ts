@@ -16,12 +16,15 @@ import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/s
 import { ISubCategoryValue } from '../../../Models/isub-category-value';
 import { CategoryService } from '../../../services/category.service';
 import { FileService } from '../../../services/file.service';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-add-sub-category-value',
   standalone: true,
   imports: [MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
+    MatSelect,
     FormsModule,
     MatButtonModule,
     MatDialogTitle,
