@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
@@ -11,6 +11,8 @@ import { ProductsPagination } from '../../../Models/products-pagination';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { FormsModule } from '@angular/forms';
 import { ICart } from '../../../Models/icart';
+import { WishListService } from '../../../services/wishList.service';
+import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 @Component({
   selector: 'app-products-list',
   standalone: true,
@@ -18,7 +20,7 @@ import { ICart } from '../../../Models/icart';
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
-export class ProductsListComponent implements OnInit, OnDestroy{
+export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
   products!: IProduct[];
   images: string[][] = [];
   /*pagination properties*/
@@ -36,13 +38,18 @@ export class ProductsListComponent implements OnInit, OnDestroy{
 
   constructor(private productService: ProductService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private wishListService:WishListService
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+this.getProductsPaginated(1,10);
+this.fetchWishList(3);  }
   ngOnDestroy(): void {
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
     this.getProductsPaginated(1,10);
+    this.fetchWishList(3);
   }
 
   /*start observers*/
@@ -98,5 +105,44 @@ export class ProductsListComponent implements OnInit, OnDestroy{
     localStorage.setItem('cart', JSON.stringify(cart));
     this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
   }
+  addToWishList(item:IAddWishListProduct):void{
+console.log("hello from with list")
+this.addProductToWishList(item)
+
+
+
+
+  }
+fetchWishList(UserId:number){
+  this.wishListService.getWishList(UserId).subscribe(
+    (data)=>{
+      console.log("from success section")
+      console.log(data);
+      this.snackBar.open('تم تحميل القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    },
+    (error)=>{
+      console.log("error section")
+      console.log(error);
+      this.snackBar.open('حدث خطأ أثناء القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    }
+  );
+
+
+}
+  addProductToWishList(item:IAddWishListProduct)
+{
+  this.wishListService.addWishListProduct(item).subscribe(
+    (data)=>{
+      console.log("from success section")
+      console.log(data);
+      this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة hg', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    },
+    (error)=>{
+      console.log("error section")
+      console.log(error);
+      this.snackBar.open('حدث خطأ أثناء إضافة المنتج إلى  القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    }
+  );
+}
 
 }

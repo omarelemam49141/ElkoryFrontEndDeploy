@@ -99,3 +99,19 @@ h5 {
 .btn-secondary:hover {
   background-color: #004080;
 }
+ .wishbutton{
+  border: none;
+  background-color: transparent;
+  color:red;
+  font-size: xx-large;
+  float: left;
+  margin-left: 10px;
+  margin-bottom: -50px;
+  cursor: pointer;
+  display: flex;
+ }
+  .wishbutton:hover {
+    color: #dc3545;
+    
+  }
+  

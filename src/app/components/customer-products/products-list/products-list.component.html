@@ -29,6 +29,9 @@
               <!-- <img [src]="images[i] ? images[i][0] : ''" class="img-fluid rounded-3 image" alt="{{product.name}}" /> -->
               <img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg"class="img-fluid rounded-3 image" alt="{{product.name}}" />
             </div>
+            <button class="wishbutton" (click)="addToWishList({ UserId: 3, ProductId: product.productId })" > <span class="fa-regular fa-heart"></span>
+              </button>
+
             <h5 class="mt-3">{{ product.name }}</h5>
             <p>
               <span class="text-muted">السعر </span>
@@ -45,6 +48,8 @@
             <i class="fas fa-shopping-cart"></i> &nbsp;أضف إلى السلة</button>
         
           </div>
+          
+            <!-- <i class="fa-regular fa-heart"></i> -->
         </div>
       </div>
     </div>
