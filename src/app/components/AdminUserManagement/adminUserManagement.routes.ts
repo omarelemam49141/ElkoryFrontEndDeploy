@@ -8,10 +8,10 @@ export const routes: Routes = [
     // {path: "view-admins", component: ViewAdminsComponent},
     // {path: "add-admin", component: AddAdminComponent}
 
-    {path: "", redirectTo: "/AdminUserManagement/admin-view-admins", pathMatch: "full"},
-    {path: "admin-view-users", component: ViewUsersComponent},
-    {path: "admin-view-admins", component: ViewAdminsComponent},
-    {path: "app-add-admin", component: AddAdminComponent}
+    {path: "", redirectTo: "view-admins", pathMatch: "full"},
+    {path: "view-users", component: ViewUsersComponent},
+    {path: "view-admins", component: ViewAdminsComponent},
+    {path: "add-admin", component: AddAdminComponent}
 ]
 
 
