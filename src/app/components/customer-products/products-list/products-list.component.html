@@ -39,7 +39,7 @@
               </button>
         
       
-                      <button (click)="addToCart(product)" class="cartbutton"*ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)" >
+                      <button (click)="addToCart(product)" class="cartbutton notincart"*ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)"  >
                   <i class="fas fa-shopping-cart"></i> </button>
 
                    
