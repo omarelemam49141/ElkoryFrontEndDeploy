@@ -5,25 +5,24 @@
 <table class="table table-bordered table-hover text-center">
   <thead>
     <tr>
-      <th>Actions</th>
-      <th>Role</th>
-      <th>Mobile</th>
-      <th>Email</th>
-      <th>Name</th>
-      <th>Admin Number</th>
+      <th>رقم الإداري</th>
+      <th>الاسم</th>
+      <th>البريد الإلكتروني</th>
+      <th>الجوال</th>
+      <th>الدور</th>
+      <th>الإجراءات</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let admin of adminsList; let i = index">
-      <td>
-        <button class="btn btn-danger" (click)="confirmDelete(admin.userId)">Delete</button>
-      </td>
-      <!-- <td>{{admin.role === 0 ? 'admin' : 'user'}}</td> -->
-      <td>admin</td>
-      <td>{{admin.phone}}</td>
-      <td>{{admin.email}}</td>
-      <td>{{admin.fName}}  {{admin.lName}}</td>
       <td>{{i+1}}</td>
+      <td>{{admin.fName}}  {{admin.lName}}</td>
+      <td>{{admin.email}}</td>
+      <td>{{admin.phone}}</td>
+      <td>مدير</td>
+      <td>
+        <button class="btn btn-danger" (click)="confirmDelete(admin.userId)">حذف</button>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -31,7 +30,7 @@
 <div class="container">
   <div class="row">
     <div class="text-center W-25">
-      <a (click)="navigateToAddAdmin()" class="btn btn-outline-primary">Add New Admin</a>
+      <a (click)="navigateToAddAdmin()" class="btn btn-outline-primary">اضافة مدير جديد</a>
     </div>
   </div>
 </div>
