@@ -1,1 +1,35 @@
 <p>products-wish-list works!</p>
+<div class="wish-list-container">
+  <div *ngIf="wishListProducts.length === 0; else wishListContent">
+    <p class="text-muted">قائمة الرغبات فارغة</p>
+  </div>
+  <ng-template #wishListContent>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">صورة المنتج</th>
+          <th scope="col">اسم المنتج</th>
+          <th scope="col">الوصف</th>
+          <th scope="col">السعر النهائي</th>
+          <th scope="col">العمليات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of wishListProducts">
+          <td>
+            <!-- Replace with actual image binding if available -->
+            <img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg" class="img-fluid rounded" alt="{{ product.name }}">
+          </td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.finalPrice | currency: 'USD' }}</td>
+          <td>
+            <button class="btn btn-outline-danger" (click)="removeFunc(product.productId)">
+              إزالة من قائمة الرغبات
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</div>

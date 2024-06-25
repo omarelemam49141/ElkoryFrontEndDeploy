@@ -4,11 +4,12 @@ import { AdminProductsListComponent } from '../../admin-products/admin-products-
 import { OfferComponent } from '../../offer/offer.component';
 import { ViewProfileComponent } from '../../customer-account/view-profile/view-profile.component';
 import { EditProfileComponent } from '../../customer-account/edit-profile/edit-profile.component';
+import { ProductsWishListComponent } from '../../customer-products/products-wish-list/products-wish-list.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ProductsListComponent,AdminProductsListComponent,OfferComponent,ViewProfileComponent,EditProfileComponent],
+  imports: [ProductsListComponent,AdminProductsListComponent,OfferComponent,ViewProfileComponent,EditProfileComponent,ProductsWishListComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

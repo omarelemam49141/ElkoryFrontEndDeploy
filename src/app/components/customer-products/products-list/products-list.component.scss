@@ -5,9 +5,9 @@
 }
 
 .product-card {
-  flex: 1 1 calc(33.333% - 16px);
+  flex: 1 1 calc(25.333% - 16px);
   box-sizing: border-box;
-  max-width: calc(33.333% - 16px);
+  max-width: calc(25% - 16px);
   display: flex;
   flex-direction: column;
 }
@@ -54,6 +54,7 @@ h5 {
   font-size: 1em;
   text-decoration: line-through;
   color: #dc3545;
+  margin-right: 10px;
 }
 
 .btn-primary {
@@ -99,3 +100,86 @@ h5 {
 .btn-secondary:hover {
   background-color: #004080;
 }
+ .wishbutton{
+  color:red;
+  border: none;
+  font-size: 50px;
+ float: left;
+  
+  cursor: pointer;
+  display: flex;
+  border-radius: 50%;
+  position: absolute;
+  top: 10px; /* Adjust the value as needed */
+  right: 10px; /* Adjust the value as needed */
+  background-color: rgba(255, 255, 255, 0.7); /* Optional: Add a semi-transparent background */
+  border: none;
+  padding: 10px;
+  
+  
+  cursor: pointer;
+  width: 1.4em;
+
+
+ }
+  .wishbutton:hover {
+    color: #dc3545;
+    
+  }
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .image {
+    width: 100%;
+    height: auto;
+  }
+  
+ 
+  
+  .wishbutton .fa-heart {
+    color: red;
+  }
+  
+  .wishbutton:hover {
+    background-color: rgba(255, 255, 255, 1); /* Optional: Change background color on hover */
+  }
+  
+  .cartbutton{
+    border: none;
+    color:green;
+    font-size: 50px;
+   float: left;
+    
+    cursor: pointer;
+    display: flex;
+    border-radius: 50%;
+    position: absolute;
+    top: 90px; /* Adjust the value as needed */
+    right: 10px; /* Adjust the value as needed */
+    background-color: rgba(255, 255, 255, 0.7); /* Optional: Add a semi-transparent background */
+    border: none;
+    padding: 10px;
+    
+    cursor: pointer;
+    width: 1.5em;
+   }
+   
+    .image-container {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .image {
+      width: 100%;
+      height: auto;
+    }
+    
+   
+    
+   
+    
+    .cartbutton:hover {
+      background-color: rgba(255, 255, 255, 1); /* Optional: Change background color on hover */
+    }

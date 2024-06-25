@@ -7,57 +7,41 @@ import { RouterModule } from '@angular/router';
 import { WebInfoService } from '../../../services/WebInfo.service';
 import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { environment } from '../../../../environment/environment';
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrls: ['./navbar.component.scss'] // Corrected styleUrls property
 })
-export class NavbarComponent implements OnInit,OnDestroy {
-  Categories:ICategory[]=[];
-  subscriptions:Subscription[]=[];
-  webInfo:IWebInfo|undefined;
+export class NavbarComponent implements OnInit, OnDestroy {
+  Categories: ICategory[] = [];
+  subscriptions: Subscription[] = [];
+  webInfo: IWebInfo | undefined;
+  activeCategory: string = ''; // Property to track the active category
 
+  constructor(private categoryService: CategoryService, private webInfoServise: WebInfoService) {}
 
-  constructor(private categoryService:CategoryService,private webInfoServise:WebInfoService){}
-
-fetchCategories():void{
-  const subscription= this.categoryService.getAll().subscribe(
-    {
-      next:(categories:ICategory[])=>{
-        this.Categories=categories
-
-
+  fetchCategories(): void {
+    const subscription = this.categoryService.getAll().subscribe({
+      next: (categories: ICategory[]) => {
+        this.Categories = categories;
       },
-      error:(error:any)=>console.error('Erroe fetching categories',error)}
-      );
-      this.subscriptions.push(subscription);
-    }
+      error: (error: any) => console.error('Error fetching categories', error)
+    });
+    this.subscriptions.push(subscription);
+  }
 
-
-  
- 
-
-
-
-
-
-
-  
-
-
+  setActiveCategory(category: string): void { // Method to set the active category
+    this.activeCategory = category;
+  }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub=>sub.unsubscribe());
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
   ngOnInit(): void {
-this.fetchCategories();
-
-
-
-
+    this.fetchCategories();
   }
-
-
 }

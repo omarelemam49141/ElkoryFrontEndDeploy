@@ -1,4 +1,5 @@
 export interface IWebInfo {
+
   webInfoId: number;
   webPhone: string;
   webName: string;

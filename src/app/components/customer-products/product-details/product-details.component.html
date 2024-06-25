@@ -1,12 +1,22 @@
 <div class="container product-details-container" *ngIf="product">
   <div class="row product-main-details">
     <div class="col-md-6 product-image">
-      <img [src]="image" class="img-fluid rounded-3" alt="{{product.name}}" />
+      <!-- <img [src]="image" class="img-fluid rounded-3" alt="{{product.name}}" /> -->
+      <div class="image-container text-center">
+        <img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg" class="img-fluid rounded-3 image" alt="{{product.name}}" />
+        <button class="wishbutton" (click)="addProductToWishList({ UserId: user.userId, ProductId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
+          <span class="fa-regular fa-heart"></span>
+        </button>
+        <button class="wishbutton" (click)="removeFromWishList({ UserId: user.userId, ProductId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
+          <span class="fa-solid fa-heart"></span>
+        </button>
+      </div>
+      
     </div>
     <div class="col-md-6 product-info">
       <h2>{{ product.name }}</h2>
       <h4 class="text-muted">{{ product.categoryName }}</h4>
-      <p class="price display-4">{{ product?.finalPrice | currency: 'USD' }}</p>
+      <p class="price display-4">{{ product.finalPrice | currency: 'USD' }}</p>
     
       <!-- <div class="d-flex align-items-center mb-3 quantity-section">
         <button class="btn btn-outline-secondary quantity-button" type="button">-</button>

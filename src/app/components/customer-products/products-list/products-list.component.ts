@@ -1,5 +1,5 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
@@ -11,6 +11,11 @@ import { ProductsPagination } from '../../../Models/products-pagination';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { FormsModule } from '@angular/forms';
 import { ICart } from '../../../Models/icart';
+import { WishListService } from '../../../services/wishList.service';
+import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
+import { IUser } from '../../../Models/iuser';
+import { IwishList } from '../../../Models/IwishList';
+import { IwhishListProduct } from '../../../Models/IwishListProduct';
 @Component({
   selector: 'app-products-list',
   standalone: true,
@@ -18,7 +23,8 @@ import { ICart } from '../../../Models/icart';
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
-export class ProductsListComponent implements OnInit, OnDestroy{
+export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
+  hovering = false;
   products!: IProduct[];
   images: string[][] = [];
   /*pagination properties*/
@@ -33,16 +39,44 @@ export class ProductsListComponent implements OnInit, OnDestroy{
   snackBarDurationInSeconds = 5;
 
   subscriptions?: Subscription[];
+//temp user
+user: IUser = {
+  userId: 3,
+  fName: 'Ahmad',
+  lName: 'Esam',
+  email: 'ahmad.esam@ex.com',
+  password: '123',
+  phone: "1015328933",
+  governorate: 'Ghatbia',
+  city: 'MAhalla',
+  street: 'Farouk21',
+  postalCode: "12345",
+  isDeleted: false,
+  role: 1
+};
+
+wishList?:IwhishListProduct[];
+
+
+
+
 
   constructor(private productService: ProductService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private wishListService:WishListService
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    throw new Error('Method not implemented.');
+  }
   ngOnDestroy(): void {
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
     this.getProductsPaginated(1,10);
+    this.fetchWishList(this.user.userId);
+    console.log(this.wishList);
+   
   }
 
   /*start observers*/
@@ -83,20 +117,117 @@ export class ProductsListComponent implements OnInit, OnDestroy{
   addToCart(product: IProduct): void {
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
-    const existingProduct = cart.productsAmounts.find(p => p.productId === product.productId);
+    const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+    console.log( `the product from cart is ${existingProduct?.amount}`);
+      console.log(`the product from product list ${product.amount}`)
+    
     if (existingProduct) {
+      
+
+      if(this.isProductReachedMaxAmount(product)){
+        this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        return;
+      }
+
+
       existingProduct.amount += 1;
+      this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+
     } else {
-      product.amount = 1;
-      cart.productsAmounts.push(product);
+      let newCartItme={
+        productId:product.productId,
+        amount:1,
+        categoryId:product.categoryId,
+        categoryName:product.categoryName,
+        description:product.description,
+        discount:product.discount,
+        finalPrice:product.finalPrice,
+        name:product.name,
+        originalPrice:product.originalPrice,
+        productImages:product.productImages,
+      
+
+      }
+     
+      cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
+      this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+
     }
 
     cart.finalPrice += product.finalPrice;
     cart.numberOfProducts += 1;
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    
   }
+
+fetchWishList(UserId:number){
+  this.wishListService.getWishList(UserId).subscribe(
+    (data)=>{
+      console.log("from success section")
+      console.log(data);
+      this.wishList=data;
+   
+     
+      
+    },
+    (error)=>{
+      console.log("error section")
+      console.log(error);
+      
+    }
+    
+  );
+ 
+
+}
+  addProductToWishList(item:IAddWishListProduct)
+{
+  this.wishListService.addWishListProduct(item).subscribe(
+    ()=>{
+      console.log("from success section")
+      this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      this.fetchWishList(this.user.userId);
+    },
+    (error)=>{
+      console.log("error section")
+      console.log(error);
+      this.snackBar.open('حدث خطأ أثناء إضافة المنتج إلى  القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    }
+  );
+}
+
+isProductInWishlist(productId:number):boolean{
+  if(!this.wishList){
+    return false;
+  }
+  return this.wishList.some(p=>p.productId===productId);
+}
+isProductInCart(productId:number){
+  const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+  return cart.productsAmounts.some(p=>p.productId===productId);
+
+}
+removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
+  this.wishListService.deleteWishListProduct(wishListProduct.UserId, wishListProduct.ProductId).subscribe(
+    () => {
+      this.fetchWishList(this.user.userId);
+      this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
+    },
+    (error) => {
+      console.error('Error removing product from wishlist:', error);
+      this.snackBar.open('حدث خطأ أثناء حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    }
+  );
+}
+isProductReachedMaxAmount(product:IProduct):boolean{
+  const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+  const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+  if(existingProduct){
+    return existingProduct.amount>=product.amount;
+  }
+  return false;
+}
 
 }
