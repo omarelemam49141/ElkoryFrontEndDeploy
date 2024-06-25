@@ -151,6 +151,14 @@ export class AccountService {
     return jwtDecode.jwtDecode(token??'');
   }
 
+  public getTokenId() {
+    let decodedToken = this.decodedToken;
+    if (decodedToken) {
+      return Object.values(decodedToken)[0];
+    }
+    return '';
+  }
+
   public getTokenEmail() {
     let decodedToken = this.decodedToken;
     if (decodedToken) {
