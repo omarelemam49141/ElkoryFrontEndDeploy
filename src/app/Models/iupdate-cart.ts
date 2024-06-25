@@ -1,5 +1,5 @@
 export interface IUpdateCart {
-    userEmail: string;
+    userId: number;
     productsIds: number[];
     amounts: number[];
 }

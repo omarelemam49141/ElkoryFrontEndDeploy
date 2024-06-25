@@ -26,7 +26,7 @@ export class ProductService {
   }
 
   public getById(id: number): Observable<IProduct> {
-    return this.http.get<IProduct>(`${environment.apiUrl}/${id}`);
+    return this.http.get<IProduct>(`${environment.apiUrl}/product/${id}`);
   }
 
   public getPictures(productId: number): Observable<string[]> {

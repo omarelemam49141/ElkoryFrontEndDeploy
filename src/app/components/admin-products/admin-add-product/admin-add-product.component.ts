@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import { IProduct } from '../../../Models/iproduct';
 import { ICategory } from '../../../Models/icategory';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 import { IAddProduct } from '../../../Models/iadd-product';
 import { Subscription } from 'rxjs';
@@ -15,6 +15,8 @@ import { oneImageAtLeast } from '../../../custom-validators/oneImageAtLeast';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FileService } from '../../../services/file.service';
 import { GenericService } from '../../../services/generic.service';
+import { IProductCategorySubValues } from '../../../Models/iproduct-category-sub-values';
+import { ICategorySubCategoriesValues } from '../../../Models/icategory-sub-categories-values';
 
 
 @Component({
@@ -28,6 +30,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*start form properties*/
   productForm: FormGroup;
   allCategories: ICategory[] = [];
+  subCategoriesAndValues?: ICategorySubCategoriesValues;
 
   /*start edit product properties*/
   productToEdit?: IProduct;
@@ -54,7 +57,8 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     private activatedRoute: ActivatedRoute,
     private fileService: FileService,
     private genericService: GenericService<ICategory>,
-    private router: Router
+    private router: Router,
+    private categoryService: CategoryService
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required]],
@@ -67,8 +71,12 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       amount: ['', [Validators.required, Validators.min(0)]],
       description: ['', [Validators.required]],
       categoryId: ['', [Validators.required, CheckCategoryIsSelected]],
+      subCategoriesWithValues: new FormArray([
+
+      ])
     })
   }
+
 
   /*observers*/
   InsertNewImagesToProduct() {
@@ -97,15 +105,11 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   productsObserver = {
-    next: (data: any) => {
+    next: (productData: any) => {
       if (!this.productToEdit) {
-        this.productService.insertPictures(data.productId, this.images.value).subscribe({
+        this.productService.insertPictures(productData.productId, this.images.value).subscribe({
           next: data => {
-            this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-              data: 'تم اضافة المنتج بنجاح!',
-              duration: this.snackBarDurationInSeconds * 1000
-            });
-            this.router.navigate(["/admin-products"]);
+            this.addAllSelectedSubCategoriesValuesToProduct(productData.productId);
           },
           error: (err: Error) => {
             this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -158,6 +162,24 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.subscriptions?.push(this.genericService.getAll('category/all').subscribe(this.categoryObserver));
     this.populateEditForm();
+  }
+
+  addAllSelectedSubCategoriesValuesToProduct(productId: number) {
+    //add the product sub categories values
+    if (this.subCategoriesWithValues) {
+      this.subCategoriesWithValues.controls.forEach((subCategoryGroup, index) => {
+        let productCategorySubCategoryValue: IProductCategorySubValues 
+        = this.mapSubCategoryValueFieldsToproductCategorySubCategoryValue(
+          productId,
+          this.productForm.get('categoryId')?.value,
+          subCategoryGroup.get('selectedValue')?.value,
+          +subCategoryGroup.get('subCategoryId')?.value
+          
+        )
+
+        this.addSubCategoriesValueToProduct(productCategorySubCategoryValue, index);
+      });
+    }
   }
 
   private populateEditForm() {
@@ -251,7 +273,81 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       }
     }
   }
+
+  addSubCategoriesToForm(subCategoriesAndValues: ICategorySubCategoriesValues) {
+    this.subCategoriesWithValues.clear();
+    subCategoriesAndValues.subCategories.forEach(subCategory => {
+      this.subCategoriesWithValues.push(this.fb.group({
+        subCategoryId: [subCategory.subCategoryId, [Validators.required]],
+        selectedValue: ['', [Validators.required]],
+        subCategoryName: [subCategory.name, [Validators.required]],
+        subCategoryValues: this.fb.array(subCategory.values.map(value => {
+          return this.fb.control(value.value);
+        })),
+      }));
+    })
+  }
+
+  getSubCategoryValues(subCategory: any): FormArray {
+    return subCategory.get('subCategoryValues') as FormArray;
+  }
+
+  displaySubCategories() {
+    if (this.categoryId?.value == -1) {
+      this.subCategoriesWithValues.clear();
+      return
+    }
+    this.categoryService.getCategorySubCategoriesWithValues(this.categoryId?.value).subscribe({
+      next: (data: ICategorySubCategoriesValues) => {
+        this.addSubCategoriesToForm(data);
+      },
+      error: (err: Error) => {
+        console.log(err)
+        this.snackBar.openFromComponent(FailedSnackbarComponent, {
+          data: "تعذر تحميل الأقسام الفرعية",
+          duration: this.snackBarDurationInSeconds * 1000
+        })
+      }
+    })
+  }
   /*end images functions*/
+
+  mapSubCategoryValueFieldsToproductCategorySubCategoryValue(
+    productId:number, 
+    subCategoryId:number,
+    subCategoryValue:string,
+    categoryId: number): IProductCategorySubValues {
+    let productCategorySubCategoryValue: IProductCategorySubValues = {
+      productId: productId,
+      subCategoryId: subCategoryId,
+      value: subCategoryValue,
+      categoryId: categoryId
+    }
+
+    return productCategorySubCategoryValue;
+  }
+
+  addSubCategoriesValueToProduct(productCategorySubCategoryValue: IProductCategorySubValues, subCategoryValueIndex: number) {
+    this.categoryService.addProductCategorySubCategoryValue(productCategorySubCategoryValue).subscribe({
+      next: () => {
+        if (subCategoryValueIndex == this.subCategoriesWithValues.controls.length - 1) {
+          this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+            data: 'تم اضافة المنتج بنجاح!',
+            duration: this.snackBarDurationInSeconds * 1000
+          });
+
+          this.router.navigate(["/admin-products"]);
+        }
+      },
+      error: (err: Error) => {
+        console.log(err)
+        this.snackBar.openFromComponent(FailedSnackbarComponent, {
+          data: "تعذر اض  افة المنتج الى الأقسام الفرعية",
+          duration: this.snackBarDurationInSeconds * 1000
+        })
+      }
+    })
+  }
 
   /*submit the form*/
   submitProduct(): void {
@@ -287,6 +383,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
   get imagesToAdd(): FormArray {
     return this.productForm.get("imagesToAdd") as FormArray;
+  }
+
+  get subCategoriesWithValues() {
+    return this.productForm.get("subCategoriesWithValues") as FormArray;
   }
 
   ngOnDestroy(): void {

@@ -80,8 +80,6 @@ export class AccountService {
         'Authorization': token??''
     });
 
-    console.log(token)
-
     //send the request
     return this.http.get<IEditProfile>(`${environment.apiUrl}/Account/userInfo?email=${email}`, {headers})
     .pipe(

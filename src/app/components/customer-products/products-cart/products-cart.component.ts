@@ -8,14 +8,16 @@ import { Subscription } from 'rxjs';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { AccountService } from '../../../services/account.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Token } from '@angular/compiler';
 import { IProduct } from '../../../Models/iproduct';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SendOrderComponent } from '../send-order/send-order.component';
 
 @Component({
   selector: 'app-products-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './products-cart.component.html',
   styleUrl: './products-cart.component.scss'
 })
@@ -32,12 +34,14 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   constructor(private cartService: CartService,
     private snackBar: MatSnackBar,
     private accountService: AccountService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
   ) {}
 
   //observers
   getCartObserver = {
     next: (data: ICart) => {
+      console.log(data)
       localStorage.setItem("cart", JSON.stringify(data));
       this.cart = data
     },
@@ -48,12 +52,9 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
       })
     }
   }
+
   deleteCartObserver = {
     next: (data: ICart) => {
-      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
-        data: " تم حذف العربة بنجاح!",
-        duration: this.notificationDurationInSeconds * 1000
-      })
       this.loadCart();
     },
     error: (err: Error) => {
@@ -113,6 +114,15 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   }
 
   updateProductAmount(product: IProduct, event: any): void {
+    console.log(product.allAmount)
+    if (event.target.value < 1) {
+      product.amount = 1;
+      return;
+    } else if (event.target.value > product.allAmount!) {
+      product.amount = event.target.value;
+      return;
+    }
+
     if (event.target.value < product.amount) {
       product.amount = event.target.value;
       this.decreaseCartPrice(product.productId);
@@ -132,13 +142,43 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
     }
   }
 
-  updateCart(): void {
-    this.cartService.updateCart(this.cart).subscribe(this.updateCartObserver);
+  updateCart(isOrderOpen: boolean = false): void {
+    if (isOrderOpen) {
+      this.cartService.updateCart(this.cart).subscribe({
+        next: (data: ICart) => {
+          this.openSendOrder();
+        },
+        error: (err: Error) => {
+          console.log(err)
+          this.snackBar.openFromComponent(FailedSnackbarComponent, {
+            data: "تعذر تعديل العربة!",
+            duration: this.notificationDurationInSeconds * 1000
+          })
+        }
+      });
+    } else {
+      this.cartService.updateCart(this.cart).subscribe(this.updateCartObserver);
+    }
   }
 
   deleteProductFromCart(productId: number): void {
     this.cart.productsAmounts = this.cart.productsAmounts.filter(p => p.productId != productId);
     this.updateLocalStorageWithCart();
+  }
+
+  openSendOrder() {
+    let dialogRef: MatDialogRef<SendOrderComponent> = this.dialog.open(SendOrderComponent, {
+    })
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (data) {
+        this.clearCart();
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: "تم ارسال الطلب بنجاح!",
+          duration: this.notificationDurationInSeconds * 1000
+        })
+      }
+    })
   }
 
   ngOnDestroy(): void {
