@@ -33,11 +33,12 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     fName: 'Ahmad',
     lName: 'Esam',
     email: 'ahmad.esam@ex.com',
-    phone: 1015328933,
+    phone: '1015328933',
     governorate: 'Ghatbia',
     city: 'MAhalla',
     street: 'Farouk21',
-    postalCode: 12345,
+    postalCode: '12345',
+    password: '12345',
     isDeleted: false,
     role: 1
   };
@@ -174,8 +175,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
     return this.wishList.some(p=>p.productId===productId);
   }
-  removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
-    this.wishListService.deleteWishListProduct(wishListProduct.UserId, wishListProduct.ProductId).subscribe(
+  removeFromWishList(wishListProduct: { userId: number, productId: number }): void {
+    this.wishListService.deleteWishListProduct(wishListProduct.userId, wishListProduct.productId).subscribe(
       () => {
         this.fetchWishList(this.user.userId);
         this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })

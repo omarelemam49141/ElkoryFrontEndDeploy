@@ -16,12 +16,13 @@ export class ProductsWishListComponent implements OnInit {
     userId: 3,
     fName: 'Ahmad',
     lName: 'Esam',
+    password: '12345',
     email: 'ahmad.esam@ex.com',
-    phone: 1015328933,
+    phone: '1015328933',
     governorate: 'Ghatbia',
     city: 'MAhalla',
     street: 'Farouk21',
-    postalCode: 12345,
+    postalCode: '12345',
     isDeleted: false,
     role: 1
   };

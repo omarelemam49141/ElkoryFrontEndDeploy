@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ISignUpModel } from '../Models/isign-up-model';
 import { environment } from '../../environment/environment';
 import { GenericService } from './generic.service';
-import { Observable, catchError, retry, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, retry, throwError } from 'rxjs';
 import { ILoginModel } from '../Models/ilogin-model';
 import { IResetPassword } from '../Models/ireset-password';
 import { IEditProfile } from '../Models/iedit-profile';
@@ -15,6 +15,8 @@ import { IForgetPassword } from '../Models/iforget-password';
   providedIn: 'root'
 })
 export class AccountService {
+  public loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
   public isLoggedIn: boolean = false;
   user?: {}
 
@@ -32,6 +34,10 @@ export class AccountService {
     .pipe(
       catchError(this.genericService.handlingErrors)
     )
+  }
+
+  public activateLogin() {
+    this.loggedInSubject.next(true);
   }
 
   public login(loginModel: ILoginModel): Observable<HttpResponse<any>> {
@@ -119,6 +125,7 @@ export class AccountService {
   public logout(): void {
     localStorage.removeItem("token");
     this.isLoggedIn = false;
+    this.loggedInSubject.next(false);
   }
 
   public verifyEmail(verifyEmail: IVerifyEmail): Observable<any> {

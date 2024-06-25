@@ -22,7 +22,8 @@ import { AdminMenuComponent } from './components/main-components/admin-menu/admi
   standalone: true,
   imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
-  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, AdminProductsListComponent,ProductsWishListComponent],
+  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, 
+  AdminProductsListComponent,ProductsWishListComponent, AdminMenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   
