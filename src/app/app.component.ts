@@ -12,6 +12,8 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { WhatsappButtonComponent } from './components/whatsapp-button/whatsapp-button.component';
 import { ViewUsersComponent } from './components/AdminUserManagement/view-users/view-users.component';
 import { AdminProductsListComponent } from './components/admin-products/admin-products-list/admin-products-list.component';
+import { ProductsWishListComponent } from './components/customer-products/products-wish-list/products-wish-list.component';
+
 import { AccountService } from './services/account.service';
 import { AdminMenuComponent } from './components/main-components/admin-menu/admin-menu.component';
 
@@ -20,10 +22,11 @@ import { AdminMenuComponent } from './components/main-components/admin-menu/admi
   standalone: true,
   imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
-  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent,
-  WhatsappButtonComponent, AdminProductsListComponent, AdminMenuComponent],
+  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, AdminProductsListComponent,ProductsWishListComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  
+
 })
 export class AppComponent {
   loading$ = this.loadingService.loading$;

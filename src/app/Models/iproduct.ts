@@ -1,3 +1,4 @@
+
 import { IProductImage } from "./iproduct-image";
 
 export interface IProduct {

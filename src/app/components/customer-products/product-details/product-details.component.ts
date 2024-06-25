@@ -7,6 +7,10 @@ import { IProduct } from '../../../Models/iproduct';
 import { CurrencyPipe, CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
+import { IwhishListProduct } from '../../../Models/IwishListProduct';
+import { WishListService } from '../../../services/wishList.service';
+import { IUser } from '../../../Models/iuser';
+import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 
 
 @Component({
@@ -23,12 +27,31 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   image: string | undefined;
   images: string[][] = [];
   quantity: number = 1; // Initialize quantity to 1
+  wishList:IwhishListProduct [] = [];
+  user: IUser = {
+    userId: 3,
+    fName: 'Ahmad',
+    lName: 'Esam',
+    email: 'ahmad.esam@ex.com',
+    phone: 1015328933,
+    governorate: 'Ghatbia',
+    city: 'MAhalla',
+    street: 'Farouk21',
+    postalCode: 12345,
+    isDeleted: false,
+    role: 1
+  };
+  
+  snackBarDurationInSeconds = 5;
+
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
     private categoryService: CategoryService,
-    private snackBar: MatSnackBar // Add MatSnackBar here
+    private snackBar: MatSnackBar, // Add MatSnackBar here
+    private wishListService:WishListService
+
 
   ) {}
 
@@ -37,6 +60,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       const productId = Number(params.get('id'));
       this.fetchProductDetails(productId);
     });
+    this.fetchWishList(this.user.userId);
   }
 
   fetchProductDetails(productId: number): void {
@@ -83,7 +107,26 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       this.quantity--;
     }
   }
-
+  fetchWishList(UserId:number){
+    this.wishListService.getWishList(UserId).subscribe(
+      (data)=>{
+        console.log("from success section")
+        console.log(data);
+        this.wishList=data;
+     
+       
+        
+      },
+      (error)=>{
+        console.log("error section")
+        console.log(error);
+        
+      }
+      
+    );
+   
+  
+  }
   addToCart(product: IProduct): void {
     // Implement your logic to add to cart using this.quantity
     const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
@@ -107,5 +150,40 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     // Provide feedback to the user
     const snackBarDurationInSeconds = 5;
     this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: snackBarDurationInSeconds * 1500 });
+  }
+
+  addProductToWishList(item:IAddWishListProduct)
+  {
+    this.wishListService.addWishListProduct(item).subscribe(
+      ()=>{
+        console.log("from success section")
+        this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        this.fetchWishList(this.user.userId);
+      },
+      (error)=>{
+        console.log("error section")
+        console.log(error);
+        this.snackBar.open('حدث خطأ أثناء إضافة المنتج إلى  القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      }
+    );
+  }
+  
+  isProductInWishlist(productId:number):boolean{
+    if(!this.wishList){
+      return false;
+    }
+    return this.wishList.some(p=>p.productId===productId);
+  }
+  removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
+    this.wishListService.deleteWishListProduct(wishListProduct.UserId, wishListProduct.ProductId).subscribe(
+      () => {
+        this.fetchWishList(this.user.userId);
+        this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
+      },
+      (error) => {
+        console.error('Error removing product from wishlist:', error);
+        this.snackBar.open('حدث خطأ أثناء حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      }
+    );
   }
 }
