@@ -171,9 +171,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.subscriptions?.push(this.productService.getById(id).subscribe(product => {
           this.productToEdit = product;
           this.productForm.patchValue(this.productToEdit);
-          this.productForm.get("images")?.setValue(this.fb.array([
-            ['', [Validators.required]]
-          ], oneImageAtLeast));
           this.subscriptions?.push(this.productService.getPictures(id).subscribe(imagesUrls => {
             if (imagesUrls.length > 0) {
               this.imagesArray = imagesUrls;
@@ -197,6 +194,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
               }).catch(error => {
                 console.error('Error processing images:', error);
               });
+            } else {
+              this.productForm.get("images")?.setValue(this.fb.array([
+                ['', [Validators.required]]
+              ], oneImageAtLeast));
             }
           }));
         }));
