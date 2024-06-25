@@ -18,6 +18,7 @@ export class WhatsappButtonComponent implements OnInit, OnDestroy {
 subscriptions: Subscription[] = [];
 
 
+
 webInfo: IWebInfo | undefined;
 
 fetchWebInfo(): void {
@@ -64,7 +65,6 @@ fetchWebInfo(): void {
       console.error('floatingWhatsApp plugin not loaded');
     }
   }
-
 
   openWhatsApp(event: any) {
     if (event) {

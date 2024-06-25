@@ -184,18 +184,18 @@ fetchWishList(UserId:number){
 }
   addProductToWishList(item:IAddWishListProduct)
 {
-  this.wishListService.addWishListProduct(item).subscribe(
-    ()=>{
+  this.wishListService.addWishListProduct(item).subscribe({
+    next: (data: any) => {
       console.log("from success section")
       this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
       this.fetchWishList(this.user.userId);
     },
-    (error)=>{
+    error: (err: Error)=> {
       console.log("error section")
-      console.log(error);
+      console.log(err);
       this.snackBar.open('حدث خطأ أثناء إضافة المنتج إلى  القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
     }
-  );
+  })
 }
 
 isProductInWishlist(productId:number):boolean{

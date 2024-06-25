@@ -46,8 +46,6 @@ export class SignupComponent implements OnDestroy{
         data: 'تم انشاء الحساب, قم بتفقد حسابك',
         duration: this.snackBarDurationInSeconds * 1000
       });
-      localStorage.setItem("token", "Bearer " + data);
-      this.accountService.isLoggedIn = true;
       this.router.navigate(["/customer-account/verify-email"])
     },
     error: (err:Error)=> {

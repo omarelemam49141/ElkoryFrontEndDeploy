@@ -1,5 +1,5 @@
 export interface IAddWishListProduct{
-    UserId:number;
-    ProductId:number;
+    userId:number;
+    productId:number;
     
 }

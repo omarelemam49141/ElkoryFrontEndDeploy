@@ -17,6 +17,7 @@ export class ProductsWishListComponent implements OnInit {
     fName: 'Ahmad',
     lName: 'Esam',
     email: 'ahmad.esam@ex.com',
+
     password: '123',
     phone: "1015328933",
     governorate: 'Ghatbia',

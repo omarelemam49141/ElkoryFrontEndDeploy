@@ -36,7 +36,7 @@ export class AddAdminComponent {
       console.log(data);
     });
     //redirect to view-admins
-    this.router.navigate(['/view-admins']);
+    this.router.navigate(['/admin-user-management/view-admins']);
   }
 
   AddNewAdmin(){
@@ -44,7 +44,7 @@ export class AddAdminComponent {
       console.log(data);
     });
     //redirect to view-admins with refreshed data
-    this.router.navigate(['/view-admins']);
+    this.router.navigate(['/admin-user-management/view-admins']);
 
   }
 
