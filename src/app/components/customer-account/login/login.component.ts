@@ -37,10 +37,11 @@ export class LoginComponent {
       const token = response.headers.get('bearer-token'); // Adjust header name as necessary
       this.snackBar.openFromComponent(SuccessSnackbarComponent, {
         data: 'تم تسجيل الدخول بنجاح',
-        duration: this.snackBarDurationInSeconds * 1000
+        duration: this.snackBarDurationInSeconds * 100
       });
       localStorage.setItem("token", "Bearer " + token);
       this.accountService.isLoggedIn = true;
+      this.accountService.activateLogin();
       this.router.navigate(["/customer-account/view-profile"])
     },
     error: (err: Error) => {

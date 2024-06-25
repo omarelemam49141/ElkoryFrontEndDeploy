@@ -175,8 +175,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
     return this.wishList.some(p=>p.productId===productId);
   }
-  removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
-    this.wishListService.deleteWishListProduct(wishListProduct.UserId, wishListProduct.ProductId).subscribe(
+  removeFromWishList(wishListProduct: { userId: number, productId: number }): void {
+    this.wishListService.deleteWishListProduct(wishListProduct.userId, wishListProduct.productId).subscribe(
       () => {
         this.fetchWishList(this.user.userId);
         this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })

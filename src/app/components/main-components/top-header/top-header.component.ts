@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faBars, faChevronDown, faUserTie, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
@@ -6,19 +6,23 @@ import { Subscription } from 'rxjs';
 import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { WebInfoService } from '../../../services/WebInfo.service';
 import { RouterLink } from '@angular/router';
+import { AccountService } from '../../../services/account.service';
 
 @Component({
   selector: 'app-top-header',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, RouterLink],
+  imports: [CommonModule, FontAwesomeModule, RouterLink, AsyncPipe],
   templateUrl: './top-header.component.html',
   styleUrls: ['./top-header.component.scss']
 })
 export class TopHeaderComponent implements OnDestroy, OnInit {
   subscriptions: Subscription[] = [];
   webInfo: IWebInfo | undefined;
+  isLogged!: boolean;
 
-  constructor(library: FaIconLibrary, private webInfoService: WebInfoService) {
+  constructor(library: FaIconLibrary, private webInfoService: WebInfoService,
+    public accountService: AccountService
+  ) {
     library.addIcons(faBars, faChevronDown, faUserTie, faShoppingCart);
   }
 
@@ -42,6 +46,15 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.fetchWebInfo();
+    this.accountService.loggedInSubject.subscribe({
+      next: (data) => {
+        this.isLogged = data; 
+      }
+    })
+  }
+
+  logOut() {
+    this.accountService.logout();
   }
 
   ngOnDestroy(): void {

@@ -40,7 +40,7 @@ export class ViewAdminsComponent {
   }
 
   navigateToAddAdmin(): void {
-    this.router.navigate(['/add-admin']);
+    this.router.navigate(['/admin-user-management/add-admin']);
   }
 
 }
