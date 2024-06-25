@@ -10,34 +10,30 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./whatsapp-button.component.scss'],
 })
 
-export class WhatsappButtonComponent implements OnInit , OnDestroy {
-
+export class WhatsappButtonComponent implements OnInit, OnDestroy {
   phone: string = '+201021275272'; // Your WhatsApp number
   message: string = 'مرحبًا، كيف يمكننا مساعدتك؟'; // Your message in Arabic
 
-  constructor( private webInfoService: WebInfoService) { }
+  constructor( private webInfoService: WebInfoService) {}
+subscriptions: Subscription[] = [];
 
 
-  subscriptions: Subscription[] = [];
 
+webInfo: IWebInfo | undefined;
 
-  webInfo: IWebInfo | undefined;
-
-  fetchWebInfo(): void {
-      const subscription = this.webInfoService.getWebInfo().subscribe({
-        next: (webInfo: IWebInfo) => {
-          
-          this.webInfo = webInfo;
-          console.log('Assigned webInfo:', this.webInfo);
-        },
-        error: (error: any) => {
-          // console.error('Error fetching web info', error);
-        }
-      });
-      this.subscriptions.push(subscription);
-    }
-
-
+fetchWebInfo(): void {
+    const subscription = this.webInfoService.getWebInfo().subscribe({
+      next: (webInfo: IWebInfo) => {
+        
+        this.webInfo = webInfo;
+        console.log('Assigned webInfo:', this.webInfo);
+      },
+      error: (error: any) => {
+        // console.error('Error fetching web info', error);
+      }
+    });
+    this.subscriptions.push(subscription);
+  }
   ngOnInit(): void {
     this.loadWhatsAppScript();
     this.fetchWebInfo();
@@ -56,7 +52,7 @@ export class WhatsappButtonComponent implements OnInit , OnDestroy {
   initializeFloatingWhatsApp() {
     if ((window as any).$ && (window as any).$.fn.floatingWhatsApp) {
       (window as any).$('#WAButton').floatingWhatsApp({
-        phone: this.phone,
+        phone: this.webInfo?.webPhone,
         headerTitle: 'رسالة', // Popup title in Arabic
         popupMessage: this.message,
         showPopup: true,
