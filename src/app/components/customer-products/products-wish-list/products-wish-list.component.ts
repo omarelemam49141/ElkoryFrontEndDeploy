@@ -17,11 +17,12 @@ export class ProductsWishListComponent implements OnInit {
     fName: 'Ahmad',
     lName: 'Esam',
     email: 'ahmad.esam@ex.com',
-    phone: 1015328933,
+    password: '123',
+    phone: "1015328933",
     governorate: 'Ghatbia',
     city: 'MAhalla',
     street: 'Farouk21',
-    postalCode: 12345,
+    postalCode: "12345",
     isDeleted: false,
     role: 1
   };
