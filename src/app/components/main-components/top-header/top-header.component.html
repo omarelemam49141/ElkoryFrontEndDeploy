@@ -19,7 +19,7 @@
           <span class="fi fi-eg"></span>
           <fa-icon [icon]="['fas', 'chevron-down']" class="arrow"></fa-icon>
         </a>
-        @if (!isLogged) {
+        @if (!accountService.isLoggedIn) {
           <a routerLink="/customer-account/login" routerLinkActive="active" class="nav-link arabic">
             <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
             تسجيل الدخول
@@ -30,15 +30,13 @@
             تسجيل الخروج
           </a>
         }
-        
-        
       </div>
     </div>
     <a routerLink="/customer-products/products-cart" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
       <span class="cart-title">عربة التسوق</span>
       <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon"></fa-icon>
     </a>
-    @if(!isLogged) {
+    @if(!accountService.isLoggedIn) {
       <button routerLink="/customer-account/login" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
         <span class="cart-title">تسجيل الدخول</span>
         <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
@@ -49,7 +47,6 @@
         <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
       </button>
     }
-    
   </div>
 </div>
 
