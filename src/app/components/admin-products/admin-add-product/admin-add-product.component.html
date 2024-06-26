@@ -44,17 +44,50 @@
         </div>
 
         <div class="form-field col-lg-6">
-            <select id="categoryId" formControlName="categoryId" class="input-text js-input">
-                <option value="-1">اختر القسم</option>
+            <select id="categoryId" formControlName="categoryId" class="input-text js-input" (change)="displaySubCategories()">
+                <option value="-1" selected="true">اختر القسم</option>
                 <option *ngFor="let category of allCategories" [value]="category.categoryId">{{category.name}}</option>
             </select>
             <label class="label" for="categoryId">القسم</label>
             <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
-                <span *ngIf="categoryId?.errors?.['required']">القسم مطلوب</span>
+                <span *ngIf="categoryId?.errors?.['required']" selected>القسم مطلوب</span>
                 <span *ngIf="categoryId?.errors?.['categoryNotSelected']">القسم مطلوب</span>
             </div>
         </div>
 
+        <div class="form-field col-lg-12">
+            <div formArrayName="subCategoriesWithValues" *ngIf="subCategoriesWithValues?.length; else noSubCategories">
+                <div *ngFor="let subCategory of subCategoriesWithValues.controls; let i = index" [formGroupName]="i" class="form-field col">
+                  <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
+                  <input type="hidden" formControlName="subCategoryId">
+                  <select class="input-text js-input" formControlName="selectedValue">
+                    <option value="-1" selected="true">اختر ال {{ subCategory.get('subCategoryName')?.value }}</option>
+                    <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
+                </select>
+                </div>
+              </div>
+            
+            <ng-template #noSubCategories>
+              <p class="lead text-center">قم باختيار قسم حتى يتم تحديد الأقسام الفرعية</p>
+            </ng-template>
+            <!-- @for (subCategory of subCategoriesWithValues.controls; track $index) {
+                <div [formControlName]="$index">
+                    <label formControlName="subCategoryId">{{subCategoriesWithValues.at($index).get("subCategoryName")?.value}}</label>
+                    
+                    <select id="index" formControlName="selectedValue" class="input-text js-input">
+                        <option value="-1">اختر ال {{subCategoriesWithValues.at($index).get("subCategoryName")?.value}}</option>
+                        @for(subCategoryValue of subCategoryValues($index).controls; track i; let i=$index) {
+                            <option [value]="subCategoryValues($index).controls[i].value">{{subCategoryValues($index).controls[i].value}}</option>
+                        }
+                    </select>
+
+                    <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
+                        <span *ngIf="categoryId?.errors?.['required']">القسم مطلوب</span>
+                        <span *ngIf="categoryId?.errors?.['categoryNotSelected']">القسم مطلوب</span>
+                    </div>
+                </div>
+            } -->
+        </div>
         
         <div class="form-field col-lg-12">
             <div formArrayName="images">

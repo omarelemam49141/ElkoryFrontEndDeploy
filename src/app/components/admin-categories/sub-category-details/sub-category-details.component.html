@@ -23,25 +23,25 @@
             
             <div class="row mt-4" id="ads">
                 <button class="btn btn-primary w-50 m-auto" type="button" (click)="SubCategoryValueModal(subCategory.subCategoryId)">اضافة قيمة الى القسم الفرعى</button>
-                <!-- <h3 class="text-center text-light my-4">القيم التي يمتلكها القسم الفرعى</h3>
-                @for (value of offer.productOffers; track prod.productId;) {
-                    <div class="col-md-4 col-lg-3 mb-3">
-                        <div class="card rounded">
-                            <div class="card-image">
-                                <span class="card-notify-year">-{{prod.discount}}</span>
-                                <img class="img-fluid" [src]="!productsImage[$index] ? 'assets/images/no-image.png' : productsImage[$index]" alt="Alternate Text" />
-                            </div>
-                            <div class="card-body text-center">
-                                <div class="ad-title m-auto">
-                                    <h4>{{prod.name}}</h4>
-                                    <h5>الكمية المطلوبة لتغعيل العرض: {{prod.productAmount}}</h5>
+                <h3 class="text-center text-light my-4">القيم التي يمتلكها القسم الفرعى</h3>
+                @for (categoryValues of subCategory.categories; track subCategory.subCategoryId;) {
+                    @for (value of categoryValues.values; track $index) {
+                        <div class="col-md-4 col-lg-3 mb-3">
+                            <div class="card rounded">
+                                <div class="card-image">
+                                    <img class="img-fluid" [src]="!value.imageUrl ? 'assets/images/no-image.png' : value.imageUrl" alt="Alternate Text" />
                                 </div>
-                                <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a>
-                                <a class="ad-btn" (click)="addOfferProduct(offer.offerId, offer.title, prod.productId, prod.productAmount, prod.discount)">تعديل</a>
+                                <div class="card-body text-center">
+                                    <div class="ad-title m-auto">
+                                        <h4>{{value.value}}</h4>
+                                        <h5>القسم: <span class="text-success">{{categoryValues.name}}</span></h5>
+                                    </div>
+                                    <!-- <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a> -->
+                                </div>
                             </div>
                         </div>
-                    </div>
-                } -->
+                    }
+                }
             </div>
         </div>
     </section>

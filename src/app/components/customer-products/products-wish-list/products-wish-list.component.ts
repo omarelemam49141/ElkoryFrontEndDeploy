@@ -17,7 +17,6 @@ export class ProductsWishListComponent implements OnInit {
     fName: 'Ahmad',
     lName: 'Esam',
     email: 'ahmad.esam@ex.com',
-
     password: '123',
     phone: "1015328933",
     governorate: 'Ghatbia',
@@ -27,6 +26,7 @@ export class ProductsWishListComponent implements OnInit {
     isDeleted: false,
     role: 1
   };
+  
   wishListProducts: IwhishListProduct[] = [];
   wishList?:IwhishListProduct[];
 

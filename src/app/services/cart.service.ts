@@ -6,6 +6,7 @@ import  * as jwtDecode  from 'jwt-decode';
 import { GenericService } from './generic.service';
 import { environment } from '../../environment/environment';
 import { IUpdateCart } from '../Models/iupdate-cart';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ import { IUpdateCart } from '../Models/iupdate-cart';
 export class CartService{
   constructor(private http: HttpClient,
     private genericServcie: GenericService<ICart>,
+    private accountService: AccountService
   ) { }
 
   getLoggedInUserEmail() : string | null{
@@ -47,18 +49,21 @@ export class CartService{
 
   public updateCart(cart: ICart): Observable<any> {
     //get the token and decode it
-    let userEmail = this.getLoggedInUserEmail();
-    if (!userEmail) {
+    let userId = this.accountService.getTokenId();
+    if (!userId) {
       return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
     }
 
+    console.log(userId)
+
     //get the products ids in an array
     let productsIds = cart.productsAmounts.map(product => product.productId);
+    console.log(productsIds)
     //get the products amounts in an array
     let productsAmounts = cart.productsAmounts.map(product => product.amount);
     //make an IUpdateCart object
     let updateCart: IUpdateCart = {
-      userEmail: userEmail,
+      userId: userId,
       productsIds: productsIds,
       amounts: productsAmounts
     }
@@ -67,7 +72,7 @@ export class CartService{
     this.genericServcie.addHeaders("Content-Type", "application/json");
 
     //update the cart
-    return this.http.put<any>(`${environment.apiUrl}/cart}`, updateCart, this.genericServcie.getHeaders())
+    return this.http.put<any>(`${environment.apiUrl}/cart`, updateCart, this.genericServcie.getHeaders())
     .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)
