@@ -61,7 +61,21 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
       }
 
       this.createWebInfoForm();
+
+      this.addImageToForm(webInfoModel.webLogoImageUrl);
     })
+  }
+
+  addImageToForm(imageUrl: string) {
+    this.webSiteImage = imageUrl;
+    if (imageUrl) {
+      //get the image name from the image url
+      let imageName: string = imageUrl.split('/').pop()!;
+      let mimeType: string = imageUrl.split(';')[0].split(':')[1];
+      this.fileService.urlToFile(imageUrl, imageName, mimeType).then(file=> {
+        this.webInfoForm.get("webLogo")?.setValue(file);
+      });
+    }
   }
 
   async getWebInfoIfExist() {
@@ -108,7 +122,7 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
     this.webInfoForm = this.fb.group({
       webPhone: [this.webInfoToEdit?.webPhone, [Validators.required]],
       webName: [this.webInfoToEdit?.webName, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      webLogo: [this.webInfoToEdit?.webLogo, [Validators.required]],
+      webLogo: ['', [Validators.required]],
       instagramAccount: [this.webInfoToEdit?.instagramAccount, [Validators.required, Validators.minLength(2)]],
       facebookAccount: [this.webInfoToEdit?.facebookAccount, [Validators.required, Validators.minLength(2)]]
     })
@@ -121,9 +135,9 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
           data: 'تم حقظ معلومات الموقع بنجاح',
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.getWebInfoIfExist();
       },
       error: (err) => {
-        console.log(err)
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر حفظ معلومات الموقع',
           duration: this.notificationDurationInSeconds * 1000
