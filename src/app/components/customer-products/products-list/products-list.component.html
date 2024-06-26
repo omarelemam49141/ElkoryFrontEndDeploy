@@ -27,27 +27,27 @@
           <div class="card-body p-4">
          
             <div class="image-container text-center">
-              <img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg" class="img-fluid rounded-3 image" alt="{{product.name}}" />
+              <img src="{{product.productImages?.[0]?.imageUri || ''}}" class="img-fluid rounded-3 image" alt="{{product.name}}" />
               <div *ngIf=" getDiscountPercentage(product.originalPrice, product.finalPrice) " class="position-absolute top-0 start-0 translate-middle badge-container" style="margin-left: 27px; margin-top: 8px; font-size: 20px;">
-                <span class="badge bg-danger">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
+                <span class="badge bg-success">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
             </div>
-              <button class="wishbutton" (click)="addProductToWishList({ userId: user.userId, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
+              <button class="wishbutton" (click)="addProductToWishList({ userId: userLoggedID, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)" title="اضافة لقائمة المفضلة">
                 <span class="fa-regular fa-heart"></span>
               </button>
-              <button class="wishbutton" (click)="removeFromWishList({ UserId: user.userId, ProductId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
+              <button class="wishbutton" (click)="removeFromWishList({ UserId: userLoggedID, ProductId: product.productId })" *ngIf="isProductInWishlist(product.productId)" title="حذف من قائمة المفضلة">
                 <span class="fa-solid fa-heart"></span>
               </button>
         
       
-                      <button (click)="addToCart(product)" class="cartbutton notincart"*ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)"  >
+                      <button (click)="addToCart(product,i)" class="cartbutton "*ngIf="!isProductInCart(product.productId)" title="إضافة قطعة واحدة فقط"  >
                   <i class="fas fa-shopping-cart"></i> </button>
 
                    
-                  <button (click)="addToCart(product)" class="cartbutton"*ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)" >
+                  <button (click)="addToCart(product,i)" class="cartbutton"*ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)" >
                     <i class="fas fa-shopping-cart"></i> </button>
-                     <button  class="cartbutton"*ngIf="isProductInCart(product.productId)&&isProductReachedMaxAmount(product)" style="background-color:lightgreen; opacity: 0.5;">
+                     <button  class="cartbutton"*ngIf="isProductInCart(product.productId)"  >
                       <i class="fas fa-shopping-cart"></i> </button> 
-                      <button  class="cartbutton"*ngIf="isProductInCart(product.productId)&&isProductReachedMaxAmount(product)" style="opacity: 0.5; color: red;">
+                      <button  class="cartbutton"*ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)" style="background-color: rgba(255, 255, 255, 0); color: red;" title="حذف المنتج من سلة المشتريات">
                         <i class="fa-solid fa-ban"></i></button> 
     
                     
@@ -86,7 +86,7 @@
               </p>
               <p *ngIf="product.originalPrice !== product.finalPrice">
                 <span class="original-price">{{ product.originalPrice | currency: "USD" }}</span>
-                <span class="badge bg-danger ms-2">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
+                
               </p>
             </div>
 
@@ -95,15 +95,39 @@
 
               
             
-            <button [routerLink]="['/customer-products/product-details', product.productId]" class="btn btn-primary w-100 mt-2">تفاصيل</button>
+           
           <!-- Add to Cart Button -->
-          <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
+          <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
             <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button>
             <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
               <i class="fas fa-shopping-cart" ></i> &nbsp;إضافة المزيد إلى السلة</button>
 
               <button (click)="addToCart(product)" class="btn btn-danger w-100 mt-2" *ngIf="isProductReachedMaxAmount(product)">
-                <i class="fas fa-shopping-cart" ></i> &nbsp;لا يمكن إضافة المزيد إلى السلة</button>
+                <i class="fas fa-shopping-cart" ></i> &nbsp;لا يمكن إضافة المزيد إلى السلة</button> -->
+
+
+
+
+                <div *ngIf="!isProductInCart(product.productId)" class="d-flex align-items-center mb-3 quantity-section">
+                  <span class="d-flex " style="margin-top: 7px;">
+                    <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity(i)" style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;">-</button>
+                    <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity[i]" min="1">
+     
+                    <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity(i)" style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>
+
+                  </span>
+                    <button  (click)="addToCart(product,i)" class="btn btn-primary w-100 mt-2 add-to-cart-button ">إضافة لعربة التسوق  </button>
+                  </div >
+                  <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center ">
+          
+                  </div>
+                  <div style="margin-top: -10px;">
+                  <button *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)" class="btn btn-danger w-100 mt-2" >إزالة من السلة</button>
+
+                </div>
+                <a routerLink='/customer-products/product-details/{{product.productId }}' class="btn btn-primary w-100 mt-2">تفاصيل</a>
+                  <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)" >
+                    <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button> -->
           </div>
         
         </div>

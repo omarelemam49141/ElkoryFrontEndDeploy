@@ -11,6 +11,7 @@ import { IwhishListProduct } from '../../../Models/IwishListProduct';
 import { WishListService } from '../../../services/wishList.service';
 import { IUser } from '../../../Models/iuser';
 import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
+import { ICart } from '../../../Models/icart';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   };
   
   snackBarDurationInSeconds = 5;
+  // isProductInCart: boolean = false; // Track if the product is in the cart
 
 
   constructor(
@@ -52,8 +54,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private snackBar: MatSnackBar, // Add MatSnackBar here
     private wishListService:WishListService
-
-
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +82,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     if (this.product?.categoryId) {
       const subscription = this.categoryService.getCategoryProducts(this.product.categoryId).subscribe({
         next: (products: IProduct[]) => {
-          this.relatedProducts = products.slice(0, 4);
+          this.relatedProducts = this.getRandomSubset(products, 4);          
           for (let i = 0; i < this.relatedProducts.length; i++) {
             this.productService.getPictures(this.relatedProducts[i].productId).subscribe({
               next: (images: string[]) => this.images[i] = images,
@@ -96,11 +96,24 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  getRandomSubset(array: any[], size: number): any[] {
+    return array
+      .map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
+      .slice(0, size);
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
   increaseQuantity(): void {
-    this.quantity++;
+    if (this.product && this.quantity < this.product.amount) {
+      this.quantity++;
+    } else {
+      this.snackBar.open('لا يوجد كمية كافية في المخزون', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+    }
   }
 
   decreaseQuantity(): void {
@@ -108,83 +121,122 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       this.quantity--;
     }
   }
-  fetchWishList(UserId:number){
+
+  fetchWishList(UserId:number) {
     this.wishListService.getWishList(UserId).subscribe(
-      (data)=>{
+      (data) => {
         console.log("from success section")
         console.log(data);
-        this.wishList=data;
-     
-       
-        
+        this.wishList = data;
       },
-      (error)=>{
+      (error) => {
         console.log("error section")
         console.log(error);
-        
       }
-      
     );
-   
-  
   }
+
   addToCart(product: IProduct): void {
-    // Implement your logic to add to cart using this.quantity
-    const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
-    const existingProduct = cart.productsAmounts.find((p: any) => p.productId === product.productId);
+    const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+    console.log( `the product from cart is ${existingProduct?.amount}`);
+      console.log(`the product from product list ${product.amount}`)
+    
     if (existingProduct) {
+      
+
+     
+
+
       existingProduct.amount += this.quantity;
+      this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+
     } else {
-      product.amount = this.quantity;
-      cart.productsAmounts.push(product);
+      let newCartItme={
+        productId:product.productId,
+        amount:this.quantity,
+        categoryId:product.categoryId,
+        categoryName:product.categoryName,
+        description:product.description,
+        discount:product.discount,
+        finalPrice:product.finalPrice,
+        name:product.name,
+        originalPrice:product.originalPrice,
+        productImages:product.productImages,
+      
+
+      }
+     
+      cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
+      this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+
     }
 
-    cart.finalPrice += product.finalPrice * this.quantity;
+    cart.finalPrice +=( product.finalPrice* this.quantity);
     cart.numberOfProducts += this.quantity;
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    // Reset quantity after adding to cart
-    this.quantity = 1;
-
-    // Provide feedback to the user
-    const snackBarDurationInSeconds = 5;
-    this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: snackBarDurationInSeconds * 1500 });
+    
   }
 
-  addProductToWishList(item:IAddWishListProduct)
-  {
+  removeFromCart(product: IProduct): void {
+    const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    const productIndex = cart.productsAmounts.findIndex((p: any) => p.productId === product.productId);
+    if (productIndex !== -1) {
+      const productAmount = cart.productsAmounts[productIndex].amount;
+      cart.productsAmounts.splice(productIndex, 1);
+      cart.numberOfUniqueProducts -= 1;
+      cart.numberOfProducts -= productAmount;
+      cart.finalPrice -= product.finalPrice * productAmount;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+    }
+  }
+
+  addProductToWishList(item:IAddWishListProduct) {
     this.wishListService.addWishListProduct(item).subscribe(
-      ()=>{
+      () => {
         console.log("from success section")
-        this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
         this.fetchWishList(this.user.userId);
       },
-      (error)=>{
+      (error) => {
         console.log("error section")
         console.log(error);
-        this.snackBar.open('حدث خطأ أثناء إضافة المنتج إلى  القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        this.snackBar.open('حدث خطأ أثناء إضافة المنتج إلى  القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
       }
     );
   }
-  
-  isProductInWishlist(productId:number):boolean{
-    if(!this.wishList){
+
+  isProductInWishlist(productId:number):boolean {
+    if(!this.wishList) {
       return false;
     }
-    return this.wishList.some(p=>p.productId===productId);
+    return this.wishList.some(p => p.productId === productId);
   }
+
   removeFromWishList(wishListProduct: { userId: number, productId: number }): void {
     this.wishListService.deleteWishListProduct(wishListProduct.userId, wishListProduct.productId).subscribe(
       () => {
         this.fetchWishList(this.user.userId);
-        this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
+        this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
       },
       (error) => {
         console.error('Error removing product from wishlist:', error);
-        this.snackBar.open('حدث خطأ أثناء حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        this.snackBar.open('حدث خطأ أثناء حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
       }
     );
+  }
+
+  getDiscountPercentage(originalPrice: number, finalPrice: number): number {
+    return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
+  }
+
+  isProductInCart(productId:number){
+    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    return cart.productsAmounts.some(p=>p.productId===productId);
+  
   }
 }

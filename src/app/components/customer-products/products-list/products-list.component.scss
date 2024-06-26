@@ -103,7 +103,7 @@ h5 {
  .wishbutton{
   color:red;
   border: none;
-  font-size: 50px;
+  font-size: 25px;
  float: left;
   
   cursor: pointer;
@@ -118,7 +118,6 @@ h5 {
   
   
   cursor: pointer;
-  width: 1.4em;
 
 
  }
@@ -136,7 +135,17 @@ h5 {
     height: auto;
   }
   
- 
+  .QuantityValue {
+    width: 50px;
+    appearance: textfield;
+    -webkit-appearance: textfield;
+  }
+  
+  .QuantityValue::-webkit-inner-spin-button,
+  .QuantityValue::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   
   .wishbutton .fa-heart {
     color: red;
@@ -149,21 +158,20 @@ h5 {
   .cartbutton{
     border: none;
     color:green;
-    font-size: 50px;
+    font-size: 25px;
    float: left;
     
     cursor: pointer;
     display: flex;
     border-radius: 50%;
     position: absolute;
-    top: 90px; /* Adjust the value as needed */
+    top: 60px; /* Adjust the value as needed */
     right: 10px; /* Adjust the value as needed */
     background-color: rgba(255, 255, 255, 0.7); /* Optional: Add a semi-transparent background */
     border: none;
     padding: 10px;
     
     cursor: pointer;
-    width: 1.5em;
    }
    
     .image-container {
@@ -189,3 +197,60 @@ h5 {
     .notincart:hover{
       background-color:rgba(0, 128, 0, 0.664);
     }
+
+    .quantity-section {
+      display: flex;
+      align-items: center;
+margin-top: 5px;
+    }
+    
+    .quantity-button {
+      border: 2px solid #ced4da;
+      border-radius: 0;
+      width: 30px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+      font-size: 22px;
+    }
+    
+    .quantity-button:hover {
+      color: #b51cb0;
+      font-weight: bolder;
+      font-size: 25px;
+    }
+    
+    .quantity-input {
+      border: 1px solid #ced4da;
+      border-left: 0;
+      border-right: 0;
+      border-radius: 0;
+      text-align: center;
+      height: 35px;
+    }
+    
+    .add-to-cart-button {
+      border: 1px solid #ced4da;
+      background-color: #f8f9fa;
+      color: #b51cb0;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 0;
+      text-transform: uppercase;
+      font-weight: bold;
+      transition: background-color 0.3s;
+      margin-right: 15px;
+      border-radius: 8px;
+      font-size: 10px;
+      height: 38px;
+      @media (max-width: 1024px) {
+        height: 50px;
+      }
+    }
+
+.add-to-cart-button:hover {
+  color: #f8f9fa;
+  background-color: #b51cb0;
+}

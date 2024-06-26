@@ -48,9 +48,13 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
     this.fetchWebInfo();
     this.accountService.loggedInSubject.subscribe({
       next: (data) => {
+        
         this.isLogged = data; 
       }
     })
+    if(localStorage.getItem("token")){
+      this.isLogged = true;
+    }
   }
 
   logOut() {

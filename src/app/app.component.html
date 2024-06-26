@@ -12,7 +12,7 @@
 
 <div class="container">
   <!-- @if(accountService.getTokenRole().toLowerCase() == 'admin') { -->
-  @if(accountService.decodedToken) {
+  <!-- @if(accountService.decodedToken) {
     <div class="row">
       <div class="col-lg-3">
           <app-admin-menu></app-admin-menu>
@@ -21,12 +21,12 @@
         <router-outlet></router-outlet>
       </div>
     </div>
-} @else {
+} @else { -->
   <div class="my-4">
     <router-outlet></router-outlet>
 
   </div>
-}
+<!-- } -->
 </div>
 
 <app-footer></app-footer>
