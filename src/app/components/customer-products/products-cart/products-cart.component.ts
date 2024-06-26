@@ -41,7 +41,6 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   //observers
   getCartObserver = {
     next: (data: ICart) => {
-      console.log(data)
       localStorage.setItem("cart", JSON.stringify(data));
       this.cart = data
     },
@@ -113,23 +112,42 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
     this.updateLocalStorageWithCart();
   }
 
-  updateProductAmount(product: IProduct, event: any): void {
-    console.log(product.allAmount)
-    if (event.target.value < 1) {
+  validateSelectedPRoductAmount(product: IProduct, productAmount: number): boolean {
+    let notValid = false;
+    if (productAmount < 1) {
       product.amount = 1;
-      return;
-    } else if (event.target.value > product.allAmount!) {
-      product.amount = event.target.value;
+      notValid = true;
+    } else if (productAmount > product.allAmount!) {
+      product.amount = product.allAmount!;
+      notValid = true;
+    } 
+    return notValid;
+  }
+
+  decreaseOrIncreaseProductAmount(product: IProduct, productAmount: number): void {
+    if (productAmount < product.amount) {
+      product.amount = productAmount;
+      this.decreaseCartPrice(product.productId);
+    } else {
+      product.amount = productAmount;
+      this.increaseCartPrice(product.productId);
+    }
+  }
+
+  updateProductAmount(product: IProduct, event: any): void {
+    if(this.validateSelectedPRoductAmount(product, +event.target.value)){
       return;
     }
 
-    if (event.target.value < product.amount) {
-      product.amount = event.target.value;
-      this.decreaseCartPrice(product.productId);
-    } else {
-      product.amount = event.target.value;
-      this.increaseCartPrice(product.productId);
+    this.decreaseOrIncreaseProductAmount(product, +event.target.value);
+  }
+
+  updateProductAmountWithProuctId(product: IProduct, productAmount: any): void {
+    if(this.validateSelectedPRoductAmount(product, productAmount.value)){
+      return;
     }
+
+    this.decreaseOrIncreaseProductAmount(product, productAmount.value);
   }
 
   clearCart(): void {
