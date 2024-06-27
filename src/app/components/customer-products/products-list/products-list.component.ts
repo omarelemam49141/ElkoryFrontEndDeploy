@@ -74,7 +74,7 @@ wishList?:IwhishListProduct[];
   }
   ngOnInit(): void {
     this.getProductsPaginated(1,10);
-    this.fetchWishList(this.user.userId);
+    this.fetchWishList(this.user.userId!);
     console.log(this.wishList);
    
   }
@@ -188,7 +188,7 @@ fetchWishList(UserId:number){
     next: (data: any) => {
       console.log("from success section")
       this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-      this.fetchWishList(this.user.userId);
+      this.fetchWishList(this.user.userId!);
     },
     error: (err: Error)=> {
       console.log("error section")
@@ -212,7 +212,7 @@ isProductInCart(productId:number){
 removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
   this.wishListService.deleteWishListProduct(wishListProduct.UserId, wishListProduct.ProductId).subscribe(
     () => {
-      this.fetchWishList(this.user.userId);
+      this.fetchWishList(this.user.userId!);
       this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
     },
     (error) => {

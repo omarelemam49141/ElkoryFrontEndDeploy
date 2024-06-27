@@ -61,7 +61,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       const productId = Number(params.get('id'));
       this.fetchProductDetails(productId);
     });
-    this.fetchWishList(this.user.userId);
+    this.fetchWishList(this.user.userId!);
   }
 
   fetchProductDetails(productId: number): void {
@@ -159,7 +159,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       ()=>{
         console.log("from success section")
         this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-        this.fetchWishList(this.user.userId);
+        this.fetchWishList(this.user.userId!);
       },
       (error)=>{
         console.log("error section")
@@ -178,7 +178,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   removeFromWishList(wishListProduct: { userId: number, productId: number }): void {
     this.wishListService.deleteWishListProduct(wishListProduct.userId, wishListProduct.productId).subscribe(
       () => {
-        this.fetchWishList(this.user.userId);
+        this.fetchWishList(this.user.userId!);
         this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
       },
       (error) => {

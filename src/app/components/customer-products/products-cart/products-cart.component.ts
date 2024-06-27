@@ -164,7 +164,7 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
     if (isOrderOpen) {
       this.cartService.updateCart(this.cart).subscribe({
         next: (data: ICart) => {
-          this.openSendOrder();
+          this.router.navigate(['/customer-products/confirm-order']);
         },
         error: (err: Error) => {
           console.log(err)

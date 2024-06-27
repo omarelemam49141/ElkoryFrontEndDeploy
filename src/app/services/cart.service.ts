@@ -7,6 +7,7 @@ import { GenericService } from './generic.service';
 import { environment } from '../../environment/environment';
 import { IUpdateCart } from '../Models/iupdate-cart';
 import { AccountService } from './account.service';
+import { IReviewOrder } from '../Models/ireview-order';
 
 @Injectable({
   providedIn: 'root'
@@ -54,11 +55,8 @@ export class CartService{
       return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
     }
 
-    console.log(userId)
-
     //get the products ids in an array
     let productsIds = cart.productsAmounts.map(product => product.productId);
-    console.log(productsIds)
     //get the products amounts in an array
     let productsAmounts = cart.productsAmounts.map(product => product.amount);
     //make an IUpdateCart object
@@ -73,6 +71,14 @@ export class CartService{
 
     //update the cart
     return this.http.put<any>(`${environment.apiUrl}/cart`, updateCart, this.genericServcie.getHeaders())
+    .pipe(
+      retry(2),
+      catchError(this.genericServcie.handlingErrors)
+    );
+  }
+
+  public getOrderInfo(userId: number): Observable<IReviewOrder> {
+    return this.http.get<IReviewOrder>(`${environment.apiUrl}/Order?userId=${userId}`)
     .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)

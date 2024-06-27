@@ -35,7 +35,7 @@ export class ProductsWishListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadWishList();
-    this.fetchWishList(this.user.userId);
+    this.fetchWishList(this.user.userId!);
 
   }
   fetchWishList(UserId:number){
@@ -60,7 +60,7 @@ export class ProductsWishListComponent implements OnInit {
   }
 
   loadWishList(): void {
-    this.wishListService.getWishList(this.user.userId).subscribe(
+    this.wishListService.getWishList(this.user.userId!).subscribe(
       (data) => {
         this.wishListProducts = data;
       },
@@ -71,10 +71,10 @@ export class ProductsWishListComponent implements OnInit {
   }
 
   removeFromWishList(productId: number): void {
-    this.wishListService.deleteWishListProduct(this.user.userId, productId).subscribe(
+    this.wishListService.deleteWishListProduct(this.user.userId!, productId).subscribe(
       () => {
         // Remove the product from the local list
-        this.fetchWishList(this.user.userId);
+        this.fetchWishList(this.user.userId!);
         this.loadWishList();
         this.wishListProducts = this.wishListProducts.filter((p) => p.productId !== productId);
       
