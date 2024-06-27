@@ -16,17 +16,18 @@ import { ProductsWishListComponent } from './components/customer-products/produc
 
 import { AccountService } from './services/account.service';
 import { AdminMenuComponent } from './components/main-components/admin-menu/admin-menu.component';
+import { ReviewComponent } from './components/review/review.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent, 
+  imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent,
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
-  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent, 
-  AdminProductsListComponent,ProductsWishListComponent, AdminMenuComponent],
+  CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent,
+  AdminProductsListComponent,ProductsWishListComponent, AdminMenuComponent, ReviewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  
+
 
 })
 export class AppComponent {
