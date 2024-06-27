@@ -250,3 +250,15 @@
   position: relative; /* Ensure it positions relative to the button */
   left: 5px; /* Adjust as needed to position next to the icon */
 }
+
+.price {
+  font-size: 1.2em;
+  color: #28a745;
+}
+
+.original-price {
+  font-size: 1em;
+  text-decoration: line-through;
+  color: #dc3545;
+  margin-right: 10px;
+}
