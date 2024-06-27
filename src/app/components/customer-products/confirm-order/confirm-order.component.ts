@@ -9,6 +9,7 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
 import { MatDialog } from '@angular/material/dialog';
 import { SendOrderComponent } from '../send-order/send-order.component';
 import { FormsModule } from '@angular/forms';
+import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 
 @Component({
   selector: 'app-confirm-order',
@@ -33,30 +34,42 @@ export class ConfirmOrderComponent implements OnInit {
   ngOnInit(): void {
     let tokenId = this.getUserId();
     if (!tokenId) {
-      this.snackBar.openFromComponent(FailedSnackbarComponent, {
-        data: "قم بإعادة تسجيل الدخول مرة أخرى",
-        duration: this.notificationDurationInSeconds * 1000
-      })
+      this.showNotification("يجب عليك تسجيل الدخول اولا", false);
       this.router.navigate(["/customer-account/login"])
     } else {
-      this.cartService.getOrderInfo(tokenId).subscribe(this.reviewOrderObserver)
+      this.getUserOrderInfo(tokenId);
     }
     
   }
   //observers
   reviewOrderObserver = {
     next: (data: IReviewOrder) => {
+      console.log("order details is: " + data)
       this.reviewOrderModel = data
     },
     error: (err: Error) => {
-      this.snackBar.openFromComponent(FailedSnackbarComponent, {
-        data: "تعذر تحميل الطلب!",
-        duration: this.notificationDurationInSeconds * 1000
-      })
+      console.log(err)
+      this.showNotification("تعذر تحميل الطلب. الرجاء المحاولة مرة أخرى", false);
     }
   }
 
   //methods
+  getUserOrderInfo(userId: number) {
+    this.cartService.getOrderInfo(userId).subscribe(this.reviewOrderObserver)
+  }
+  showNotification(message: string, success: boolean) {
+    if (success) {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: message,
+        duration: this.notificationDurationInSeconds * 1000
+      })
+    } else {
+      this.snackBar.openFromComponent(FailedSnackbarComponent, {
+        data: message,
+        duration: this.notificationDurationInSeconds * 1000
+      })
+    }
+  }
   getUserId() {
     return this.accountService.getTokenId();
   }
