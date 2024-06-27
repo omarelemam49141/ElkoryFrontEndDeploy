@@ -110,7 +110,7 @@
 
                 <div *ngIf="!isProductInCart(product.productId)" class="d-flex align-items-center mb-3 quantity-section">
                   <span class="d-flex " style="margin-top: 7px;">
-                    <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity(i)" style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;">-</button>
+                    <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity(i)" style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;" >-</button>
                     <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity[i]" min="1">
      
                     <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity(i)" style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>

@@ -27,6 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const subscription = this.categoryService.getAll().subscribe({
       next: (categories: ICategory[]) => {
         this.Categories = categories;
+        console.log('Fetched categories:', this.Categories);
       },
       error: (error: any) => console.error('Error fetching categories', error)
     });
@@ -43,5 +44,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchCategories();
+    console.log(this.Categories)
   }
 }
