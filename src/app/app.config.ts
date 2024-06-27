@@ -5,10 +5,11 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { LoadingService } from './services/loading.service';
 import { loadinPageInterceptor } from './interceptors/loadin-page.interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), 
-    provideHttpClient(withInterceptors([loadinPageInterceptor])), 
+  providers: [provideRouter(routes),
+  provideHttpClient(withInterceptors([loadinPageInterceptor])),
     LoadingService,
-    provideAnimationsAsync()]
+  provideAnimationsAsync(), provideAnimations()]
 };

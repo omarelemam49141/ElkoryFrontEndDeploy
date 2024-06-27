@@ -14,12 +14,12 @@ import { ICart } from '../../../Models/icart';
 import { WishListService } from '../../../services/wishList.service';
 import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { IUser } from '../../../Models/iuser';
-import { IwishList } from '../../../Models/IwishList';
 import { IwhishListProduct } from '../../../Models/IwishListProduct';
+import { OffersSliderComponent } from '../../main-components/offers-slider/offers-slider.component';
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule],
+  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
@@ -74,9 +74,7 @@ wishList?:IwhishListProduct[];
   }
   ngOnInit(): void {
     this.getProductsPaginated(1,10);
-    this.fetchWishList(this.user.userId!);
-    console.log(this.wishList);
-   
+    this.fetchWishList(this.user.userId!);   
   }
 
   /*start observers*/

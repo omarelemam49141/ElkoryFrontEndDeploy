@@ -1,0 +1,27 @@
+.carousel-container {
+    height: 80vh;
+    margin: 16px auto;
+}
+
+:host ::ng-deep{
+    .image-container {
+        max-width: 85%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .igx-carousel {
+        max-width: 100%;
+        width: unset;
+    }
+
+    .igx-slide img {
+        object-fit: fill;
+        max-width: 90%;
+    }
+}
+
+#pageHeaderTitle {
+    color: rgba(0, 0, 0, 0.671) !important;
+}

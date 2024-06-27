@@ -1,0 +1,32 @@
+<div class="carousel-container mb-4">
+    <igx-carousel #carousel>
+        <igx-slide *ngFor="let offer of offers">
+            <h1 class="h1 text-center" id="pageHeaderTitle">{{offer.title}} تفاصيل العرض</h1>
+            <article class="postcard dark blue">
+                <a class="postcard__img_link">
+                    <img class="postcard__img" src="{{offer.image}}" alt="Image Title" />
+                </a>
+                <div class="postcard__text">
+                    <h1 class="postcard__title blue"><a href="#">{{offer.title}}</a></h1>
+                    <div class="postcard__subtitle small">
+                        <time datetime="2020-05-25 12:00:00">
+                            <i class="fas fa-calendar-alt me-2"></i>{{offer.offerDate| date : 'dd/MM/yyyy'}}
+                        </time>
+                    </div>
+                    <div class="postcard__bar"></div>
+                    <div class="postcard__preview-txt">{{offer.description}}</div>
+                    <ul class="postcard__tagbox">
+                        <li class="tag__item"><i class="fas fa-dollar-sign me-2"></i>
+                            -<span class="text-success font-bold">{{offer.packageDiscount | currency: "ج.م"}}</span>
+                        </li>
+                        <li class="tag__item"><i class="fas fa-clock me-2"></i>{{offer.duration | date : 'dd'}} يوم</li>
+                        <li class="tag__item play blue">
+                            <a [routerLink]="['/admin-offers/offer-details', offer.offerId, 'customer']"
+                                routerLinkActive="router-link-active"><i class="fas fa-edit me-2"></i>تفاصيل العرض</a>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+        </igx-slide>
+    </igx-carousel>
+</div>
