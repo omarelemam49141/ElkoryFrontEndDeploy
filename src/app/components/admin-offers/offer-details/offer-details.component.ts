@@ -41,7 +41,7 @@ export class OfferDetailsComponent implements OnDestroy, OnInit{
   private offerDetailsObserver = {
     next: (data: IOffer) => {
       this.offer = data;
-      this.offer.productOffers.forEach(product => {
+      this.offer.productOffers!.forEach(product => {
         this.productService.getPictures(product.productId).subscribe(images => {
           this.productsImage.push(images[0]);
         });

@@ -3,6 +3,8 @@ import { AdminService } from '../../../services/admin.service';
 import { IUser } from '../../../Models/iuser';
 import { CommonModule } from '@angular/common'
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteAdminComponent } from '../delete-admin/delete-admin.component';
 
 
 @Component({
@@ -16,19 +18,33 @@ export class ViewAdminsComponent {
 
   adminsList:IUser[]=[];
 
-  constructor(private adminService:AdminService, private router: Router){}
+  constructor(private adminService:AdminService, private router: Router
+    , private dialog: MatDialog
+  ){}
 
   ngOnInit(): void {
+    this.getAllAdmins();
+  }
+
+  getAllAdmins() {
     this.adminService.GetAllUsers().subscribe( (data) => {
       this.adminsList = data.filter(admin => admin.role === 0);
     })
-
   }
 
-  confirmDelete(adminId: number): void {
-    if (confirm('Are you sure you want to delete this admin?')) {
-      this.deleteAdmin(adminId);
-    }
+  confirmDelete(adminId: number, adminName: string): void {
+    let dialogRef = this.dialog.open(DeleteAdminComponent, {
+      data: {
+        adminId,
+        adminName
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getAllAdmins();
+      }
+    })
   }
 
   deleteAdmin(adminId: number): void {

@@ -6,13 +6,14 @@
             <span class="badge bg-success">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
           </div>
           <img src="{{product.productImages?.[0]?.imageUri || ''}}" class="img-fluid rounded-3 image" alt="{{product.name}}" />
-          <button class="wishbutton" (click)="addProductToWishList({ userId: user.userId, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
+          <button class="wishbutton" (click)="addProductToWishList({ userId: user.userId!, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
             <span class="fa-regular fa-heart"></span>
           </button>
-          <button class="wishbutton" (click)="removeFromWishList({ userId: user.userId, productId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
+          <button class="wishbutton" (click)="removeFromWishList({ userId: user.userId!, productId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
             <span class="fa-solid fa-heart"></span>
           </button>
         </div>
+
       </div>
       <div class="col-md-6 product-info">
         <h2>{{ product.name }}</h2>

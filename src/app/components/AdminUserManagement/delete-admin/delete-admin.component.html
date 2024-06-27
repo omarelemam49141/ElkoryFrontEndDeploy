@@ -1,1 +1,8 @@
-<p>delete-admin works!</p>
+<h2 mat-dialog-title class="dialog-title">حذف الأدمن <span class="font-bold text-danger">{{data.adminName}}</span></h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <p class="lead">هل أنت متأكد من حذف الأدمن {{data.adminName}}</p>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="confirmAdminDelete()" class="btn btn-danger">حذف</button>
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+</mat-dialog-actions>

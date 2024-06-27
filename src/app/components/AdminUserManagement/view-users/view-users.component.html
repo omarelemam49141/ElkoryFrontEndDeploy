@@ -22,7 +22,8 @@
       <td>{{user.phone}}</td>
       <td>مستخدم</td>
       <td>
-        <button class="btn btn-danger" (click)="confirmDelete(user.userId)">حذف</button>
+        <button class="btn btn-danger" (click)="confirmDelete(user.userId!)">حذف</button>
+        <button class="btn btn-danger" [routerLink]="['/admin-user-management/edit-user', user.email]">تعديل</button>
       </td>
     </tr>
   </tbody>

@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { ISignUpModel } from '../Models/isign-up-model';
 import { environment } from '../../environment/environment';
 import { GenericService } from './generic.service';
@@ -14,15 +14,27 @@ import { IForgetPassword } from '../Models/iforget-password';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
+export class AccountService implements OnInit{
   public loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  public isLoggedIn: boolean = false;
+  public loggedIn = "isLoggedIn";
   user?: {}
 
   constructor(private http: HttpClient,
               private genericService: GenericService<ISignUpModel>
   ) { }
+
+  ngOnInit(): void {
+    this.isLoggedIn = false;
+  }
+
+  set isLoggedIn(value: boolean) {
+    localStorage.setItem(this.loggedIn, JSON.stringify(value));
+  }
+
+  get isLoggedIn(): boolean {
+    return JSON.parse(localStorage.getItem(this.loggedIn) || 'false');
+  }
 
   public signUp(signUpModel: ISignUpModel): Observable<string> {
     const headers = new HttpHeaders({
@@ -37,6 +49,7 @@ export class AccountService {
   }
 
   public activateLogin() {
+    this.isLoggedIn = true;
     this.loggedInSubject.next(true);
   }
 
@@ -66,22 +79,24 @@ export class AccountService {
     )
   }
 
-  public viewProfile(): Observable<IEditProfile> {
-    //get the token from the local storage
+  public viewProfile(userEmail?: string): Observable<IEditProfile> {
+    let email: string;
     const token = localStorage.getItem("token");
     if (!token) {
       return throwError(()=> new Error("قم باعادة تسجيل الدخول مرة أخرى"))
     }
-
-    const email = this.getTokenEmail();
+    //get the token from the local storage
+    if (!userEmail) {
+      email = this.getTokenEmail();
+    } else {
+      email = userEmail;
+    }
 
     //prepare the headers
     const headers = new HttpHeaders({
-        'Authorization': token??''
+      'Authorization': token??''
     });
-
-    console.log(token)
-
+    
     //send the request
     return this.http.get<IEditProfile>(`${environment.apiUrl}/Account/userInfo?email=${email}`, {headers})
     .pipe(

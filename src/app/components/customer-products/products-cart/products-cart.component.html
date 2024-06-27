@@ -4,11 +4,11 @@
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-10 text-center" *ngIf="cart.productsAmounts && cart.productsAmounts.length == 0">
                     <h3 class="text-muted">لم يتم اضافة منتجات الى العربة!</h3>
-                    <a routerLink="/" class="btn btn-primary btn-lg w-80 mt-3">أضف بعض
+                    <a [routerLink]="['/customer-products']" class="btn btn-primary btn-lg w-80 mt-3">أضف بعض
                         المنتجات</a>
                 </div>
 
-                <div class="col-10" *ngIf="cart?.productsAmounts?.length != 0">
+                <div class="col-10" *ngIf="cart?.productsAmounts?.length">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="fw-normal mb-0 text-black">عربة التسوق - عدد
                             المنتجات : {{cart.productsAmounts.length}}</h3>
@@ -38,14 +38,14 @@
 
                                 <div class="amount d-flex col-lg-3 col-xl-2">
                                     <input type="button" value="-" class="button-minus btn changing-amount"
-                                        (click)="product.amount=product.amount-1; decreaseCartPrice(product.productId);"
+                                        (click)="product.amount=product.amount-1; updateProductAmountWithProuctId(product,productAmount);"
                                         [disabled]="product.amount <= 1">
-                                    <input type="number" inputmode="numeric" class="form-control" min="1"
+                                    <input #productAmount type="number" inputmode="numeric" class="form-control" min="1"
                                         max="{{product.allAmount}}"
                                         (change)="updateProductAmount(product, $event)"
                                         [(ngModel)]="product.amount">
                                     <input type="button" value="+" class="button-plus btn changing-amount"
-                                        (click)="product.amount=product.amount+1; increaseCartPrice(product.productId);"
+                                        (click)="product.amount=product.amount+1; updateProductAmountWithProuctId(product,productAmount);"
                                         [disabled]="product.amount >= product.allAmount!">
                                 </div>
 
@@ -68,13 +68,12 @@
                         </div>
                     </div>
 
-                    <!-- <div class="card">
+                    <div class="card">
                         <div class="card-body p-4">
                             <button type="button" class="btn btn-warning btn-lg w-100 text-uppercase light h4"
-                                (click)="openSendOrder(infoModal, 'lg')">{{currentLanguage=='arabic'?'اطلب الان':'Order
-                                Now'}}</button>
+                                (click)="updateCart(true)">اطلب الان</button>
                         </div>
-                    </div> -->
+                    </div>
 
                 </div>
             </div>

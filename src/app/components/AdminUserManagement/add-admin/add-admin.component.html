@@ -1,69 +1,101 @@
+<div class="account-container">
+  <form [formGroup]="registerForm" (ngSubmit)="register()" class="account-form">
+      <div class="form-header">
+          <img src="assets/images/logo.png" alt="Form Image" class="form-image">
+          <h2 class="form-title">{{adminToEditId ? 'تعديل المدير' : 'اضافة مدير جديد'}}</h2>
+      </div>
+      <div class="form-group">
+          <label class="label">الاسم الأول</label>
+          <input formControlName="fName" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!fName?.valid && fName?.touched">
+              <span *ngIf="fName?.errors?.['required']">الاسم الأول مطلوب</span>
+              <span *ngIf="fName?.errors?.['minlength']">الاسم الأول لا يمكن أن يقل عن حرفان</span>
+              <span *ngIf="fName?.errors?.['maxlength']">الاسم الأول لا يمكن أن يزيد عن 30 حرف</span>
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="label">الاسم الأخير</label>
+          <input formControlName="lName" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!lName?.valid && lName?.touched">
+              <span *ngIf="lName?.errors?.['required']">الاسم الأخير مطلوب</span>
+              <span *ngIf="lName?.errors?.['minlength']">الاسم الأخير لا يمكن أن يقل عن حرفان</span>
+              <span *ngIf="lName?.errors?.['maxlength']">الاسم الأخير لا يمكن أن يزيد عن 30 حرف</span>
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="label">البريد الالكترونى</label>
+          <input formControlName="email" class="form-control" type="email"/>
+          <div class="text-danger" *ngIf="!email?.valid && email?.touched">
+              <span *ngIf="email?.errors?.['required']">البريد الالكترونى مطلوب</span>
+              <span *ngIf="email?.errors?.['email']">البريد الالكترونى غير صالح</span>
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="label">رقم الهاتف</label>
+          <input formControlName="phone" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!phone?.valid && phone?.touched">
+              <span *ngIf="phone?.errors?.['required']">رقم الهاتف مطلوب</span>
+              <span *ngIf="phone?.errors?.['pattern']">رقم الهاتف يجب أن لا يقل عن 11 رقم ويبدأ ب (010,011,012,015)</span>
+          </div>
+      </div>
+      
+        <div class="form-group">
+            <label class="label">كلمة المرور</label>
+            <input formControlName="password" class="form-control" type="password" />
+            <div class="text-danger" *ngIf="!password?.valid && password?.touched">
+                <span *ngIf="password?.errors?.['required']">كلمة المرور مطلوبة</span>
+                <span *ngIf="password?.errors?.['minlength']">كلمة المرور يجب أن لا تقل عن 8 أحرف</span>
+                <span *ngIf="password?.errors?.['maxlength']">كلمة المرور يجب أن لا تزيد عن 50 حرف</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="label">تأكيد كلمة المرور</label>
+            <input formControlName="confirmPassword" class="form-control" type="password" />
+            <div class="text-danger" *ngIf="!confirmPassword?.valid && confirmPassword?.touched">
+                <span *ngIf="confirmPassword?.errors?.['required']">تأكيد كلمة المرور مطلوبة</span>
+            </div>
+            <div class="text-danger" *ngIf="!registerForm?.valid">
+                <span *ngIf="registerForm.errors?.['comparePassword']">كلمتى المرور غير متطابقتين</span>
+            </div>
+        </div>
 
-<div class="text-center">
-  <h1>Add new admin</h1>
+
+      <div class="form-group">
+          <label class="label">المحافظة</label>
+          <input formControlName="governorate" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!governorate?.valid && governorate?.touched">
+              <span *ngIf="governorate?.errors?.['required']">المحافظة مطلوبة</span>
+              <span *ngIf="governorate?.errors?.['minlength']">المحافظة يجب أن لا تقل عن حرفان</span>
+              <span *ngIf="governorate?.errors?.['maxlength']">المحافظة يجب أن لا تزيد عن 50 حرف</span>
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="label">المدينة</label>
+          <input formControlName="city" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!city?.valid && city?.touched">
+            <span *ngIf="city?.errors?.['required']">المدينة مطلوبة</span>
+            <span *ngIf="city?.errors?.['minlength']">المدينة يجب أن لا تقل عن حرفان</span>
+            <span *ngIf="city?.errors?.['maxlength']">المدينة يجب أن لا تزيد عن 50 حرف</span>
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="label">الشارع</label>
+          <input formControlName="street" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!street?.valid && street?.touched">
+              <span *ngIf="street?.errors?.['required']">الشارع مطلوب</span>
+              <span *ngIf="street?.errors?.['minlength']">الشارع يجب أن لا تقل عن حرفان</span>
+              <span *ngIf="street?.errors?.['maxlength']">الشارع يجب أن لا تزيد عن 50 حرف</span>
+          </div>
+      </div>
+      <div class="form-group">
+          <label class="label">الرمز البريدي</label>
+          <input formControlName="postalCode" class="form-control" type="text"/>
+          <div class="text-danger" *ngIf="!postalCode?.valid && postalCode?.touched">
+              <span *ngIf="postalCode?.errors?.['required']">الرمز البريدي مطلوب</span>
+              <span *ngIf="postalCode?.errors?.['minlength']">الرمز البريدي يجب أن لا تقل عن حرفان</span>
+              <span *ngIf="postalCode?.errors?.['maxlength']">الرمز البريدي يجب أن لا تزيد عن 50 حرف</span>
+          </div>
+      </div>
+      <button type="submit" class="btn-submit" [disabled]="registerForm.invalid">{{adminToEditId ? 'تعديل' : 'تسجيل'}}</button>
+  </form>
 </div>
-  <table class="text-center table table-hovered table-bordered">
-    <thead>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.fName" placeholder="الاسم الاول">
-        </td>
-        <td>الاسم الاول</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.lName" placeholder="الاسم الاخير">
-        </td>
-        <td>الاسم الاخير</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.email" placeholder="البريد الالكتروني">
-        </td>
-        <td>البريد الالكتروني</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.phone" placeholder="رقم الموبايل">
-        </td>
-        <td>رقم الموبايل</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.governorate" placeholder="المحافظة">
-        </td>
-        <td>المحافظة</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.city" placeholder="المدينة">
-        </td>
-        <td>المدينة</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.street" placeholder="الشارع">
-        </td>
-        <td>الشارع</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="text" [(ngModel)]="newAdmin.postalCode" placeholder="الرقم البريدي">
-        </td>
-        <td>الرقم البريدي</td>
-      </tr>
-      <tr>
-        <td>
-          <input class="form-control text-center" type="password" [(ngModel)]="newAdmin.password" placeholder="كلمة السر">
-        </td>
-        <td>كلمة السر</td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <a class="btn btn-primary" (click)="AddNewAdmin()">اضافة</a>
-        </td>
-      </tr>
-    </thead>
-  </table>
-
-

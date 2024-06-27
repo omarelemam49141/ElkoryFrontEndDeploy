@@ -6,7 +6,7 @@ export interface IOffer {
     image: string;
     description: string;
     offerDate: Date;
-    duration: number;
-    packageDiscount: number;
-    productOffers: IOfferProduct[];
+    duration?: number;
+    packageDiscount?: number;
+    productOffers?: IOfferProduct[];
 }

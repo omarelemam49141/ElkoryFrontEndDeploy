@@ -1,0 +1,49 @@
+<h2 mat-dialog-title class="dialog-title">املأ بياناتك لإكمال الطلب</h2>
+<mat-dialog-content class="dialog-content" maxWidth="90vw">
+    <!--create a form that will add a search input to search for the product by its name and get its id-->
+    <form [formGroup]="orderForm">
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>المحافظة</mat-label>
+                <input matInput formControlName="governerate" type="text" placeholder="ادخل اسم المحافظة">
+                <mat-error *ngIf="!governerate?.valid && governerate?.touched">
+                    <span *ngIf="governerate?.errors?.['required']">اسم المحافظة مطلوب</span>
+                    <span *ngIf="governerate?.errors?.['min']">اسم المحافظة يجب ان لا يقل عن حرفان</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>المدينة</mat-label>
+                <input matInput formControlName="city" type="text" placeholder="ادخل اسم المدينة">
+                <mat-error *ngIf="!city?.valid && city?.touched">
+                    <span *ngIf="city?.errors?.['required']">اسم المدينة مطلوب</span>
+                    <span *ngIf="city?.errors?.['min']">اسم المدينة يجب ان لا يقل عن حرفان</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>الشارع</mat-label>
+                <input matInput formControlName="street" type="text" placeholder="ادخل اسم الشارع">
+                <mat-error *ngIf="!street?.valid && street?.touched">
+                    <span *ngIf="street?.errors?.['required']">اسم الشارع مطلوب</span>
+                    <span *ngIf="street?.errors?.['min']">اسم الشارع يجب ان لا يقل عن حرفان</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group mb-3">
+            <mat-form-field appearance="fill">
+                <mat-label>الرقم البريدى</mat-label>
+                <input matInput formControlName="postalCode" type="text" placeholder="ادخل الرقم البريدى">
+                <mat-error *ngIf="!postalCode?.valid && postalCode?.touched">
+                    <span *ngIf="postalCode?.errors?.['required']">الرقم البريدى مطلوب</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onNoClick()" class="btn btn-secondary">الغاء</button>
+    <button mat-button (click)="submitForm()" class="btn btn-success" [disabled]="orderForm.invalid">إرسال الطلب</button>
+</mat-dialog-actions>

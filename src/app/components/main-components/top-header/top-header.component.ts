@@ -7,11 +7,12 @@ import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { WebInfoService } from '../../../services/WebInfo.service';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../../services/account.service';
+import { SearchProductComponent } from '../search-product/search-product.component';
 
 @Component({
   selector: 'app-top-header',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, RouterLink, AsyncPipe],
+  imports: [CommonModule, FontAwesomeModule, RouterLink, AsyncPipe, SearchProductComponent],
   templateUrl: './top-header.component.html',
   styleUrls: ['./top-header.component.scss']
 })

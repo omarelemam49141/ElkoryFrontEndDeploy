@@ -9,6 +9,8 @@ import { ISubCategoryValue } from '../Models/isub-category-value';
 
 import { IProduct } from '../Models/iproduct';
 import { ISubCategory } from '../Models/isub-category';
+import { ICategorySubCategoriesValues } from '../Models/icategory-sub-categories-values';
+import { IProductCategorySubValues } from '../Models/iproduct-category-sub-values';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +51,23 @@ export class CategoryService {
   }
   public getSubcategoriesbyCategoryID(categoryId:number):Observable<ISubCategory[]>{
     return this.http.get<ISubCategory[]>(`${environment.apiUrl}/subCategoryFromCategory/${categoryId}`);
+  }
+
+  getCategorySubCategoriesWithValues(categoryId: number): Observable<ICategorySubCategoriesValues> {
+    return this.http.get<ICategorySubCategoriesValues>(`${environment.apiUrl}/CategoryDetails/${categoryId}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    )
+  }
+
+  addProductCategorySubCategoryValue(value: IProductCategorySubValues) {
+    console.log(value)
+    this.genericService.addHeaders("Content-Type", "application/json");
+    return this.http.post(`${environment.apiUrl}/ProductCategorySubCategoryValues`, value, this.genericService.httpOptions)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    )
   }
 }

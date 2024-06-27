@@ -10,11 +10,12 @@ import { AddSubcategoryComponent } from '../add-subcategory/add-subcategory.comp
 import { DeleteSubcategoryComponent } from '../delete-subcategory/delete-subcategory.component';
 import { AddSubCategoryValueComponent } from '../add-sub-category-value/add-sub-category-value.component';
 import { ICategory } from '../../../Models/icategory';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-sub-category-details',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, JsonPipe],
   templateUrl: './sub-category-details.component.html',
   styleUrl: './sub-category-details.component.scss'
 })
@@ -40,6 +41,7 @@ export class SubCategoryDetailsComponent implements OnInit{
 
   private subCategoryDetailsObserver = {
     next: (data: ISubCategory) => {
+      console.log(data);
       this.subCategory = data;
     },
     error: (error: any) => {
@@ -59,7 +61,7 @@ export class SubCategoryDetailsComponent implements OnInit{
           duration: this.notificationDurationInSeconds * 1000
         })
       } else {
-        this.subscriptions.push(this.genericService.getById('subCategory', subCategoryId).subscribe(this.subCategoryDetailsObserver));
+        this.subscriptions.push(this.genericService.getById('subCategoryDetails', subCategoryId).subscribe(this.subCategoryDetailsObserver));
       }
     }))
   }
