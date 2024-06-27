@@ -41,7 +41,7 @@ export class SubCategoryDetailsComponent implements OnInit{
 
   private subCategoryDetailsObserver = {
     next: (data: ISubCategory) => {
-      console.log(data.categories);
+      console.log(data);
       this.subCategory = data;
     },
     error: (error: any) => {

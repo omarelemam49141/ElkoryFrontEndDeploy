@@ -21,7 +21,8 @@
       <td>{{admin.phone}}</td>
       <td>مدير</td>
       <td>
-        <button class="btn btn-danger" (click)="confirmDelete(admin.userId)">حذف</button>
+        <button class="btn btn-danger ms-2" (click)="confirmDelete(admin.userId!, admin.fName)">حذف</button>
+        <button class="btn btn-info" [routerLink]="['/admin-user-management/edit-admin', admin.userId]">تعديل</button>
       </td>
     </tr>
   </tbody>

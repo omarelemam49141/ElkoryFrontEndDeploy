@@ -79,20 +79,24 @@ export class AccountService implements OnInit{
     )
   }
 
-  public viewProfile(): Observable<IEditProfile> {
-    //get the token from the local storage
+  public viewProfile(userEmail?: string): Observable<IEditProfile> {
+    let email: string;
     const token = localStorage.getItem("token");
     if (!token) {
       return throwError(()=> new Error("قم باعادة تسجيل الدخول مرة أخرى"))
     }
-
-    const email = this.getTokenEmail();
+    //get the token from the local storage
+    if (!userEmail) {
+      email = this.getTokenEmail();
+    } else {
+      email = userEmail;
+    }
 
     //prepare the headers
     const headers = new HttpHeaders({
-        'Authorization': token??''
+      'Authorization': token??''
     });
-
+    
     //send the request
     return this.http.get<IEditProfile>(`${environment.apiUrl}/Account/userInfo?email=${email}`, {headers})
     .pipe(
