@@ -20,18 +20,20 @@
                             -<span class="text-success font-bold">{{offer.packageDiscount | currency: "ج.م"}}</span>
                         </li>
                         <li class="tag__item"><i class="fas fa-clock me-2"></i>{{offer.duration | date : 'dd'}} يوم</li>
-                        <li class="tag__item play red">
-                            <a (click)="confirmOfferDelete(offer.offerId, offer.title)"><i class="fas fa-trash me-2"></i>حذف العرض</a>
-                        </li>
-                        <li class="tag__item play blue">
-                            <a [routerLink]="['/admin-offers/edit-offer', offer.offerId]" routerLinkActive="router-link-active" ><i class="fas fa-edit me-2"></i>تعديل العرض</a>
-                        </li>
+                        @if (!isCustomer) {
+                            <li class="tag__item play red">
+                                <a (click)="confirmOfferDelete(offer.offerId, offer.title)"><i class="fas fa-trash me-2"></i>حذف العرض</a>
+                            </li>
+                            <li class="tag__item play blue">
+                                <a [routerLink]="['/admin-offers/edit-offer', offer.offerId]" routerLinkActive="router-link-active" ><i class="fas fa-edit me-2"></i>تعديل العرض</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </article>
             
             <div class="row mt-4" id="ads">
-                <button class="btn btn-primary w-50 m-auto" type="button" (click)="addOfferProduct(offer.offerId, offer.title)">اضافة منتج الى العرض</button>
+                <button *ngIf="!isCustomer" class="btn btn-primary w-50 m-auto" type="button" (click)="addOfferProduct(offer.offerId, offer.title)">اضافة منتج الى العرض</button>
                 <h3 class="text-center text-light my-4">المنتجات التي يمتلكها العرض</h3>
                 @for (prod of offer.productOffers; track prod.productId;) {
                     <div class="col-md-4 col-lg-3 mb-3">
@@ -46,8 +48,12 @@
                                     <h5>الكمية المطلوبة لتغعيل العرض: {{prod.productAmount}}</h5>
                                     <!-- <h5 *ngIf="prod.discount"> الخصم: <span class="text-danger">-{{prod.discount | currency: "ج.م"}}</span></h5> -->
                                 </div>
-                                <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a>
-                                <a class="ad-btn" (click)="addOfferProduct(offer.offerId, offer.title, prod.productId, prod.productAmount, prod.discount)">تعديل</a>
+                                @if (!isCustomer) {
+                                    <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a>
+                                    <a class="ad-btn" (click)="addOfferProduct(offer.offerId, offer.title, prod.productId, prod.productAmount, prod.discount)">تعديل</a>
+                                } @else {
+                                    <a class="ad-btn" [routerLink]="['/customer-products/product-details', prod.productId]">تفاصيل المنتج</a>
+                                }
                             </div>
                         </div>
                     </div>

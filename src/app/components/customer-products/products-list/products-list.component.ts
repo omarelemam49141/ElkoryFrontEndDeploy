@@ -14,13 +14,14 @@ import { ICart } from '../../../Models/icart';
 import { WishListService } from '../../../services/wishList.service';
 import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { IUser } from '../../../Models/iuser';
-import { IwishList } from '../../../Models/IwishList';
 import { IwhishListProduct } from '../../../Models/IwishListProduct';
+import { OffersSliderComponent } from '../../main-components/offers-slider/offers-slider.component';
 import { AccountService } from '../../../services/account.service';
+
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule],
+  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
 })
@@ -63,13 +64,14 @@ wishList?:IwhishListProduct[];
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
+
     this.getProductsPaginated(1,12);
     this.userLoggedID=this.accountService.getTokenId();
 
     if(this.userLoggedID){this.fetchWishList(this.userLoggedID);}
 
 
-   
+
   }
 
   /*start observers*/
@@ -110,8 +112,6 @@ wishList?:IwhishListProduct[];
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
     const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
-    console.log( `the product from cart is ${existingProduct?.amount}`);
-      console.log(`the product from product list ${product.amount}`)
     
     if (existingProduct) {
       
@@ -126,9 +126,10 @@ wishList?:IwhishListProduct[];
       this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
 
     } else {
-      let newCartItme={
+      let newCartItme: IProduct = {
         productId:product.productId,
-        amount:this.quantity[locationInlist],
+        amount:1,
+        allAmount:product.amount,
         categoryId:product.categoryId,
         categoryName:product.categoryName,
         description:product.description,
@@ -137,9 +138,8 @@ wishList?:IwhishListProduct[];
         name:product.name,
         originalPrice:product.originalPrice,
         productImages:product.productImages,
-      
-
       }
+      
      
       cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;

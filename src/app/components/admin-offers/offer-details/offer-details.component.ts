@@ -22,6 +22,10 @@ import { ProductService } from '../../../services/product.service';
 })
 export class OfferDetailsComponent implements OnDestroy, OnInit{
   offer!: IOffer;
+  
+  //customer view offer details properties
+  isCustomer = false;
+
   productsImage: string[] = [];
   //subscription properties
   subscriptions: Subscription[] = [];
@@ -62,6 +66,11 @@ export class OfferDetailsComponent implements OnDestroy, OnInit{
   loadOfferInfo(): void {
     this.subscriptions.push(this.activatedRoute.paramMap.subscribe(params=>{
       let offerId = Number(params.get('id'));
+      let role = params.get('role');
+      if (role == "customer") {
+        this.isCustomer = true;
+      }
+      
       if (!offerId) {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'هذا العرض غير موجود!',
