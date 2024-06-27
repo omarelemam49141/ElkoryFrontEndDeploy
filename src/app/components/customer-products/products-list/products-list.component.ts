@@ -116,8 +116,6 @@ wishList?:IwhishListProduct[];
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
     const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
-    console.log( `the product from cart is ${existingProduct?.amount}`);
-      console.log(`the product from product list ${product.amount}`)
     
     if (existingProduct) {
       
@@ -132,9 +130,10 @@ wishList?:IwhishListProduct[];
       this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
 
     } else {
-      let newCartItme={
+      let newCartItme: IProduct = {
         productId:product.productId,
         amount:1,
+        allAmount:product.amount,
         categoryId:product.categoryId,
         categoryName:product.categoryName,
         description:product.description,
@@ -143,9 +142,8 @@ wishList?:IwhishListProduct[];
         name:product.name,
         originalPrice:product.originalPrice,
         productImages:product.productImages,
-      
-
       }
+      
      
       cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;

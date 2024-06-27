@@ -38,14 +38,14 @@
 
                                 <div class="amount d-flex col-lg-3 col-xl-2">
                                     <input type="button" value="-" class="button-minus btn changing-amount"
-                                        (click)="product.amount=product.amount-1; updateProductAmountWithProuctId(product,productAmount);"
+                                        (click)="updateProductAmountWithProuctId(product,product.amount-1);"
                                         [disabled]="product.amount <= 1">
                                     <input #productAmount type="number" inputmode="numeric" class="form-control" min="1"
                                         max="{{product.allAmount}}"
-                                        (change)="updateProductAmount(product, $event)"
+                                        (change)="updateProductAmount(product, productAmount.value)"
                                         [(ngModel)]="product.amount">
                                     <input type="button" value="+" class="button-plus btn changing-amount"
-                                        (click)="product.amount=product.amount+1; updateProductAmountWithProuctId(product,productAmount);"
+                                        (click)="updateProductAmountWithProuctId(product,product.amount+1);"
                                         [disabled]="product.amount >= product.allAmount!">
                                 </div>
 
