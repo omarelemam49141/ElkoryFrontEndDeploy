@@ -41,6 +41,7 @@ export class LoginComponent {
       });
       localStorage.setItem("token", "Bearer " + token);
       this.accountService.isLoggedIn = true;
+      
       this.accountService.activateLogin();
       this.router.navigate(["/customer-account/view-profile"])
     },
