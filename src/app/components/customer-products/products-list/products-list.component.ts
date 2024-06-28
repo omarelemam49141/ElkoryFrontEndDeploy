@@ -45,7 +45,7 @@ export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
 //temp user
 userLoggedID!:number;
 
-wishList?:IwhishListProduct[];
+wishList?:IProduct[];
 
 
 

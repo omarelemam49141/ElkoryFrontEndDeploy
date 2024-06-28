@@ -28,7 +28,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   image: string | undefined;
   images: string[][] = [];
   quantity: number = 1; // Initialize quantity to 1
-  wishList:IwhishListProduct [] = [];
+  wishList:IProduct [] = [];
   user: IUser = {
     userId: 3,
     fName: 'Ahmad',
@@ -164,7 +164,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         name:product.name,
         originalPrice:product.originalPrice,
         productImages:product.productImages,
-      
+        allAmount:product.amount
+
 
       }
      
