@@ -3,7 +3,7 @@ import { IProductImage } from "./iproduct-image";
 export interface IwhishListProduct{
     productId:number;
     name:string;
-    ProductImages:IProductImage[];
+    productImages:IProductImage[];
 
     originalPrice: number;
     amount:number;

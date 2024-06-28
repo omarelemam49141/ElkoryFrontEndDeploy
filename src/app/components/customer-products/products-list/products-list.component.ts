@@ -45,7 +45,7 @@ export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
 //temp user
 userLoggedID!:number;
 
-wishList?:IwhishListProduct[];
+wishList?:IProduct[];
 
 
 
@@ -128,7 +128,7 @@ wishList?:IwhishListProduct[];
     } else {
       let newCartItme: IProduct = {
         productId:product.productId,
-        amount:1,
+        amount:this.quantity[locationInlist],
         allAmount:product.amount,
         categoryId:product.categoryId,
         categoryName:product.categoryName,

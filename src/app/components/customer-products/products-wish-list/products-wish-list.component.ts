@@ -3,64 +3,48 @@ import { WishListService } from '../../../services/wishList.service';
 import { IwhishListProduct } from '../../../Models/IwishListProduct';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { IUser } from '../../../Models/iuser';
+import { AccountService } from '../../../services/account.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { IProduct } from '../../../Models/iproduct';
+import { ICart } from '../../../Models/icart';
+import { ProductService } from '../../../services/product.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-products-wish-list',
   standalone: true,
-  imports: [CurrencyPipe,CommonModule],
+  imports: [RouterLink,CurrencyPipe,CommonModule],
   templateUrl: './products-wish-list.component.html',
   styleUrl: './products-wish-list.component.scss'
 })
 export class ProductsWishListComponent implements OnInit {
-  user: IUser = {
-    userId: 3,
-    fName: 'Ahmad',
-    lName: 'Esam',
-    email: 'ahmad.esam@ex.com',
-    password: '123',
-    phone: "1015328933",
-    governorate: 'Ghatbia',
-    city: 'MAhalla',
-    street: 'Farouk21',
-    postalCode: "12345",
-    isDeleted: false,
-    role: 1
-  };
-  
-  wishListProducts: IwhishListProduct[] = [];
-  wishList?:IwhishListProduct[];
 
-  constructor(private wishListService: WishListService) {}
+  userLoggedID!:number;
+  wishListProducts: IProduct[] = [];
+  snackBarDurationInSeconds = 5;
+   product!:IProduct;
+
+  
+
+  constructor(
+    private wishListService: WishListService,
+    private accountService: AccountService,
+    private snackBar: MatSnackBar,
+    private productService: ProductService
+
+  ) {}
 
 
   ngOnInit(): void {
-    this.loadWishList();
-    this.fetchWishList(this.user.userId!);
-
-  }
-  fetchWishList(UserId:number){
-    this.wishListService.getWishList(UserId).subscribe(
-      (data)=>{
-        console.log("from success section")
-        console.log(data);
-        this.wishList=data;
-     
-       
-        
-      },
-      (error)=>{
-        console.log("error section")
-        console.log(error);
-        
-      }
-      
-    );
-   
-  
+    this.userLoggedID=this.accountService.getTokenId();
+    if(this.userLoggedID){
+    this.loadWishList(this.userLoggedID);
+    }
   }
 
-  loadWishList(): void {
-    this.wishListService.getWishList(this.user.userId!).subscribe(
+
+  loadWishList(uerId:number): void {
+    this.wishListService.getWishList(uerId!).subscribe(
       (data) => {
         this.wishListProducts = data;
       },
@@ -71,11 +55,10 @@ export class ProductsWishListComponent implements OnInit {
   }
 
   removeFromWishList(productId: number): void {
-    this.wishListService.deleteWishListProduct(this.user.userId!, productId).subscribe(
+    this.wishListService.deleteWishListProduct(this.userLoggedID!, productId).subscribe(
       () => {
         // Remove the product from the local list
-        this.fetchWishList(this.user.userId!);
-        this.loadWishList();
+        this.loadWishList(this.userLoggedID!);
         this.wishListProducts = this.wishListProducts.filter((p) => p.productId !== productId);
       
       },
@@ -86,6 +69,82 @@ export class ProductsWishListComponent implements OnInit {
   }
   removeFunc(productId: number): void {
     this.removeFromWishList(productId);
+  }
+
+  addToCart(product: IProduct): void {
+    console.log(product);
+    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    
+    const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+
+    
+    if (existingProduct) {
+      
+
+      if(this.isProductReachedMaxAmount(product)){
+        this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        return;
+      }
+
+
+      existingProduct.amount += 1;
+      this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+
+    } else {
+      let newCartItme: IProduct = {
+        productId:product.productId,
+        amount:1,
+        allAmount:product.amount,
+        categoryId:product.categoryId,
+        categoryName:product.categoryName,
+        description:product.description,
+        discount:product.discount,
+        finalPrice:product.finalPrice,
+        name:product.name,
+        originalPrice:product.originalPrice,
+        productImages:product.productImages,
+      }
+      
+     
+      cart.productsAmounts.push(newCartItme);
+      cart.numberOfUniqueProducts += 1;
+      this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+
+    }
+
+    cart.finalPrice += (product.finalPrice);
+    cart.numberOfProducts += 1;
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+  }
+
+  removeFromCart(product: IProduct): void {
+    const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    const productIndex = cart.productsAmounts.findIndex((p: any) => p.productId === product.productId);
+    if (productIndex !== -1) {
+      const productAmount = cart.productsAmounts[productIndex].amount;
+      cart.productsAmounts.splice(productIndex, 1);
+      cart.numberOfUniqueProducts -= 1;
+      cart.numberOfProducts -= productAmount;
+      cart.finalPrice -= product.finalPrice * productAmount;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+    }
+  }
+  isProductReachedMaxAmount(product:IProduct):boolean{
+    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+    if(existingProduct){
+      return existingProduct.amount>=product.amount;
+    }
+    return false;
+  }
+
+  isProductInCart(productId:number){
+    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    return cart.productsAmounts.some(p=>p.productId===productId);
+  
   }
 
 }
