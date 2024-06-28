@@ -42,7 +42,7 @@
                                         [disabled]="product.amount <= 1">
                                     <input #productAmount type="number" inputmode="numeric" class="form-control" min="1"
                                         max="{{product.allAmount}}"
-                                        (change)="updateProductAmount(product, productAmount.value)"
+                                        (keyup)="updateProductAmountWithProuctId(product, +productAmount.value);"
                                         [(ngModel)]="product.amount">
                                     <input type="button" value="+" class="button-plus btn changing-amount"
                                         (click)="updateProductAmountWithProuctId(product,product.amount+1);"
