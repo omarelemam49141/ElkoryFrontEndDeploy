@@ -10,13 +10,20 @@ import { environment } from '../../environment/environment';
   providedIn: 'root'
 })
 export class OrderService {
-
   constructor(private http: HttpClient,
     private genericService: GenericService<IOrderModel>
   ) { }
 
   public getOrderModifiedPrice(offerId: number, userId: number): Observable<IOrderModifiedPrice> {
     return this.http.get<IOrderModifiedPrice>(`${environment.apiUrl}/Order/GetFinalPriceDetails/${offerId}/${userId}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    );
+  }
+
+  public getCustomerPreviousOrders(): Observable<IOrderModel[]> {
+    return this.http.get<IOrderModel[]>(`${environment.apiUrl}/Order/GetCustomerPreviousOrders`)
     .pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)

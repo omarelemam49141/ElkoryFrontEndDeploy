@@ -113,7 +113,7 @@ wishList?:IProduct[];
   addToCart(product: IProduct,locationInlist:number): void {
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
-    const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+    const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
     
     if (existingProduct) {
       if(this.isProductReachedMaxAmount(product)){
@@ -235,7 +235,7 @@ isProductInWishlist(productId:number):boolean{
 }
 isProductInCart(productId:number){
   const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
-  return cart.productsAmounts.some(p=>p.productId===productId);
+  return cart.productsAmounts?.some(p=>p.productId===productId);
 
 }
 removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
@@ -252,7 +252,7 @@ removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void
 }
 isProductReachedMaxAmount(product:IProduct):boolean{
   const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
-  const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
+  const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
   if(existingProduct){
     return existingProduct.amount>=product.amount;
   }
