@@ -1,0 +1,23 @@
+/* src/app/components/review/review.component.css */
+div[dir="rtl"] {
+  text-align: right;
+  margin: 20px 0px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  margin-top: 5px;
+}
+
+button {
+  margin-top: 15px;
+}
+
+.star-rating .fa-star:hover {
+  cursor: pointer;
+}
