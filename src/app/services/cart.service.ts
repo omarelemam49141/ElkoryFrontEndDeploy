@@ -85,5 +85,23 @@ export class CartService{
     );
   }
   
+  public addProductToCart(productId: number, amount: number): Observable<any> {
+    let userId = this.accountService.getTokenId();
+    if (!userId) {
+      return throwError(() => new Error("قم بإعادة تسجيل الدخول مرة أخرى"));
+    }
 
+    let addProduct = {
+      userId: userId,
+      productId: productId,
+      amount: amount
+    };
+
+    this.genericServcie.addHeaders("Content-Type", "application/json");
+
+    return this.http.post<any>(`${environment.apiUrl}/cart`, addProduct, this.genericServcie.getHeaders()).pipe(
+      retry(2),
+      catchError(this.genericServcie.handlingErrors)
+    );
+  }
 }
