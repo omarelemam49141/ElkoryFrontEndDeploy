@@ -16,6 +16,9 @@ import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { IUser } from '../../../Models/iuser';
 import { IwhishListProduct } from '../../../Models/IwishListProduct';
 import { OffersSliderComponent } from '../../main-components/offers-slider/offers-slider.component';
+import { CartService } from '../../../services/cart.service';
+import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
+import { AccountService } from '../../../services/account.service';
 @Component({
   selector: 'app-products-list',
   standalone: true,
@@ -64,7 +67,9 @@ wishList?:IwhishListProduct[];
   constructor(private productService: ProductService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private wishListService:WishListService
+    private wishListService:WishListService,
+    private cartService: CartService,
+    private accountService: AccountService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     throw new Error('Method not implemented.');
@@ -118,44 +123,78 @@ wishList?:IwhishListProduct[];
     const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
     
     if (existingProduct) {
-      
-
       if(this.isProductReachedMaxAmount(product)){
         this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
         return;
       }
-
-
       existingProduct.amount += 1;
-      this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      let cartToUpdateInDatabase = this.modifyCartAndAddItToLocalStorage(cart, product)
 
-    } else {
-      let newCartItme: IProduct = {
-        productId:product.productId,
-        amount:1,
-        allAmount:product.amount,
-        categoryId:product.categoryId,
-        categoryName:product.categoryName,
-        description:product.description,
-        discount:product.discount,
-        finalPrice:product.finalPrice,
-        name:product.name,
-        originalPrice:product.originalPrice,
-        productImages:product.productImages,
+      let userId = this.accountService.getTokenId();
+      if (userId) {
+        this.updateCartInDatabase(cartToUpdateInDatabase);
+      } else {
+        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
       }
-      
-     
-      cart.productsAmounts.push(newCartItme);
+    } else {
+      let newCartItme: IProduct = product;
+      newCartItme.amount = 1;
+      cart.productsAmounts.push(product);
       cart.numberOfUniqueProducts += 1;
-      this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      this.modifyCartAndAddItToLocalStorage(cart, product)
 
+      let userId = this.accountService.getTokenId();
+      if (userId) {
+        this.addItemToCart(product);
+      } else {
+        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      }
     }
+  }
 
+  updateCartInDatabase(cart:ICart) {
+    this.cartService.updateCart(cart).subscribe({
+      next: (data) => {
+        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى السلة", true);
+      },
+      error: (err: Error) => {
+        this.showNotification("تعذر أضافة قطعة اخرى من المنتج إلى السلة", false);
+      }
+    })
+  }
+
+  modifyCartAndAddItToLocalStorage(cart: ICart, product: IProduct) {
     cart.finalPrice += product.finalPrice;
     cart.numberOfProducts += 1;
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    
+
+    return cart;
+  }
+
+  addItemToCart(item: IProduct) {
+    this.cartService.addToCart(item).subscribe({
+      next: (data) => {
+        this.showNotification("تم أضافة المنتج إلى السلة بنجاح", true);
+      },
+      error: (err: Error) => {
+        this.showNotification("تعذر اضافة المنتج الى السلة", false);
+      }
+    });
+  }
+
+  showNotification(message:string, success:boolean) {
+    if (success) {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: message,
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+    } else {
+      this.snackBar.openFromComponent(FailedSnackbarComponent, {
+        data: message,
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+    }
   }
 
 fetchWishList(UserId:number){
