@@ -1,30 +1,47 @@
-import { Component } from '@angular/core';
+import { Component, ErrorHandler, Input } from '@angular/core';
 import { IRate } from '../../../Models/irate';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ReviewService } from '../../../services/review.service';
 
 @Component({
   selector: 'app-get-review',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './get-review.component.html',
   styleUrl: './get-review.component.scss'
 })
 export class GetReviewComponent {
 
-  rate:IRate = {
-    productId: 0,
-    customerId: 0,
-    numOfStars: 0,
-    comment: '',
-    rateDate: new Date()
-  };
+  // @Input() productId: number = 0;
+  reviewsList: IRate[] = [];
 
-  constructor() {}
+  constructor(private reviewService: ReviewService) { }
 
   ngOnInit(): void {
-    this.getReview();
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.reviewService.getProductReviews(1).subscribe((data: IRate[]) => {
+      this.reviewsList = data;
+      console.log("Reviews", this.reviewsList);
+    },
+    error => {
+      console.error("Error fetching Reviews", error);
+    });
+
   }
 
-  getReview(): void {
 
+  getStars(numOfStars: number): string {
+    let starsHtml = '';
+    for (let i = 0; i < 5; i++) {
+      if (i < numOfStars) {
+        starsHtml += `<i class="fa-solid fa-star fa-2x"></i>`;
+      } else {
+        starsHtml += '<i class="fa-regular fa-star fa-2x"></i>';
+      }
+    }
+    return starsHtml;
   }
+
 }
