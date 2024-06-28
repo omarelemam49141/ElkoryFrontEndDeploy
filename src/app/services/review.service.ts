@@ -17,7 +17,6 @@ export class ReviewService {
     return this.http.post<IRate>(`${environment.apiUrl}/review`, rate);
   }
 
-  //get review with the productId and customerId
   getReview(productId: number, customerId: number): Observable<IRate> {
     return this.http.get<IRate>(`${environment.apiUrl}/review?productId=${productId}&customerId=${customerId}`);
   }

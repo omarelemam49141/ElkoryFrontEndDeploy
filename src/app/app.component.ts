@@ -17,6 +17,7 @@ import { ProductsWishListComponent } from './components/customer-products/produc
 import { AccountService } from './services/account.service';
 import { AdminMenuComponent } from './components/main-components/admin-menu/admin-menu.component';
 import { AddReviewComponent } from './components/review/add-review/add-review.component';
+import { GetReviewComponent } from './components/review/get-review/get-review.component';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ import { AddReviewComponent } from './components/review/add-review/add-review.co
   imports: [RouterOutlet, TopHeaderComponent, NavbarComponent, FooterComponent,
     ViewAdminsComponent,AddAdminComponent, MainSpinnerComponent, AsyncPipe,
   CommonModule, ViewAdminsComponent,AddAdminComponent, ViewUsersComponent, WhatsappButtonComponent,
-  AdminProductsListComponent,ProductsWishListComponent, AdminMenuComponent, AddReviewComponent],
+  AdminProductsListComponent,ProductsWishListComponent, AdminMenuComponent, AddReviewComponent, GetReviewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 
