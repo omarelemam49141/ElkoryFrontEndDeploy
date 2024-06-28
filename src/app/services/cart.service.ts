@@ -8,6 +8,7 @@ import { environment } from '../../environment/environment';
 import { IUpdateCart } from '../Models/iupdate-cart';
 import { AccountService } from './account.service';
 import { IReviewOrder } from '../Models/ireview-order';
+import { IProduct } from '../Models/iproduct';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +80,16 @@ export class CartService{
 
   public getOrderInfo(userId: number): Observable<IReviewOrder> {
     return this.http.get<IReviewOrder>(`${environment.apiUrl}/Order?userId=${userId}`)
+    .pipe(
+      retry(2),
+      catchError(this.genericServcie.handlingErrors)
+    );
+  }
+
+  public addToCart(product: IProduct): Observable<any> {
+    let userId = this.accountService.getTokenId();
+    this.genericServcie.addHeaders("Content-Type", "application/json");
+    return this.http.post<any>(`${environment.apiUrl}/cart?userId=${userId}&productId=${product.productId}&amount=${product.amount}`, {}, this.genericServcie.httpOptions)
     .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)
