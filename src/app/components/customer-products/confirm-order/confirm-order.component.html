@@ -14,16 +14,21 @@
                             المنتجات : {{reviewOrderModel.productsAmounts.length}}</h5>
                     </div>
 
-                    <div class="offer" *ngIf="reviewOrderModel.applicableOffers?.length">
-                        <label class="form-label">اختر العرض لتطبيقه على طلبك</label>
-                        <select class="form-select" aria-label="Default select example" [(ngModel)]="reviewOrderModel.offerId">
-                            <option value="-1" selected>اختر عرض...</option>
+                    <div class="offer mb-4" *ngIf="reviewOrderModel.applicableOffers?.length">
+                        <label class="form-label">اختر عرض لتطبيقه على طلبك</label>
+                        <select class="form-select" aria-label="Default select example" [(ngModel)]="reviewOrderModel.offerId" (change)="selectOffer($event)">
+                            <option value="-1" selected=true>اختر عرض...</option>
                             <option value="{{offer.offerId}}" *ngFor="let offer of reviewOrderModel.applicableOffers">
                                 {{offer.title}}
                             </option>
                         </select>
                         <span class="text-danger" *ngIf="reviewOrderModel.offerId == -1">يرجى تحديد عرض</span>
+                        <div class="offerDetails">
+                            <app-offer-details *ngIf="selectedOfferId && selectedOfferId != -1" [offerId]="selectedOfferId" [isCustomer]="true"></app-offer-details>
+                        </div>
+                        <hr>
                     </div>
+
 
                     <div class="card rounded-3 mb-4" *ngFor="let product of reviewOrderModel.productsAmounts">
                         <div class="card-body p-4">
@@ -49,7 +54,7 @@
                                 </div>
 
                                 <div class="col-lg-3 col-xl-3 offset-lg-1 mt-2 mt-lg-0">
-                                    <h6 class="mb-0 fw-bold">{{(product.amount * product.finalPrice).toFixed(2) | currency:"EGP"}}ج.م</h6>
+                                    <h6 class="mb-0 fw-bold">{{(product.amount * product.finalPrice).toFixed(2) | currency:"ج.م"}}</h6>
                                 </div>
                             </div>
                         </div>
@@ -57,8 +62,19 @@
 
                     <div class="card mb-4">
                         <div class="card-body p-4 d-flex justify-content-between align-items-center">
-                            <h5>اجمالى التكلفة</h5>
-                            <h6 class="fw-bold text-success">{{reviewOrderModel.finalPrice | currency:"EGP"}} ج.م</h6>
+                            @if (reviewOrderModel.finalPriceAfterOffer) {
+                                <div>
+                                    <h5>التكلفة قبل العرض</h5>
+                                    <h6 class="text-danger" style="text-decoration: line-through;">{{reviewOrderModel.finalPrice | currency:"ج.م"}}</h6>
+                                </div>
+                                <div>
+                                    <h5>التكلفة بعد العرض</h5>
+                                    <h6 class="fw-bold text-success">{{reviewOrderModel.finalPriceAfterOffer | currency:"ج.م"}}</h6>
+                                </div>
+                            } @else {
+                                <h5>اجمالى التكلفة</h5>
+                                <h6 class="fw-bold text-success">{{reviewOrderModel.finalPrice | currency:"ج.م"}}</h6>
+                            }  
                         </div>
                     </div>
 

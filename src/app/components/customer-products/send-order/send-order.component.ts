@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatOption, MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
 import { IOrderModel } from '../../../Models/iorder-model';
@@ -18,12 +18,14 @@ import { GenericService } from '../../../services/generic.service';
   standalone: true,
   imports: [MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     FormsModule,
     MatButtonModule,
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
+    MatOption,
     ReactiveFormsModule,
     CommonModule],
   templateUrl: './send-order.component.html',
@@ -33,6 +35,21 @@ export class SendOrderComponent implements OnDestroy{
   //form properties
   orderForm!: FormGroup;
 
+  paymentMethods = [
+    {
+      id: 0,
+      name: "الدفع عند التسليم"
+    },
+    {
+      id: 1,
+      name: "الدفع فى الفرع"
+    },
+    {
+      id: 2,
+      name: "الدفع ببطاقة الدفع"
+    }
+  ]
+
   //notifications properties
   notificationDurationInSeconds = 5;
 
@@ -40,18 +57,18 @@ export class SendOrderComponent implements OnDestroy{
   subscriptions: Subscription[] = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: {offerId: number},
+    @Inject(MAT_DIALOG_DATA) public data: {userId: number, offerId: number},
     public dialogRef: MatDialogRef<SendOrderComponent>,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private accountService: AccountService,
     private genericService: GenericService<IOrderModel>,
   ) {
     this.orderForm = this.fb.group({
       governerate: ['', [Validators.required]],
       city: ['', [Validators.required]],
       street: ['', [Validators.required]],
-      postalCode: ['', [Validators.required]]
+      postalCode: ['', [Validators.required]],
+      paymentMethod: ['', [Validators.required]]
     })
   }
   ngOnDestroy(): void {
@@ -60,8 +77,9 @@ export class SendOrderComponent implements OnDestroy{
 
   submitForm() {
     let orderModel: IOrderModel = this.orderForm.value as IOrderModel;
-    orderModel.userId = this.accountService.getTokenId();
-    this.subscriptions.push(this.genericService.insert("Order/ConfirmWithoutOffer", orderModel).subscribe({
+    orderModel.userId = this.data.userId;
+    orderModel.offerId = this.data.offerId;
+    this.subscriptions.push(this.genericService.insert("Order/ConfirmOrder", orderModel).subscribe({
       next: () => {
         this.dialogRef.close(true);
       },
@@ -89,5 +107,8 @@ export class SendOrderComponent implements OnDestroy{
   }
   get postalCode() {
     return this.orderForm.get("postalCode");
+  }
+  get paymentMethod() {
+    return this.orderForm.get("paymentMethod");
   }
 }
