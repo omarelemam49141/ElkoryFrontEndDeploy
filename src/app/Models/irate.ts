@@ -3,5 +3,5 @@ export interface IRate {
   customerId: number;
   numOfStars: number;
   comment: string;
-  rateDate: Date;
+  rateDate?: string | Date;
 }
