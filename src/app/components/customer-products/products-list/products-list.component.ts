@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
 import { Subscription } from 'rxjs';
@@ -19,14 +19,16 @@ import { OffersSliderComponent } from '../../main-components/offers-slider/offer
 import { CartService } from '../../../services/cart.service';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { AccountService } from '../../../services/account.service';
+import { PaginatorService } from '../../../services/paginator.service';
 @Component({
   selector: 'app-products-list',
   standalone: true,
   imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent],
   templateUrl: './products-list.component.html',
+  providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
   styleUrl: './products-list.component.scss'
 })
-export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
+export class ProductsListComponent implements OnInit, OnDestroy{
   hovering = false;
   products!: IProduct[];
   images: string[][] = [];
@@ -62,8 +64,6 @@ wishList?:IwhishListProduct[];
 
 
 
-
-
   constructor(private productService: ProductService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -71,9 +71,6 @@ wishList?:IwhishListProduct[];
     private cartService: CartService,
     private accountService: AccountService
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    throw new Error('Method not implemented.');
-  }
   ngOnDestroy(): void {
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }

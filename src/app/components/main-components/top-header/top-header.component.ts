@@ -5,7 +5,7 @@ import { faBars, faChevronDown, faUserTie, faShoppingCart } from '@fortawesome/f
 import { Subscription } from 'rxjs';
 import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { WebInfoService } from '../../../services/WebInfo.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../../services/account.service';
 import { SearchProductComponent } from '../search-product/search-product.component';
 
@@ -22,7 +22,8 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
   isLogged!: boolean;
 
   constructor(library: FaIconLibrary, private webInfoService: WebInfoService,
-    public accountService: AccountService
+    public accountService: AccountService,
+    private router: Router
   ) {
     library.addIcons(faBars, faChevronDown, faUserTie, faShoppingCart);
   }
@@ -56,6 +57,10 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
 
   logOut() {
     this.accountService.logout();
+  }
+
+  goToPreviousOrders() {
+    this.router.navigate(['/customer-products/customer-previous-orders', this.accountService.getTokenId()]);
   }
 
   ngOnDestroy(): void {

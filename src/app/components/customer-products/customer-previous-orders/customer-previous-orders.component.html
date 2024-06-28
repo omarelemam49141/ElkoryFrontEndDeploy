@@ -1,106 +1,68 @@
-<!-- <ul class="orders-listing list-unstyled d-flex mt-4 mb-0 ps-0">
-    <li><button class="pending" (click)="pendingOrders()" [ngClass]="{'active': ordersType=='pending'}"
-            [disabled]="ordersType=='pending'">Pending</button></li>
-    <li><button class="accepted" (click)="acceptedOrders()" [ngClass]="{'active': ordersType=='accepted'}"
-            [disabled]="ordersType=='accepted'">Accepted</button></li>
-    <li><button class="refused" (click)="refusedOrders()" [ngClass]="{'active': ordersType=='refused'}"
-            [disabled]="ordersType=='refused'">Refused</button></li>
+<ul class="orders-listing list-unstyled d-flex mt-4 mb-0 ps-0">
+    <li><button class="pending" (click)="getPreviousOrders(0)" [ngClass]="{'active': ordersType=='pending'}"
+            [disabled]="ordersType=='pending'">طلبات معلقة</button></li>
+    <li><button class="accepted" (click)="getPreviousOrders(1)" [ngClass]="{'active': ordersType=='shipped'}"
+            [disabled]="ordersType=='accepted'">تم الشحن</button></li>
+    <li><button class="refused" (click)="getPreviousOrders(2)" [ngClass]="{'active': ordersType=='delivered'}"
+            [disabled]="ordersType=='refused'">تم التوصيل</button></li>
+    <li><button class="refused" (click)="getPreviousOrders(3)" [ngClass]="{'active': ordersType=='cancelled'}"
+            [disabled]="ordersType=='refused'">تم الالغاء</button></li>
 </ul>
 
 <div class="orders" [ngStyle]="{backgroundColor: settingOrdersBacground()}">
-    <div class="col-10 text-center mt-5 mb-5 m-auto"
-        *ngIf="(carts.length == 0 && ordersType=='pending') || (refusedOrdersList.length == 0 && ordersType=='refused')">
-        <h3 class="text-muted">لا يوجد طلبات {{ordersType}} فى الوقت الحالى</h3>
+    @if (!previousOrders?.items?.length) {
+        <div class="col-10 text-center mt-5 mb-5 m-auto">
+        <h5 class="text-muted p-3">لا يوجد طلبات {{ordersType}} فى الوقت الحالى</h5>
     </div>
-
-    <div *ngIf="carts.length != 0">
-        <h2>{{ordersType + ' orders' | uppercase}}</h2>
-        <ul class="responsive-table">
-            <li class="table-header fw-bold">
-                <div class="row">
-                    <div class="col-12 col-md-4">Order time</div>
-                    <div class="col-12 col-md-3">Items</div>
-                    <div class="col-12 col-md-3">Cart price</div>
-                    <div class="col-12 col-md-2">Details</div>
-                </div>
-            </li>
-            <li class="table-row" *ngFor="let cart of carts">
-                <div class="row align-items-center">
-                    <div class="col col-12 col-md-4" data-label="Date">{{getDuration(cart.date)}}</div>
-                    <div class="col col-12 col-md-3" data-label="Items">{{cart.cartProducts.length}}</div>
-                    <div class="col col-12 col-md-3" data-label="Cart price">{{getCartPrice(cart.cartProducts)}} LE
+    } @else {
+        <div>
+            <h2>{{ordersType + 'طلبات '}}</h2>
+            <ul class="responsive-table">
+                <li class="table-header fw-bold">
+                    <div class="row">
+                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2}">رقم الطلب</div>
+                        <div class="col-md-2" [ngClass]="{'col-md-1': previousOrders.items[0].status}">عدد المنتجات</div>
+                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status}">السعر النهائى</div>
+                        <div class="col-md-2">طريقة الدفع</div>
+                        @if(previousOrders.items[0].status) {
+                            <div class="col-md-2">تاريخ الرد</div>
+                        }
+                        @if(previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2) {
+                            <div class="col-md-2">تاريخ الوصول</div>
+                        }
+                        <div class="col-md-2" data-label="Details">اجراءات</div>
                     </div>
-                    <div class="col col-12 col-md-2" data-label="Details"><fa-icon
-                            (click)="openCartDetails(content, cart)" class="fs-3 btn showIcon" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" [icon]="faShow"></fa-icon></div>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div *ngIf="acceptedOrdersList.length != 0">
-        <h2>{{ordersType + ' orders' | uppercase}}</h2>
-        <ul class="responsive-table">
-            <li class="table-header fw-bold">
-                <div class="row">
-                    <div class="col-12 col-md-4">Response time</div>
-                    <div class="col-12 col-md-3">Items</div>
-                    <div class="col-12 col-md-3">Cart price</div>
-                    <div class="col-12 col-md-2">Details</div>
-                </div>
-            </li>
-            <li class="table-row" *ngFor="let acceptedOrder of acceptedOrdersList">
-                <div class="row align-items-center">
-                    <div class="col col-12 col-md-4" data-label="Date">{{getDuration(acceptedOrder.approvedDate)}}
+                </li>
+                <li class="table-row" *ngFor="let order of previousOrders.items">
+                    <div class="row align-items-center">
+                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2}">{{order.orderId}}</div>
+                        <div class="col-md-2" [ngClass]="{'col-md-1': previousOrders.items[0].status}">{{order.totalAmount}}</div>
+                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status}">{{order.totalPrice | currency:"ج.م"}}</div>
+                        <div class="col-md-2">{{paymentMethods[order.paymentMethod]}}</div>
+                        @if(previousOrders.items[0].status) {
+                            <div class="col-md-2">{{order.responseDate| date: 'dd/MM/yyyy'}}</div>
+                        }
+                        @if(previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2) {
+                            <div class="col-md-2">{{order.arrivalDate| date: 'dd/MM/yyyy' }}</div>
+                        }
+                        <div class="col-md-2" data-label="Details"><a class="btn btn-primary">تفاصيل</a></div>
                     </div>
-                    <div class="col col-12 col-md-3" data-label="Items">{{acceptedOrder.cartProducts.length}}</div>
-                    <div class="col col-12 col-md-3" data-label="Cart price">
-                        {{getCartPrice(acceptedOrder.cartProducts)}} LE</div>
-                    <div class="col col-12 col-md-2" data-label="Details"><fa-icon
-                            (click)="openCartDetails(content, acceptedOrder)" class="fs-3 btn showIcon"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal" [icon]="faShow"></fa-icon></div>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div *ngIf="refusedOrdersList.length != 0">
-        <h2>{{ordersType + ' orders' | uppercase}}</h2>
-        <ul class="responsive-table">
-            <li class="table-header fw-bold">
-                <div class="row">
-                    <div class="col-12 col-md-4">Response time</div>
-                    <div class="col-12 col-md-3">Items</div>
-                    <div class="col-12 col-md-3">Cart price</div>
-                    <div class="col-12 col-md-2">Details</div>
-                </div>
-            </li>
-            <li class="table-row" *ngFor="let refusedOrder of refusedOrdersList">
-                <div class="row align-items-center">
-                    <div class="col col-12 col-md-4" data-label="Date">{{getDuration(refusedOrder.refusedDate)}}
-                    </div>
-                    <div class="col col-12 col-md-3" data-label="Items">{{refusedOrder.cartProducts.length}}</div>
-                    <div class="col col-12 col-md-3" data-label="Cart price">
-                        {{getCartPrice(refusedOrder.cartProducts)}} LE</div>
-                    <div class="col col-12 col-md-2" data-label="Details"><fa-icon
-                            (click)="openCartDetails(content, refusedOrder)" class="fs-3 btn showIcon"
-                            data-bs-toggle="modal" data-bs-target="#exampleModal" [icon]="faShow"></fa-icon></div>
-                </div>
-            </li>
-        </ul>
-    </div>
+                </li>
+            </ul>
+        </div>
+    }
 </div>
 
 <div>
-    <mat-paginator [length]="productsTotalAmount"
+    <mat-paginator [length]="totalPages"
             [pageSize]="pageSize"
             [showFirstLastButtons]="true"
             [pageSizeOptions]="[10, 15, 25, 50]"
             [pageIndex]="pageNumber"
-            (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)"
+            (page)="getPreviousOrders(ordersStatuses.indexOf(ordersType))"
             aria-label="Select page">
     </mat-paginator>
-</div> -->
+</div>
 
 <!-- Cart Details Modal -->
 <!-- <ng-template #content let-modal>

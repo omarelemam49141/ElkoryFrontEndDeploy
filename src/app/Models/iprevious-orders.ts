@@ -1,3 +1,4 @@
+import { IOrderProduct } from "./iorder-product";
 import { IProduct } from "./iproduct";
 
 export interface IPreviousOrders {
@@ -9,7 +10,7 @@ export interface IPreviousOrders {
     arrivalDate: Date;
     userId: number;
     status: number;
-    productOrders: IProduct[];
+    productOrders: IOrderProduct[];
     offerId: number;
     responseDate: Date;
     totalPrice: number;

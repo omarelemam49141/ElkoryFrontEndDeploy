@@ -5,6 +5,7 @@ import { GenericService } from './generic.service';
 import { IOrderModel } from '../Models/iorder-model';
 import { IOrderModifiedPrice } from '../Models/iorder-modified-price';
 import { environment } from '../../environment/environment';
+import { IOrdersPaginated } from '../Models/iorders-paginated';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,8 @@ export class OrderService {
     );
   }
 
-  public getCustomerPreviousOrders(): Observable<IOrderModel[]> {
-    return this.http.get<IOrderModel[]>(`${environment.apiUrl}/Order/GetCustomerPreviousOrders`)
+  public getCustomerPreviousOrders(userId: number, orderStatus: number, pageNumber: number, pageSize: number): Observable<IOrdersPaginated> {
+    return this.http.get<IOrdersPaginated>(`${environment.apiUrl}/Order/GetUserOrdersByStatusPaginated?userId=${userId}&orderStatus=${orderStatus}&page=${pageNumber}&pageSize=${pageSize}`)
     .pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)
