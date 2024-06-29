@@ -10,5 +10,5 @@ export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes), 
     provideHttpClient(withInterceptors([loadinPageInterceptor])), 
     LoadingService,
-    provideAnimationsAsync()]
+    provideAnimationsAsync(), provideAnimationsAsync()]
 };

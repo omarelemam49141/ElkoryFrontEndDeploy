@@ -18,6 +18,28 @@ button {
   margin-top: 15px;
 }
 
-.star-rating .fa-star:hover {
+
+.star-rating {
+  display: flex;
+  align-items: baseline;
+  margin-top: 10px;
+  gap: 9px;
+  font-size: 24px;
+}
+.stars{
+  display: flex;
+  flex-direction: row-reverse;
+}
+fa-icon {
+  color: grey;
   cursor: pointer;
+
+  &.rated,
+  &:hover,
+  &:hover ~ fa-icon
+  {
+    color: gold;
+  }
+
+  transition: color 0.3s ease-in-out;
 }
