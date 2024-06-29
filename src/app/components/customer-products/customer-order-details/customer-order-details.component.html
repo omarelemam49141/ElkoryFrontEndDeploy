@@ -48,5 +48,15 @@
     </div>
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions">
+    <div [ngSwitch]="data.status">
+        <div *ngSwitchCase="0">
+            <button mat-button (click)="changeStatus('shipped')" class="btn btn-success">تم التوصيل</button>
+            <button mat-button (click)="changeStatus('cencelled')" class="btn btn-danger">إلغاء الطلب</button>
+        </div>
+        <div *ngSwitchCase="1">
+            <button mat-button (click)="changeStatus('delivered')" class="btn btn-success">تم التسليم</button>
+            <button mat-button (click)="changeStatus('cencelled')" class="btn btn-danger">إلغاء الطلب</button>
+        </div>
+    </div>
     <button mat-button (click)="onNoClick()" class="btn btn-secondary">إغلاق</button>
 </mat-dialog-actions> -->

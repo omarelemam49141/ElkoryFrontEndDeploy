@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, Pipe } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IProduct } from '../../../Models/iproduct';
 import { ProductService } from '../../../services/product.service';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { FormsModule } from '@angular/forms';
+import { AccountService } from '../../../services/account.service';
 
 @Component({
   selector: 'app-admin-products-list',
@@ -24,7 +25,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class AdminProductsListComponent implements OnInit, OnDestroy{
   products!: IProduct[];
-  images: string[][] = [];
   /*pagination properties*/ 
   pageSize = 10;
   pageNumber = 0;
@@ -40,18 +40,15 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
 
   constructor(private productService: ProductService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private accountService: AccountService,
+    private router: Router
   ) {}
 
   /*start observers*/
   listObserver = {
     next: (data: ProductsPagination) => {
       this.products = data.items;
-      for (let i = 0; i < this.products.length; i++) {
-        this.productService.getPictures(this.products[i].productId).subscribe((images) => {
-          this.images.push(images);
-        });
-      }
       this.pageSize = data.pageSize;
       this.pageNumber = data.pageNumber-1;
       this.productsTotalAmount = data.totalItems;

@@ -8,6 +8,10 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
 import { IOrdersPaginated } from '../../../Models/iorders-paginated';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { PaginatorService } from '../../../services/paginator.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomerOrderDetailsComponent } from '../customer-order-details/customer-order-details.component';
+import { IPreviousOrders } from '../../../Models/iprevious-orders';
 
 @Component({
   selector: 'app-customer-previous-orders',
@@ -18,14 +22,19 @@ import { PaginatorService } from '../../../services/paginator.service';
   providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
 })
 export class CustomerPreviousOrdersComponent implements OnInit{
+  role: string = 'customer';
+
   //paginationProperties
   pageSize = 10;
   pageNumber = 1;
   totalPages = 0;
 
   //orders properties
-  ordersType = 'pending';
+  ordersType: string = 'pending';
   ordersStatuses = ['pending', 'shipped', 'delivered', 'cancelled'];
+  //make a hash map of orders statuses
+  ordersStatusesInArabic= ['معلقة', 'مشحونة', 'تم تسليمها', 'ملغية']
+
   previousOrders: IOrdersPaginated = {} as IOrdersPaginated;
   paymentMethods = [
     "كاش عند التسليم",
@@ -37,7 +46,9 @@ export class CustomerPreviousOrdersComponent implements OnInit{
   notificationDurationInSeconds = 5;
   constructor(private orderService: OrderService,
     private snackBar: MatSnackBar,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog
   ) {
     
   }
@@ -47,7 +58,7 @@ export class CustomerPreviousOrdersComponent implements OnInit{
     next: (data: IOrdersPaginated) => {
       this.previousOrders = data;
       this.pageSize = data.pageSize;
-      this.pageNumber = data.pageNumber;
+      this.pageNumber = data.pageNumber - 1;
       this.totalPages = data.totalPages;
     },
     error: (error: Error) => {
@@ -58,7 +69,10 @@ export class CustomerPreviousOrdersComponent implements OnInit{
 
   //life cycle hooks
   ngOnInit(): void {
-    this.getPreviousOrders(0);
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.role = params.get("role")?.toString().toLowerCase() || 'customer';
+      this.getPreviousOrders(0, params.get("role")?.toString().toLowerCase() || 'customer');
+    })
   }
 
   //methods
@@ -81,10 +95,15 @@ export class CustomerPreviousOrdersComponent implements OnInit{
       });
     }
   }
-  getPreviousOrders(ordersType: number) {
-    let userId = this.accountService.getTokenId();
+
+  getPreviousOrders(ordersType: number, role: string = 'customer') {
     this.ordersType = this.ordersStatuses[ordersType];
-    this.orderService.getCustomerPreviousOrders(userId, ordersType, this.pageNumber, this.pageSize).subscribe(this.getPreviousOrdersObserver);
+    if (role=="customer") {
+      let userId = this.accountService.getTokenId();
+      this.orderService.getCustomerPreviousOrders(userId, ordersType, this.pageNumber, this.pageSize).subscribe(this.getPreviousOrdersObserver);
+    } else {
+      this.orderService.getAllCustomersOrdersPaginated(ordersType, this.pageNumber, this.pageSize).subscribe(this.getPreviousOrdersObserver);
+    }
   }
 
   settingOrdersBacground() {
@@ -93,11 +112,23 @@ export class CustomerPreviousOrdersComponent implements OnInit{
     } else if (this.ordersType == 'shipped') {
       return '#b6e3e7';
     } else if (this.ordersType == 'delivered') {
-      return '#e7b6b6';
+      return '#b6cee7';
     } else if (this.ordersType == 'cancelled') {
-      return '#b6e3e7';
+      return '#e7b6b6';
     } else {
       return '#b6cee7';
     }
+  }
+
+  openOrderDetails(orderDetails: IPreviousOrders) {
+    let dialogRef = this.dialog.open(CustomerOrderDetailsComponent, {
+      data: orderDetails
+    })
+
+    dialogRef.afterClosed().subscribe(result=>{
+      if(result) {
+        this.getPreviousOrders(0, 'admin');
+      }
+    })
   }
 }

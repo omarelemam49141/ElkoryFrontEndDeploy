@@ -66,13 +66,12 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         ['', [Validators.required]]
       ], oneImageAtLeast),
       imagesToAdd: fb.array([]),
-      discount: ['0', [Validators.max(100), Validators.min(0)]],
+      discount: ['', [Validators.max(100), Validators.min(0)]],
       originalPrice: ['', [Validators.required, Validators.min(0)]],
       amount: ['', [Validators.required, Validators.min(0)]],
       description: ['', [Validators.required]],
       categoryId: ['', [Validators.required, CheckCategoryIsSelected]],
       subCategoriesWithValues: new FormArray([
-
       ])
     })
   }
@@ -166,7 +165,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   addAllSelectedSubCategoriesValuesToProduct(productId: number) {
     //add the product sub categories values
-    if (this.subCategoriesWithValues) {
+    if (this.subCategoriesWithValues && this.subCategoriesWithValues.length > 0) {
       this.subCategoriesWithValues.controls.forEach((subCategoryGroup, index) => {
         let productCategorySubCategoryValue: IProductCategorySubValues 
         = this.mapSubCategoryValueFieldsToproductCategorySubCategoryValue(
@@ -174,11 +173,16 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
           this.productForm.get('categoryId')?.value,
           subCategoryGroup.get('selectedValue')?.value,
           +subCategoryGroup.get('subCategoryId')?.value
-          
         )
 
         this.addSubCategoriesValueToProduct(productCategorySubCategoryValue, index);
       });
+    } else {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: "تم إضافة المنتج بنجاح",
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+      this.router.navigate(["/admin-products"]);
     }
   }
 
@@ -302,7 +306,6 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.addSubCategoriesToForm(data);
       },
       error: (err: Error) => {
-        console.log(err)
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: "تعذر تحميل الأقسام الفرعية",
           duration: this.snackBarDurationInSeconds * 1000
@@ -342,7 +345,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       error: (err: Error) => {
         console.log(err)
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
-          data: "تعذر اض  افة المنتج الى الأقسام الفرعية",
+          data: "تعذر اضافة المنتج الى الأقسام الفرعية",
           duration: this.snackBarDurationInSeconds * 1000
         })
       }
@@ -352,6 +355,9 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*submit the form*/
   submitProduct(): void {
     let product: IAddProduct = this.productForm.value;
+    if (!product.discount) {
+      product.discount = 0
+    }
     if (this.productToEdit) {
       this.subscriptions?.push(this.productService.update(this.productToEdit.productId, product).subscribe(this.productsObserver));
     } else {

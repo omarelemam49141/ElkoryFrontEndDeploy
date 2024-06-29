@@ -136,6 +136,7 @@ wishList?:IwhishListProduct[];
     } else {
       let newCartItme: IProduct = product;
       newCartItme.amount = 1;
+      newCartItme.allAmount = product.amount;
       cart.productsAmounts.push(product);
       cart.numberOfUniqueProducts += 1;
       this.modifyCartAndAddItToLocalStorage(cart, product)
@@ -165,6 +166,8 @@ wishList?:IwhishListProduct[];
     cart.numberOfProducts += 1;
     
     localStorage.setItem('cart', JSON.stringify(cart));
+
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
 
     return cart;
   }

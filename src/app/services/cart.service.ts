@@ -15,10 +15,16 @@ import { IProduct } from '../Models/iproduct';
 })
 
 export class CartService{
+  private numberOfItemsInCart: number = 0;
   constructor(private http: HttpClient,
     private genericServcie: GenericService<ICart>,
     private accountService: AccountService
-  ) { }
+  ) { 
+    if(localStorage.getItem("cart")) {
+      let cart: ICart = JSON.parse(localStorage.getItem("cart")!); 
+      this.numberOfItemsInCart = cart.numberOfUniqueProducts
+    }
+  }
 
   getLoggedInUserEmail() : string | null{
     //get the token and decode it
@@ -96,4 +102,11 @@ export class CartService{
     );
   }
 
+  changeNumberOfItemsInCart(numberOfItems: number) {
+    this.numberOfItemsInCart = numberOfItems;
+  }
+
+  getNumberOfItemsInCart(): number {
+    return this.numberOfItemsInCart;
+  }
 }

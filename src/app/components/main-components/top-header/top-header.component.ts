@@ -8,6 +8,7 @@ import { WebInfoService } from '../../../services/WebInfo.service';
 import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../../services/account.service';
 import { SearchProductComponent } from '../search-product/search-product.component';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-top-header',
@@ -23,7 +24,8 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
 
   constructor(library: FaIconLibrary, private webInfoService: WebInfoService,
     public accountService: AccountService,
-    private router: Router
+    private router: Router,
+    public cartService: CartService
   ) {
     library.addIcons(faBars, faChevronDown, faUserTie, faShoppingCart);
   }
