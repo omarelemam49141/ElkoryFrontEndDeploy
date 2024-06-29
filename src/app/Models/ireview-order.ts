@@ -9,4 +9,5 @@ export interface IReviewOrder {
     numberOfUniqueProducts: number;
     numberOfProducts: number;
     offerId?: number;
+    finalPriceAfterOffer?: number;
 }

@@ -9,7 +9,6 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { AccountService } from '../../../services/account.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Token } from '@angular/compiler';
 import { IProduct } from '../../../Models/iproduct';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SendOrderComponent } from '../send-order/send-order.component';
@@ -41,8 +40,10 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   //observers
   getCartObserver = {
     next: (data: ICart) => {
-      localStorage.setItem("cart", JSON.stringify(data));
-      this.cart = data
+      if (data?.productsAmounts) {
+        localStorage.setItem("cart", JSON.stringify(data));
+        this.cart = data
+      }
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -102,13 +103,11 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
     localStorage.setItem('cart', JSON.stringify(this.cart));
   }
 
-  decreaseCartPrice(productId: number): void {
-    this.cart.finalPrice -= this.cart.productsAmounts.find(p => p.productId == productId)!.finalPrice;
-    this.updateLocalStorageWithCart();
-  }
-
-  increaseCartPrice(productId: number): void {
-    this.cart.finalPrice += this.cart.productsAmounts.find(p => p.productId == productId)!.finalPrice;
+  calculateCartFinalPrice() {
+    this.cart.finalPrice = 0;
+    for (let i = 0; i < this.cart.productsAmounts.length; i++) {
+      this.cart.finalPrice += this.cart.productsAmounts[i].finalPrice * this.cart.productsAmounts[i].amount;
+    }
     this.updateLocalStorageWithCart();
   }
 
@@ -125,13 +124,17 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   }
 
   decreaseOrIncreaseProductAmount(product: IProduct, productAmount: number): void {
-    if (productAmount < product.amount) {
-      product.amount = productAmount;
-      this.decreaseCartPrice(product.productId);
-    } else {
-      product.amount = productAmount;
-      this.increaseCartPrice(product.productId);
+    if(this.validateSelectedPRoductAmount(product, productAmount)){
+      return;
     }
+    product.amount = productAmount;
+    this.updateProductAmountInCart(product);
+    this.calculateCartFinalPrice();
+  }
+
+  updateProductAmountInCart(product: IProduct) {
+    let productIndexInCart = this.cart.productsAmounts.findIndex(prod=>prod.productId == product.productId);
+    this.cart.productsAmounts.splice(productIndexInCart, 1, product);
   }
 
   updateProductAmount(product: IProduct, event: any): void {
@@ -142,12 +145,12 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
     this.decreaseOrIncreaseProductAmount(product, +event.target.value);
   }
 
-  updateProductAmountWithProuctId(product: IProduct, productAmount: any): void {
-    if(this.validateSelectedPRoductAmount(product, productAmount.value)){
+  updateProductAmountWithProuctId(product: IProduct, productAmount: number): void {
+    if(this.validateSelectedPRoductAmount(product, productAmount)){
       return;
     }
 
-    this.decreaseOrIncreaseProductAmount(product, productAmount.value);
+    this.decreaseOrIncreaseProductAmount(product, productAmount);
   }
 
   clearCart(): void {

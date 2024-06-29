@@ -6,6 +6,7 @@ import { IwishList } from '../Models/IwishList';
 import { IAddWishListProduct } from '../Models/Iadd-wishListproduct';
 import { GenericService } from './generic.service';
 import { IwhishListProduct } from '../Models/IwishListProduct';
+import { IProduct } from '../Models/iproduct';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class WishListService {
 
   constructor(private http: HttpClient) {}
 
-  getWishList(userid:number): Observable<IwhishListProduct[]> {
-    return this.http.get<IwhishListProduct[]>(this.apiUrl+"/"+userid);
+  getWishList(userid:number): Observable<IProduct[]> {
+    return this.http.get<IProduct[]>(this.apiUrl+"/"+userid);
   }
   addWishListProduct(wishListProduct: IAddWishListProduct): Observable<any>
    { return this.http.post<any>(this.apiUrl, wishListProduct); }

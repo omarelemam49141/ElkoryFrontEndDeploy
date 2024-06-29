@@ -9,4 +9,5 @@ export const routes: Routes = [
     {path: "edit-offer/:id", component: AddNewOfferComponent},
     {path: "show-all-offers", component: ShowAllOffersComponent},
     {path: "offer-details/:id", component: OfferDetailsComponent},
+    {path: "offer-details/:id/:role", component: OfferDetailsComponent},
 ]

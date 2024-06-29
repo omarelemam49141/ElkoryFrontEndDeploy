@@ -2,16 +2,16 @@
     <section class="h-100 mt-5" style="background-color: #eee;">
         <div class="container h-100 py-5">
             <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-10 text-center" *ngIf="cart.productsAmounts && cart.productsAmounts.length == 0">
-                    <h3 class="text-muted">لم يتم اضافة منتجات الى العربة!</h3>
+                <div class="col-10 text-center" *ngIf="!cart || !cart.productsAmounts?.length">
+                    <h5 class="text-muted">لم يتم اضافة منتجات الى العربة!</h5>
                     <a [routerLink]="['/customer-products']" class="btn btn-primary btn-lg w-80 mt-3">أضف بعض
                         المنتجات</a>
                 </div>
 
                 <div class="col-10" *ngIf="cart?.productsAmounts?.length">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 class="fw-normal mb-0 text-black">عربة التسوق - عدد
-                            المنتجات : {{cart.productsAmounts.length}}</h3>
+                        <h5 class="fw-normal mb-0 text-black">عربة التسوق - عدد
+                            المنتجات : {{cart.productsAmounts.length}}</h5>
                         <div>
                             <button class="btn btn-danger" (click)="clearCart()">ازالة كل المنتجات</button>
                         </div>
@@ -33,24 +33,24 @@
                                 <div class="col-lg-3 col-xl-3">
                                     <p class="lead fw-normal mb-2">{{product.name}}</p>
                                     <p><span class="text-muted ms-1">سعر المنتج</span><span
-                                            class="badge text-bg-success">{{product.finalPrice}}ج.م</span></p>
+                                            class="badge text-bg-success">{{product.finalPrice | currency:"ج.م"}}</span></p>
                                 </div>
 
                                 <div class="amount d-flex col-lg-3 col-xl-2">
                                     <input type="button" value="-" class="button-minus btn changing-amount"
-                                        (click)="product.amount=product.amount-1; updateProductAmountWithProuctId(product,productAmount);"
+                                        (click)="updateProductAmountWithProuctId(product,product.amount-1);"
                                         [disabled]="product.amount <= 1">
                                     <input #productAmount type="number" inputmode="numeric" class="form-control" min="1"
                                         max="{{product.allAmount}}"
-                                        (change)="updateProductAmount(product, $event)"
+                                        (keyup)="updateProductAmountWithProuctId(product, +productAmount.value);"
                                         [(ngModel)]="product.amount">
                                     <input type="button" value="+" class="button-plus btn changing-amount"
-                                        (click)="product.amount=product.amount+1; updateProductAmountWithProuctId(product,productAmount);"
+                                        (click)="updateProductAmountWithProuctId(product,product.amount+1);"
                                         [disabled]="product.amount >= product.allAmount!">
                                 </div>
 
                                 <div class="col-lg-2 col-xl-2 offset-lg-1 mt-2 mt-lg-0">
-                                    <h5 class="mb-0 fw-bold">{{(product.amount * product.finalPrice).toFixed(2)}}ج.م</h5>
+                                    <h6 class="mb-0 fw-bold">{{(product.amount * product.finalPrice).toFixed(2) | currency:"ج.م"}}</h6>
                                 </div>
                                 <div class="col-lg-1 col-xl-1 text-end">
                                     <a (click)="deleteProductFromCart(product.productId)" class="text-danger fs-3" style="cursor: pointer;">
@@ -64,7 +64,7 @@
                     <div class="card mb-4">
                         <div class="card-body p-4 d-flex justify-content-between align-items-center">
                             <h5>اجمالى التكلفة</h5>
-                            <h5 class="fw-bold">{{cart.finalPrice}} ج.م</h5>
+                            <h6 class="fw-bold">{{cart.finalPrice | currency:"ج.م"}}</h6>
                         </div>
                     </div>
 

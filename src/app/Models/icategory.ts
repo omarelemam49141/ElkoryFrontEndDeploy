@@ -1,5 +1,9 @@
+import { ISubCategory } from "./isub-category";
+
 export interface ICategory {
     categoryId: number;
     name: string;
-    imageUri: string
+    subCategories:ISubCategory[]
+    imageUri: string;
+    imageId:string;
 }
