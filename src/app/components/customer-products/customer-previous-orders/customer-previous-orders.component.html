@@ -1,65 +1,91 @@
 <ul class="orders-listing list-unstyled d-flex mt-4 mb-0 ps-0">
-    <li><button class="pending" (click)="getPreviousOrders(0, role)" [ngClass]="{'active': ordersType=='pending'}"
-            [disabled]="ordersType=='pending'">طلبات معلقة</button></li>
-    <li><button class="accepted" (click)="getPreviousOrders(1, role)" [ngClass]="{'active': ordersType=='shipped'}"
-            [disabled]="ordersType=='accepted'">تم الشحن</button></li>
-    <li><button class="refused" (click)="getPreviousOrders(2, role)" [ngClass]="{'active': ordersType=='delivered'}"
-            [disabled]="ordersType=='refused'">تم التوصيل</button></li>
-    <li><button class="refused" (click)="getPreviousOrders(3, role)" [ngClass]="{'active': ordersType=='cancelled'}"
-            [disabled]="ordersType=='refused'">تم الالغاء</button></li>
+    <li>
+        <button class="pending" (click)="getPreviousOrders(0, role)" [ngClass]="{'active': ordersType=='pending'}" [disabled]="ordersType=='pending'">
+          طلبات معلقة 
+          <span class="badge badge-pending" *ngIf="ordersStats?.totalPendingOrders">{{ ordersStats?.totalPendingOrders }}</span>
+        </button>
+      </li>
+      <li>
+        <button class="accepted" (click)="getPreviousOrders(1, role)" [ngClass]="{'active': ordersType=='accepted'}" [disabled]="ordersType=='accepted'">
+          طلبات مقبولة
+          <span class="badge badge-accepted" *ngIf="ordersStats?.totalAcceptedOrders">{{ ordersStats?.totalAcceptedOrders }}</span>
+        </button>
+      </li>
+      <li>
+        <button class="accepted" (click)="getPreviousOrders(2, role)" [ngClass]="{'active': ordersType=='shipped'}" [disabled]="ordersType=='shipped'">
+          تم الشحن 
+          <span class="badge badge-shipped" *ngIf="ordersStats?.totalShippedOrders">{{ ordersStats?.totalShippedOrders }}</span>
+        </button>
+      </li>
+      <li>
+        <button class="refused" (click)="getPreviousOrders(3, role)" [ngClass]="{'active': ordersType=='delivered'}" [disabled]="ordersType=='delivered'">
+          تم التوصيل 
+          <span class="badge badge-delivered" *ngIf="ordersStats?.totalDeliveredOrders">{{ ordersStats?.totalDeliveredOrders }}</span>
+        </button>
+      </li>
+      <li>
+        <button class="refused" (click)="getPreviousOrders(4, role)" [ngClass]="{'active': ordersType=='cancelled'}" [disabled]="ordersType=='cancelled'">
+          تم الالغاء 
+          <span class="badge badge-cancelled" *ngIf="ordersStats?.totalCancelledOrders">{{ ordersStats?.totalCancelledOrders }}</span>
+        </button>
+      </li>
 </ul>
 
-<div class="orders" [ngStyle]="{backgroundColor: settingOrdersBacground()}">
-    @if (!previousOrders?.items?.length) {
-        <div class="col-10 text-center mt-5 mb-5 m-auto">
-        <h5 class="text-muted p-3">لا يوجد طلبات {{ordersStatusesInArabic[ordersStatuses.indexOf(ordersType)]}} فى الوقت الحالى</h5>
-    </div>
-    } @else {
-        <div>
-            <h2>{{ordersStatusesInArabic[ordersStatuses.indexOf(ordersType)] + ' طلبات'}}</h2>
-            <ul class="responsive-table">
-                <li class="table-header fw-bold">
-                    <div class="row">
-                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2}">رقم الطلب</div>
-                        <div class="col-md-2" [ngClass]="{'col-md-1': previousOrders.items[0].status}">عدد المنتجات</div>
-                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status}">السعر النهائى</div>
-                        <div class="col-md-2">طريقة الدفع</div>
-                        @if(previousOrders.items[0].status) {
-                            <div class="col-md-2">تاريخ الرد</div>
-                        }
-                        @if(previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2) {
-                            <div class="col-md-2">تاريخ الوصول</div>
-                        }
-                        <div class="col-md-2" data-label="Details">اجراءات</div>
-                    </div>
-                </li>
-                <li class="table-row" *ngFor="let order of previousOrders.items">
-                    <div class="row align-items-center">
-                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2}">{{order.orderId}}</div>
-                        <div class="col-md-2" [ngClass]="{'col-md-1': previousOrders.items[0].status}">{{order.totalAmount}}</div>
-                        <div class="col-md-3" [ngClass]="{'col-md-2': previousOrders.items[0].status}">{{order.totalPrice | currency:"ج.م"}}</div>
-                        <div class="col-md-2">{{paymentMethods[order.paymentMethod]}}</div>
-                        @if(previousOrders.items[0].status) {
-                            <div class="col-md-2">{{order.responseDate| date: 'dd/MM/yyyy'}}</div>
-                        }
-                        @if(previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2) {
-                            <div class="col-md-2">{{order.arrivalDate| date: 'dd/MM/yyyy' }}</div>
-                        }
-                        <div class="col-md-2" data-label="Details" (click)="openOrderDetails(order)"><a class="btn btn-primary">تفاصيل</a></div>
-                    </div>
-                </li>
-            </ul>
+@if(!isOrdersLoading) {
+    <div class="orders" [ngStyle]="{backgroundColor: settingOrdersBacground()}">
+        @if (!previousOrders?.items?.length) {
+            <div class="col-10 text-center mt-5 mb-5 m-auto">
+            <h5 class="text-muted p-3">لا يوجد طلبات {{ordersStatusesInArabic[ordersStatuses.indexOf(ordersType)]}} فى الوقت الحالى</h5>
         </div>
-    }
-</div>
-
-<div>
-    <mat-paginator [length]="totalPages"
-            [pageSize]="pageSize"
-            [showFirstLastButtons]="true"
-            [pageSizeOptions]="[10, 15, 25, 50]"
-            [pageIndex]="pageNumber"
-            (page)="getPreviousOrders(ordersStatuses.indexOf(ordersType))"
-            aria-label="Select page">
-    </mat-paginator>
-</div>
+        } @else {
+            <div>
+                <h2>{{'طلبات ' + ordersStatusesInArabic[ordersStatuses.indexOf(ordersType)]}}</h2>
+                <ul class="responsive-table">
+                    <li class="table-header fw-bold">
+                        <div class="row">
+                            <div [ngClass]="{'col-md-2': previousOrders.items[0].status, 'col-md-4': !previousOrders.items[0].status}">رقم الطلب</div>
+                            <div [ngClass]="{'col-md-1': previousOrders.items[0].status, 'col-md-2': !previousOrders.items[0].status}">عدد المنتجات</div>
+                            <div [ngClass]="{'col-md-2': previousOrders.items[0].status, 'col-md-3': !previousOrders.items[0].status}">السعر النهائى</div>
+                            <div class="col-md-2">طريقة الدفع</div>
+                            @if(previousOrders.items[0].status) {
+                                <div class="col-md-2">تاريخ الرد</div>
+                            }
+                            @if(previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2) {
+                                <div class="col-md-2">تاريخ الوصول</div>
+                            }
+                            <div class="col-md-1" data-label="Details">اجراءات</div>
+                        </div>
+                    </li>
+                    <li class="table-row" *ngFor="let order of previousOrders.items">
+                        <div class="row align-items-center">
+                            <div [ngClass]="{'col-md-2': previousOrders.items[0].status, 'col-md-4': !previousOrders.items[0].status}">{{order.orderId}}</div>
+                            <div [ngClass]="{'col-md-1': previousOrders.items[0].status, 'col-md-2': !previousOrders.items[0].status}">{{order.totalAmount}}</div>
+                            <div [ngClass]="{'col-md-2': previousOrders.items[0].status, 'col-md-3': !previousOrders.items[0].status}">{{order.totalPrice | currency:"ج.م"}}</div>
+                            <div class="col-md-2">{{paymentMethods[order.paymentMethod]}}</div>
+                            @if(previousOrders.items[0].status) {
+                                <div class="col-md-2">{{order.responseDate| date: 'dd/MM/yyyy'}}</div>
+                            }
+                            @if(previousOrders.items[0].status == 1 || previousOrders.items[0].status == 2) {
+                                <div class="col-md-2">{{order.arrivalDate| date: 'dd/MM/yyyy' }}</div>
+                            }
+                            <div class="col-md-1" data-label="Details" (click)="openOrderDetails(order)"><a class="btn btn-primary">تفاصيل</a></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+    
+    <div>
+        <mat-paginator [length]="totalPages"
+                [pageSize]="pageSize"
+                [showFirstLastButtons]="true"
+                [pageSizeOptions]="[10, 15, 25, 50]"
+                [pageIndex]="pageNumber - 1"
+                (page)="getPreviousOrders(ordersStatuses.indexOf(ordersType))"
+                aria-label="Select page">
+        </mat-paginator>
+    </div>
+} @else {
+    <app-secondary-spinner></app-secondary-spinner>
+}

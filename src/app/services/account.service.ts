@@ -10,6 +10,7 @@ import { IEditProfile } from '../Models/iedit-profile';
 import * as jwtDecode  from 'jwt-decode';
 import { IVerifyEmail } from '../Models/iverify-email';
 import { IForgetPassword } from '../Models/iforget-password';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,8 @@ export class AccountService implements OnInit{
   user?: {}
 
   constructor(private http: HttpClient,
-              private genericService: GenericService<ISignUpModel>
+              private genericService: GenericService<ISignUpModel>,
+              private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -141,6 +143,7 @@ export class AccountService implements OnInit{
     localStorage.removeItem("token");
     this.isLoggedIn = false;
     this.loggedInSubject.next(false);
+    this.router.navigate(["/customer-account/login"])
   }
 
   public verifyEmail(verifyEmail: IVerifyEmail): Observable<any> {

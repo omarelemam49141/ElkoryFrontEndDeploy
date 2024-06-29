@@ -1,37 +1,43 @@
-<div class="text-center">
-  <h1>Manage All admins</h1>
+<div class="text-center mb-4">
+  <h5>لوحة إدارة مدراء الموقع</h5>
 </div>
 
-<table class="table table-bordered table-hover text-center">
-  <thead>
-    <tr>
-      <th>رقم الإداري</th>
-      <th>الاسم</th>
-      <th>البريد الإلكتروني</th>
-      <th>الجوال</th>
-      <th>الدور</th>
-      <th>الإجراءات</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let admin of adminsList; let i = index">
-      <td>{{i+1}}</td>
-      <td>{{admin.fName}}  {{admin.lName}}</td>
-      <td>{{admin.email}}</td>
-      <td>{{admin.phone}}</td>
-      <td>مدير</td>
-      <td>
-        <button class="btn btn-danger ms-2" (click)="confirmDelete(admin.userId!, admin.fName)">حذف</button>
-        <button class="btn btn-info" [routerLink]="['/admin-user-management/edit-admin', admin.userId]">تعديل</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
 
-<div class="container">
-  <div class="row">
-    <div class="text-center W-25">
-      <a (click)="navigateToAddAdmin()" class="btn btn-outline-primary">اضافة مدير جديد</a>
+@if(isAdminsLoading) {
+  <app-secondary-spinner></app-secondary-spinner>
+} @else {
+  <table class="table table-bordered table-hover text-center">
+    <thead>
+      <tr>
+        <th>رقم الإداري</th>
+        <th>الاسم</th>
+        <th>البريد الإلكتروني</th>
+        <th>الجوال</th>
+        <th>الدور</th>
+        <th>الإجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let admin of adminsList; let i = index">
+        <td>{{i+1}}</td>
+        <td>{{admin.fName}}  {{admin.lName}}</td>
+        <td>{{admin.email}}</td>
+        <td>{{admin.phone}}</td>
+        <td>مدير</td>
+        <td>
+          <button class="btn btn-danger ms-2" (click)="confirmDelete(admin.userId!, admin.fName)">حذف</button>
+          <button class="btn btn-info" [routerLink]="['/admin-user-management/edit-admin', admin.userId]">تعديل</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="container">
+    <div class="row">
+      <div class="text-center W-25">
+        <a (click)="navigateToAddAdmin()" class="btn btn-outline-primary">اضافة مدير جديد</a>
+      </div>
     </div>
   </div>
-</div>
+}
+

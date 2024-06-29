@@ -34,7 +34,7 @@ export class AppComponent {
   loading = false;
 
   constructor(
-    private loadingService: LoadingService,
+    public loadingService: LoadingService,
     private cdr: ChangeDetectorRef,
     public accountService: AccountService
   ) {}

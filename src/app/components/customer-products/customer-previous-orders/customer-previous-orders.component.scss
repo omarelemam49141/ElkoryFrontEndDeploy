@@ -130,3 +130,39 @@ h2 {
         }
     }
 }
+
+//notifications 
+.badge {
+    display: inline-block;
+    min-width: 20px;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+  
+  .badge-pending {
+    background-color: orange;
+  }
+  
+  .badge-accepted {
+    background-color: purple;
+  }
+  
+  .badge-shipped {
+    background-color: blue;
+  }
+  
+  .badge-delivered {
+    background-color: green;
+  }
+  
+  .badge-cancelled {
+    background-color: grey;
+  }
+  

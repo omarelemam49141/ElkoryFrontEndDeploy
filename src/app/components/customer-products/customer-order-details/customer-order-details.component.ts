@@ -6,6 +6,8 @@ import { OrderService } from '../../../services/order.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
+import { AccountService } from '../../../services/account.service';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-customer-order-details',
@@ -14,21 +16,23 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
+    MatInputModule,
   CommonModule],
   templateUrl: './customer-order-details.component.html',
   styleUrl: './customer-order-details.component.scss'
 })
 export class CustomerOrderDetailsComponent {
-  orderStatus: string[] = ["Pending", "Shipped", "Delivered", "Cancelled"];
+  orderStatus: string[] = ["pending", "accepted", "shipped", "delivered", "cancelled"];
 
   //notification properties
   notificationDurationInSeconds = 5;
   constructor(public dialogRef: MatDialogRef<CustomerOrderDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IPreviousOrders,
   private orderService: OrderService,
-  private snackBar: MatSnackBar) {  
+  private snackBar: MatSnackBar,
+  public accountService: AccountService) {  
   }
-  
+
   //observers
   changeStatusObserver = {
     next: () => {
@@ -54,8 +58,12 @@ export class CustomerOrderDetailsComponent {
       })
     }
   }
-  changeStatus(orderNewStatus: string) {
-    this.orderService.changeOrderStatus(this.data.orderId, this.orderStatus.indexOf(orderNewStatus)).subscribe(this.changeStatusObserver);
+  changeStatus(orderNewStatus: string, shippingDurationInDays?: string) {
+    if (shippingDurationInDays) {
+      this.orderService.changeOrderStatus(this.data.orderId, this.orderStatus.indexOf(orderNewStatus), +shippingDurationInDays).subscribe(this.changeStatusObserver);
+    } else {
+      this.orderService.changeOrderStatus(this.data.orderId, this.orderStatus.indexOf(orderNewStatus)).subscribe(this.changeStatusObserver);
+    }
   }
 
   onNoClick(): void {

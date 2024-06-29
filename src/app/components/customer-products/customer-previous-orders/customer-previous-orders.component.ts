@@ -12,11 +12,13 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CustomerOrderDetailsComponent } from '../customer-order-details/customer-order-details.component';
 import { IPreviousOrders } from '../../../Models/iprevious-orders';
+import { IOrdersStats } from '../../../Models/iorders-stats';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-customer-previous-orders',
   standalone: true,
-  imports: [CommonModule, MatPaginator],
+  imports: [CommonModule, MatPaginator, SecondarySpinnerComponent],
   templateUrl: './customer-previous-orders.component.html',
   styleUrl: './customer-previous-orders.component.scss',
   providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
@@ -31,16 +33,18 @@ export class CustomerPreviousOrdersComponent implements OnInit{
 
   //orders properties
   ordersType: string = 'pending';
-  ordersStatuses = ['pending', 'shipped', 'delivered', 'cancelled'];
-  //make a hash map of orders statuses
-  ordersStatusesInArabic= ['معلقة', 'مشحونة', 'تم تسليمها', 'ملغية']
-
+  ordersStatuses = ['pending', 'accepted','shipped', 'delivered', 'cancelled'];
+  ordersStats?: IOrdersStats;
+  ordersStatusesInArabic= ['معلقة', 'مقبولة','مشحونة', 'تم تسليمها', 'ملغية']
   previousOrders: IOrdersPaginated = {} as IOrdersPaginated;
   paymentMethods = [
     "كاش عند التسليم",
     "الدفع فى الفرع",
     "الدفع ببطاقة الدفع"
   ]
+
+  //spinners properties
+  isOrdersLoading: boolean = false;
 
   //notification properties
   notificationDurationInSeconds = 5;
@@ -56,14 +60,25 @@ export class CustomerPreviousOrdersComponent implements OnInit{
   //observers
   getPreviousOrdersObserver = {
     next: (data: IOrdersPaginated) => {
+      this.isOrdersLoading = false;
       this.previousOrders = data;
       this.pageSize = data.pageSize;
-      this.pageNumber = data.pageNumber - 1;
+      this.pageNumber = data.pageNumber;
       this.totalPages = data.totalPages;
     },
     error: (error: Error) => {
+      this.isOrdersLoading = false;
       this.showNotification('تعذر تحميل الطلبات', false);
       this.resetOrdersStatus();
+    }
+  }
+
+  getOrderStatsObserver = {
+    next: (data: IOrdersStats) => {
+      this.ordersStats = data;
+    },
+    error: (error: Error) => {
+      this.showNotification('تعذر تحميل احصاءات الطلبات', false);
     }
   }
 
@@ -100,9 +115,28 @@ export class CustomerPreviousOrdersComponent implements OnInit{
     this.ordersType = this.ordersStatuses[ordersType];
     if (role=="customer") {
       let userId = this.accountService.getTokenId();
+      this.getPreviousOrdersByOrdersType(userId, ordersType);
+      this.getOrderStats(userId);
+    } else {
+      this.getPreviousOrdersByOrdersType(ordersType);
+      this.getOrderStats();
+    }
+  }
+
+  getPreviousOrdersByOrdersType(ordersType: number, userId?:number) {
+    this.isOrdersLoading = true;
+    if (userId) {
       this.orderService.getCustomerPreviousOrders(userId, ordersType, this.pageNumber, this.pageSize).subscribe(this.getPreviousOrdersObserver);
     } else {
       this.orderService.getAllCustomersOrdersPaginated(ordersType, this.pageNumber, this.pageSize).subscribe(this.getPreviousOrdersObserver);
+    }
+  }
+
+  getOrderStats(userId?: number) {
+    if (userId) {
+      this.orderService.getUserOrdersStats(userId).subscribe(this.getOrderStatsObserver);
+    } else {
+      this.orderService.getAllOrdersStats().subscribe(this.getOrderStatsObserver);
     }
   }
 

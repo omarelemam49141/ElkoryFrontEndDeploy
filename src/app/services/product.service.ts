@@ -75,7 +75,7 @@ export class ProductService {
     );
   }
 
-  public searchByProductName(name: string, pageNumber: number, pageSize: number) : Observable<ProductsPagination> {
+  public searchByProductName(name: string, pageNumber: number, pageSize: number, offerId?: number) : Observable<ProductsPagination> {
     return this.http.options<ProductsPagination>(`${environment.apiUrl}/products/search?Name=${name}&page=${+pageNumber}&pageSize=${+pageSize}`)
     .pipe(
       retry(2),

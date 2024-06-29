@@ -20,10 +20,11 @@ import { CartService } from '../../../services/cart.service';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { AccountService } from '../../../services/account.service';
 import { PaginatorService } from '../../../services/paginator.service';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent],
+  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent, SecondarySpinnerComponent],
   templateUrl: './products-list.component.html',
   providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
   styleUrl: './products-list.component.scss'
@@ -31,7 +32,6 @@ import { PaginatorService } from '../../../services/paginator.service';
 export class ProductsListComponent implements OnInit, OnDestroy{
   hovering = false;
   products!: IProduct[];
-  images: string[][] = [];
   /*pagination properties*/
   pageSize = 9
   pageNumber = 0;
@@ -42,6 +42,9 @@ export class ProductsListComponent implements OnInit, OnDestroy{
 
   //notifications properties
   snackBarDurationInSeconds = 5;
+
+  //spinner properties
+  isProductsLoading = false;
 
   subscriptions?: Subscription[];
 //temp user
@@ -83,12 +86,8 @@ wishList?:IwhishListProduct[];
 
   listObserver = {
     next: (data: ProductsPagination) => {
+      this.isProductsLoading = false;
       this.products = data.items;
-      for (let i = 0; i < this.products.length; i++) {
-        this.productService.getPictures(this.products[i].productId).subscribe((images: string[]) => {
-          this.images.push(images);
-        });
-      }
       this.pageSize = data.pageSize;
       this.pageNumber = data.pageNumber-1;
       this.productsTotalAmount = data.totalItems;
@@ -98,12 +97,14 @@ wishList?:IwhishListProduct[];
         duration: this.snackBarDurationInSeconds * 1000,
         data: err.message
       });
+      this.isProductsLoading = false;
     }
   };
 
   getProductsPaginated(pageNumber:number, pageSize:number): void {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize; 
+    this.isProductsLoading = true;
     if (this.sortingOption == "all") {
       this.productService.getAllWithPagination(pageNumber, pageSize).subscribe(this.listObserver);
     } else {
@@ -134,16 +135,26 @@ wishList?:IwhishListProduct[];
         this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
       }
     } else {
-      let newCartItme: IProduct = product;
-      newCartItme.amount = 1;
-      newCartItme.allAmount = product.amount;
-      cart.productsAmounts.push(product);
+      let newCartItme: IProduct = {
+        productId: product.productId,
+        amount: 1,
+        finalPrice: product.finalPrice,
+        originalPrice: product.originalPrice,
+        discount: product.discount,
+        name: product.name,
+        description: product.description,
+        productImages: product.productImages,
+        categoryId: product.categoryId,
+        allAmount: product.amount,
+        categoryName: product.categoryName,
+      };
+      cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
-      this.modifyCartAndAddItToLocalStorage(cart, product)
+      this.modifyCartAndAddItToLocalStorage(cart, newCartItme)
 
       let userId = this.accountService.getTokenId();
       if (userId) {
-        this.addItemToCart(product);
+        this.addItemToCart(newCartItme);
       } else {
         this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
       }

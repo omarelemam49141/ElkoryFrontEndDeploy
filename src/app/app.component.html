@@ -1,6 +1,6 @@
 <div
   class="spinner"
-  [ngClass]="{ show: loading, hidden: !loading }"
+  [ngClass]="{ 'show': loadingService.loading, 'hidden': !loadingService.loading}"
   class="spinner-container"
 >
   <app-main-spinner></app-main-spinner>

@@ -24,7 +24,6 @@ export class AdminService {
   AddAdmin(admin:IUser):Observable<IUser>{
     return this.http.post<IUser>(`${environment.apiUrl}/admin`,admin)
     .pipe(
-      retry(2),
       catchError(this.genericService.handlingErrors)
     );
   }
