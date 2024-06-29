@@ -40,8 +40,10 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   //observers
   getCartObserver = {
     next: (data: ICart) => {
-      localStorage.setItem("cart", JSON.stringify(data));
-      this.cart = data
+      if (data?.productsAmounts) {
+        localStorage.setItem("cart", JSON.stringify(data));
+        this.cart = data
+      }
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
