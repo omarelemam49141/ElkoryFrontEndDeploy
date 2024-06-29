@@ -72,6 +72,7 @@ export class AddNewOfferComponent implements OnInit, OnDestroy {
     },
     error: (err: Error) => {
       if(this.offerToEdit) {
+        console.log(err)
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر تعديل العرض',
           duration: this.notificationDurationInSeconds * 1000

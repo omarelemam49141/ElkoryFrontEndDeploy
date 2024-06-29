@@ -33,7 +33,7 @@ export class OrderService {
   }
 
   public getAllCustomersOrdersPaginated(orderStatus: number, pageNumber: number, pageSize: number): Observable<IOrdersPaginated> {
-    return this.http.get<IOrdersPaginated>(`${environment.apiUrl}/Order/GetOrdersByStatusPaginatedAsync?orderStatus=${orderStatus}&page=${pageNumber}&pageSize=${pageSize}`)
+    return this.http.get<IOrdersPaginated>(`${environment.apiUrl}/Order/GetOrdersByStatusPaginated?orderStatus=${orderStatus}&page=${pageNumber}&pageSize=${pageSize}`)
     .pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)
