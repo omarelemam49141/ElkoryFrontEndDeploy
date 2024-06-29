@@ -55,7 +55,6 @@
       
                       
                   </div>
-  
                     
                 
                 
@@ -107,8 +106,57 @@
   
                 <button (click)="addToCart(product)" class="btn btn-danger w-100 mt-2" *ngIf="isProductReachedMaxAmount(product)">
                   <i class="fas fa-shopping-cart" ></i> &nbsp;لا يمكن إضافة المزيد إلى السلة</button>
+            
+            
+            </div>
+
+
+            <div style="margin-top: -30px;">
+                <h5 class="mt-3">{{ product.name }}</h5>
+                <p>
+                <span class="price"><strong>{{ product.finalPrice | currency: "USD" }}</strong></span>
+              </p>
+              <p *ngIf="product.originalPrice !== product.finalPrice">
+                <span class="original-price">{{ product.originalPrice | currency: "USD" }}</span>
+                
+              </p>
             </div>
           
+
+            
+           
+          <!-- Add to Cart Button -->
+          <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
+            <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button>
+            <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
+              <i class="fas fa-shopping-cart" ></i> &nbsp;إضافة المزيد إلى السلة</button>
+
+              <button (click)="addToCart(product)" class="btn btn-danger w-100 mt-2" *ngIf="isProductReachedMaxAmount(product)">
+                <i class="fas fa-shopping-cart" ></i> &nbsp;لا يمكن إضافة المزيد إلى السلة</button> -->
+
+
+
+
+                <div *ngIf="!isProductInCart(product.productId)" class="d-flex align-items-center mb-3 quantity-section">
+                  <span class="d-flex " style="margin-top: 7px;">
+                    <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity(i)" style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;" >-</button>
+                    <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity[i]" min="1">
+     
+                    <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity(i)" style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>
+
+                  </span>
+                    <button  (click)="addToCart(product,i)" class="btn btn-primary w-100 mt-2 add-to-cart-button ">إضافة لعربة التسوق  </button>
+                  </div >
+                  <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center ">
+          
+                  </div>
+                  <div style="margin-top: -10px;">
+                  <button *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)" class="btn btn-danger w-100 mt-2" >إزالة من السلة</button>
+
+                </div>
+                <a routerLink='/customer-products/product-details/{{product.productId }}' class="btn btn-primary w-100 mt-2">تفاصيل</a>
+                  <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)" >
+                    <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button> -->
           </div>
         </div>
       </div>

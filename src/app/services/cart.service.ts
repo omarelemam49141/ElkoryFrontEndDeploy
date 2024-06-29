@@ -91,6 +91,7 @@ export class CartService{
       catchError(this.genericServcie.handlingErrors)
     );
   }
+  
 
   public addToCart(product: IProduct): Observable<any> {
     let userId = this.accountService.getTokenId();

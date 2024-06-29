@@ -14,3 +14,18 @@ export interface IProduct {
     categoryId: number;
     productImages?: IProductImage[];
 }
+
+
+export interface IwhishListProduct{
+    productImages:IProductImage[];
+
+    originalPrice: number;
+    amount:number;
+    description:string;
+   
+  
+   
+    categoryId: number;
+    CategoryName:string;
+    finalPrice: number;
+}

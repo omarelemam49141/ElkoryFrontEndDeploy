@@ -1,0 +1,17 @@
+
+@if(reviewsList.length > 0) {
+
+  <div class="card" *ngFor="let review of reviewsList">
+    <div class="user-info">
+      <i class="fa-solid fa-user fa-2x" style="color: #B197FC;"></i>
+      <h3>{{ review.customerId }}</h3>
+    </div>
+    <div class="review">
+      <div class="stars" style="color: #FFD43B" [innerHTML]="getStars(review.numOfStars)"></div>
+      <p>{{ review.comment }}</p>
+    </div>
+  </div>
+} @else {
+
+    <p>لا يوجد تقييمات حتى الآن</p>
+}

@@ -18,9 +18,11 @@ import { IwhishListProduct } from '../../../Models/IwishListProduct';
 import { OffersSliderComponent } from '../../main-components/offers-slider/offers-slider.component';
 import { CartService } from '../../../services/cart.service';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
+
 import { AccountService } from '../../../services/account.service';
 import { PaginatorService } from '../../../services/paginator.service';
 import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+
 @Component({
   selector: 'app-products-list',
   standalone: true,
@@ -33,9 +35,10 @@ export class ProductsListComponent implements OnInit, OnDestroy{
   hovering = false;
   products!: IProduct[];
   /*pagination properties*/
-  pageSize = 9
+  pageSize = 12
   pageNumber = 0;
   productsTotalAmount = 0;
+  quantity :number[] = [];
 
   //sorting properties
   sortingOption = 'all';
@@ -48,22 +51,9 @@ export class ProductsListComponent implements OnInit, OnDestroy{
 
   subscriptions?: Subscription[];
 //temp user
-user: IUser = {
-  userId: 3,
-  fName: 'Ahmad',
-  lName: 'Esam',
-  email: 'ahmad.esam@ex.com',
-  password: '123',
-  phone: "1015328933",
-  governorate: 'Ghatbia',
-  city: 'MAhalla',
-  street: 'Farouk21',
-  postalCode: "12345",
-  isDeleted: false,
-  role: 1
-};
+userLoggedID!:number;
 
-wishList?:IwhishListProduct[];
+wishList?:IProduct[];
 
 
 
@@ -73,13 +63,20 @@ wishList?:IwhishListProduct[];
     private wishListService:WishListService,
     private cartService: CartService,
     private accountService: AccountService
+
   ) {}
   ngOnDestroy(): void {
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
-    this.getProductsPaginated(1,10);
-    this.fetchWishList(this.user.userId!);   
+
+    this.getProductsPaginated(1,12);
+    this.userLoggedID=this.accountService.getTokenId();
+
+    if(this.userLoggedID){this.fetchWishList(this.userLoggedID);}
+
+
+
   }
 
   /*start observers*/
@@ -88,6 +85,12 @@ wishList?:IwhishListProduct[];
     next: (data: ProductsPagination) => {
       this.isProductsLoading = false;
       this.products = data.items;
+
+      for (let i = 0; i < this.products.length; i++) {
+     
+        this.quantity[i]=1;
+      }
+
       this.pageSize = data.pageSize;
       this.pageNumber = data.pageNumber-1;
       this.productsTotalAmount = data.totalItems;
@@ -115,7 +118,7 @@ wishList?:IwhishListProduct[];
   getDiscountPercentage(originalPrice: number, finalPrice: number): number {
     return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
   }
-  addToCart(product: IProduct): void {
+  addToCart(product: IProduct,locationInlist:number): void {
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
     const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
@@ -173,8 +176,9 @@ wishList?:IwhishListProduct[];
   }
 
   modifyCartAndAddItToLocalStorage(cart: ICart, product: IProduct) {
-    cart.finalPrice += product.finalPrice;
-    cart.numberOfProducts += 1;
+    cart.finalPrice += (product.finalPrice* this.quantity[locationInlist]);
+    cart.numberOfProducts += this.quantity[locationInlist];
+
     
     localStorage.setItem('cart', JSON.stringify(cart));
 
@@ -234,7 +238,7 @@ fetchWishList(UserId:number){
     next: (data: any) => {
       console.log("from success section")
       this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-      this.fetchWishList(this.user.userId!);
+      this.fetchWishList(this.userLoggedID!);
     },
     error: (err: Error)=> {
       console.log("error section")
@@ -258,7 +262,7 @@ isProductInCart(productId:number){
 removeFromWishList(wishListProduct: { UserId: number, ProductId: number }): void {
   this.wishListService.deleteWishListProduct(wishListProduct.UserId, wishListProduct.ProductId).subscribe(
     () => {
-      this.fetchWishList(this.user.userId!);
+      this.fetchWishList(this.userLoggedID!);
       this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
     },
     (error) => {
@@ -275,5 +279,41 @@ isProductReachedMaxAmount(product:IProduct):boolean{
   }
   return false;
 }
+
+increaseQuantity(index:number): void {
+    // if (this.product && this.quantity < this.product.amount) {
+    //   this.quantity++;
+    // } else {
+    //   this.snackBar.open('لا يوجد كمية كافية في المخزون', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+    // }
+    if (this.quantity[index] < this.products[index].amount) {
+      this.quantity[index]++;
+    }
+    else {
+      this.snackBar.open('لا يوجد كمية كافية في المخزون', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+    }
+  }
+
+  decreaseQuantity(index:number): void {
+    // if (this.quantity > 1) {
+    //   this.quantity--;
+   // }
+    if (this.quantity[index] > 1) {
+      this.quantity[index]--;
+    }
+  }
+  removeFromCart(product: IProduct): void {
+    const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    const productIndex = cart.productsAmounts.findIndex((p: any) => p.productId === product.productId);
+    if (productIndex !== -1) {
+      const productAmount = cart.productsAmounts[productIndex].amount;
+      cart.productsAmounts.splice(productIndex, 1);
+      cart.numberOfUniqueProducts -= 1;
+      cart.numberOfProducts -= productAmount;
+      cart.finalPrice -= product.finalPrice * productAmount;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+    }
+  }
 
 }

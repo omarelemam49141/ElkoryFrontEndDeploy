@@ -11,18 +11,29 @@
           <th scope="col">اسم المنتج</th>
           <th scope="col">الوصف</th>
           <th scope="col">السعر النهائي</th>
-          <th scope="col">العمليات</th>
+          <th scope="col" colspan="3" class="text-center">العمليات</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let product of wishListProducts">
           <td>
             <!-- Replace with actual image binding if available -->
-            <img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg" class="img-fluid rounded" alt="{{ product.name }}">
+            <img src="{{product.productImages?.[0]?.imageUri || ''}}" class="img-fluid rounded" alt="{{ product.name }}">
           </td>
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.finalPrice | currency: 'USD' }}</td>
+          
+          <td><a class="btn btn-outline-primary"routerLink="/customer-products/product-details/{{product.productId}}" >تفاصيل المنتج </a></td>
+
+          <td>
+            <button class="btn btn-outline-success"  *ngIf="!isProductInCart(product.productId)"(click)="addToCart(product)">
+            إضافة قطعة واحدة إلى سلة المشتريات
+            </button>
+            <button class="btn btn-outline-danger" *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)">
+              إزالة المنتج من سلة المشتريات
+            </button>
+          </td>
           <td>
             <button class="btn btn-outline-danger" (click)="removeFunc(product.productId)">
               إزالة من قائمة الرغبات
