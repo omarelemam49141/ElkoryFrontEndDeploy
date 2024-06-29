@@ -183,8 +183,15 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   }
 
   deleteProductFromCart(productId: number): void {
+    //get the product from productsAmounts array
+    let product = this.cart.productsAmounts.find(p => p.productId == productId);
+    
+if(product){
     this.cart.productsAmounts = this.cart.productsAmounts.filter(p => p.productId != productId);
-    this.updateLocalStorageWithCart();
+    this.cart.numberOfUniqueProducts--;
+    this.cart.numberOfProducts -= product.amount;
+    this.cart.finalPrice -= product.finalPrice * product.amount;
+    this.updateLocalStorageWithCart();}
   }
 
   openSendOrder() {

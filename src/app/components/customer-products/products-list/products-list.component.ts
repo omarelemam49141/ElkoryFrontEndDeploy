@@ -113,26 +113,34 @@ wishList?:IProduct[];
   }
   addToCart(product: IProduct,locationInlist:number): void {
  
-      let cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": '+this.userLoggedID+', "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+      let cart: ICart = JSON.parse(localStorage.getItem('cart')
+       || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
   
     
-    const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
+    // const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
     
-    if (existingProduct) {
-      if(this.isProductReachedMaxAmount(product)){
-        this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-        return;
-      }
-      existingProduct.amount += 1;
-      let cartToUpdateInDatabase = this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
+    // if (existingProduct) {
+    //   if(this.isProductReachedMaxAmount(product)){
+    //     this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    //     return;
+    //   }
+    //   let userId = this.accountService.getTokenId();
 
-      let userId = this.accountService.getTokenId();
-      if (userId) {
-        this.updateCartInDatabase(cartToUpdateInDatabase);
-      } else {
-        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-      }
-    } else {
+    
+    //   if(userId){
+    //     cart.userId=this.userLoggedID;
+    //   }
+
+    //   existingProduct.amount += 1;
+    //   let cartToUpdateInDatabase = this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
+
+    //   if (userId) {
+    //     this.updateCartInDatabase(cartToUpdateInDatabase);
+    //     cart.userId=this.userLoggedID;
+    //   } else {
+    //     this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    //   }
+    // } else {
       
       let newCartItme={
         productId:product.productId,
@@ -149,19 +157,22 @@ wishList?:IProduct[];
 
 
       }
-      cart.productsAmounts.push(newCartItme);
-      cart.numberOfUniqueProducts += 1;
-      this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
+
 
       let userId = this.accountService.getTokenId();
       if (userId) {
+        cart.userId=this.userLoggedID;
+
         this.addItemToCart(product,this.quantity[locationInlist]);
       } else {
         this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
       }
+      cart.productsAmounts.push(newCartItme);
+      cart.numberOfUniqueProducts += 1;
+      this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
 
 
-    }
+    // }
     console.log(this.products[locationInlist].amount)
   }
 

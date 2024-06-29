@@ -10,6 +10,7 @@ import { IEditProfile } from '../Models/iedit-profile';
 import * as jwtDecode  from 'jwt-decode';
 import { IVerifyEmail } from '../Models/iverify-email';
 import { IForgetPassword } from '../Models/iforget-password';
+import { ICart } from '../Models/icart';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,22 @@ export class AccountService implements OnInit{
       retry(2),
       catchError(this.genericService.handlingErrors)
     )
+    
+  }
+  isCartEmpty(): boolean {
+    let cart: ICart = JSON.parse(localStorage.getItem('cart')||'')
+
+    // let cart:ICart = localStorage.getItem("cart");
+    if (cart) {
+      if (cart.productsAmounts.length > 0) {
+        return false;
+      }
+      else {
+        return true;
+      }
+
+    }
+    return true;
   }
 
   public resetPassword(resetPasswordModel: IResetPassword): Observable<any> {

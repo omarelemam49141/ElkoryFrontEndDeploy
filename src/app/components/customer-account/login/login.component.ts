@@ -56,6 +56,10 @@ export class LoginComponent {
   login(): void {
       let loginModel: ILoginModel = this.loginForm.value as ILoginModel;
       this.accountService.login(loginModel).subscribe(this.loginObserver)
+
+      console.log(this.iscartEmpty());
+
+
     }
 
   get email() {
@@ -64,4 +68,9 @@ export class LoginComponent {
   get password() {
       return this.loginForm.get("password");
     }
+
+    iscartEmpty(): boolean {
+      return this.accountService.isCartEmpty();
+    }
+
   }
