@@ -19,8 +19,6 @@ export class GetReviewComponent {
   constructor(private reviewService: ReviewService) { }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.reviewService.getProductReviews(1).subscribe((data: IRate[]) => {
       this.reviewsList = data;
       console.log("Reviews", this.reviewsList);
@@ -31,7 +29,7 @@ export class GetReviewComponent {
 
   }
 
-
+  //generating stars based on the rating
   getStars(numOfStars: number): string {
     let starsHtml = '';
     for (let i = 0; i < 5; i++) {
