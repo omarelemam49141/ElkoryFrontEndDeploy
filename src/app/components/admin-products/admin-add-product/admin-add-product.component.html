@@ -1,122 +1,126 @@
 <section class="get-in-touch">
     <h1 class="title">{{productToEdit ? 'تعديل المنتج ' + productToEdit.name : 'اضافة منتج جديد'}}</h1>
-    <form class="contact-form row" [formGroup]="productForm" (ngSubmit)="submitProduct()">
-        <div class="form-field col-lg-6">
-            <input id="name" formControlName="name" class="input-text js-input" type="text">
-            <label class="label" for="name">اسم المنتج</label>
-            <div class="text-danger" *ngIf="!name?.valid && name?.touched">
-                <span *ngIf="name?.errors?.['required']">الاسم مطلوب</span>
+    @if(!isProductAddingOrUpdating) {
+        <form class="contact-form row" [formGroup]="productForm" (ngSubmit)="submitProduct()">
+            <div class="form-field col-lg-6">
+                <input id="name" formControlName="name" class="input-text js-input" type="text">
+                <label class="label" for="name">اسم المنتج</label>
+                <div class="text-danger" *ngIf="!name?.valid && name?.touched">
+                    <span *ngIf="name?.errors?.['required']">الاسم مطلوب</span>
+                </div>
             </div>
-        </div>
-        <div class="form-field col-lg-6">
-            <input id="amount" formControlName="amount" class="input-text js-input" type="number" min="0">
-            <label class="label" for="amount">الكمية</label>
-            <div class="text-danger" *ngIf="!amount?.valid && amount?.touched">
-                <span *ngIf="amount?.errors?.['required']">الكمية مطلوبة</span>
+            <div class="form-field col-lg-6">
+                <input id="amount" formControlName="amount" class="input-text js-input" type="number" min="0">
+                <label class="label" for="amount">الكمية</label>
+                <div class="text-danger" *ngIf="!amount?.valid && amount?.touched">
+                    <span *ngIf="amount?.errors?.['required']">الكمية مطلوبة</span>
+                </div>
             </div>
-        </div>
-
-        <div class="form-field col-lg-6">
-            <input id="originalPrice" formControlName="originalPrice" class="input-text js-input" type="number" min="0">
-            <label class="label" for="originalPrice">السعر قبل الخصم</label>
-            <div class="text-danger" *ngIf="!originalPrice?.valid && originalPrice?.touched">
-                <span *ngIf="originalPrice?.errors?.['required']">السعر قبل الخصم مطلوب</span>
-                <span *ngIf="originalPrice?.errors?.['min']">السعر قبل الخصم لا يمكن أن يقل عن صفر ج.م.</span>
+    
+            <div class="form-field col-lg-6">
+                <input id="originalPrice" formControlName="originalPrice" class="input-text js-input" type="number" min="0">
+                <label class="label" for="originalPrice">السعر قبل الخصم</label>
+                <div class="text-danger" *ngIf="!originalPrice?.valid && originalPrice?.touched">
+                    <span *ngIf="originalPrice?.errors?.['required']">السعر قبل الخصم مطلوب</span>
+                    <span *ngIf="originalPrice?.errors?.['min']">السعر قبل الخصم لا يمكن أن يقل عن صفر ج.م.</span>
+                </div>
             </div>
-        </div>
-
-        <div class="form-field col-lg-6">
-            <input id="discount" formControlName="discount" class="input-text js-input" type="number" min="0" max="100">
-            <label class="label" for="discount">الخصم</label>
-            <div class="text-danger" *ngIf="!discount?.valid && discount?.touched">
-                <span *ngIf="discount?.errors?.['required']">الخصم مطلوب</span>
-                <span *ngIf="discount?.errors?.['min']">الخصم لا يمكن أن يقل عن صفر%</span>
-                <span *ngIf="discount?.errors?.['max']">الخصم لا يمكن أن يزيد عن 100%</span>
+    
+            <div class="form-field col-lg-6">
+                <input id="discount" formControlName="discount" class="input-text js-input" type="number" min="0" max="100">
+                <label class="label" for="discount">الخصم</label>
+                <div class="text-danger" *ngIf="!discount?.valid && discount?.touched">
+                    <span *ngIf="discount?.errors?.['required']">الخصم مطلوب</span>
+                    <span *ngIf="discount?.errors?.['min']">الخصم لا يمكن أن يقل عن صفر%</span>
+                    <span *ngIf="discount?.errors?.['max']">الخصم لا يمكن أن يزيد عن 100%</span>
+                </div>
             </div>
-        </div>
-
-        <div class="form-field col-lg-12">
-            <input id="description" formControlName="description" class="input-text js-input" type="text">
-            <label class="label" for="description">الوصف</label>
-            <div class="text-danger" *ngIf="!description?.valid && description?.touched">
-                <span *ngIf="description?.errors?.['required']">الوصف مطلوب</span>
+    
+            <div class="form-field col-lg-12">
+                <input id="description" formControlName="description" class="input-text js-input" type="text">
+                <label class="label" for="description">الوصف</label>
+                <div class="text-danger" *ngIf="!description?.valid && description?.touched">
+                    <span *ngIf="description?.errors?.['required']">الوصف مطلوب</span>
+                </div>
             </div>
-        </div>
-
-        <div class="form-field col-lg-6">
-            <select id="categoryId" formControlName="categoryId" class="input-text js-input" (change)="displaySubCategories()">
-                <option value="-1" selected="true">اختر القسم</option>
-                <option *ngFor="let category of allCategories" [value]="category.categoryId">{{category.name}}</option>
-            </select>
-            <label class="label" for="categoryId">القسم</label>
-            <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
-                <span *ngIf="categoryId?.errors?.['required']" selected>القسم مطلوب</span>
-                <span *ngIf="categoryId?.errors?.['categoryNotSelected']">القسم مطلوب</span>
-            </div>
-        </div>
-
-        <div class="form-field col-lg-12">
-            <div formArrayName="subCategoriesWithValues" *ngIf="subCategoriesWithValues?.length; else noSubCategories">
-                <div *ngFor="let subCategory of subCategoriesWithValues.controls; let i = index" [formGroupName]="i" class="form-field col">
-                  <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
-                  <input type="hidden" formControlName="subCategoryId">
-                  <select class="input-text js-input" formControlName="selectedValue">
-                    <option value="-1" selected="true">اختر ال {{ subCategory.get('subCategoryName')?.value }}</option>
-                    <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
+    
+            <div class="form-field col-lg-6">
+                <select id="categoryId" formControlName="categoryId" class="input-text js-input" (change)="displaySubCategories()">
+                    <option value="-1" selected="true">اختر القسم</option>
+                    <option *ngFor="let category of allCategories" [value]="category.categoryId">{{category.name}}</option>
                 </select>
-                </div>
-              </div>
-            
-            <ng-template #noSubCategories>
-              <p class="lead text-center">قم باختيار قسم حتى يتم تحديد الأقسام الفرعية</p>
-            </ng-template>
-            <!-- @for (subCategory of subCategoriesWithValues.controls; track $index) {
-                <div [formControlName]="$index">
-                    <label formControlName="subCategoryId">{{subCategoriesWithValues.at($index).get("subCategoryName")?.value}}</label>
-                    
-                    <select id="index" formControlName="selectedValue" class="input-text js-input">
-                        <option value="-1">اختر ال {{subCategoriesWithValues.at($index).get("subCategoryName")?.value}}</option>
-                        @for(subCategoryValue of subCategoryValues($index).controls; track i; let i=$index) {
-                            <option [value]="subCategoryValues($index).controls[i].value">{{subCategoryValues($index).controls[i].value}}</option>
-                        }
-                    </select>
-
-                    <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
-                        <span *ngIf="categoryId?.errors?.['required']">القسم مطلوب</span>
-                        <span *ngIf="categoryId?.errors?.['categoryNotSelected']">القسم مطلوب</span>
-                    </div>
-                </div>
-            } -->
-        </div>
-        
-        <div class="form-field col-lg-12">
-            <div formArrayName="images">
-                @for (image of images.controls; track i; let i =$index) {
-                    <div class="form-group mb-2 d-flex justify-content-between align-items-center flex-wrap">
-                        <div class="buttons">
-                            <input #fileInput type="file" (change)="onFileChange($event, i)"/>
-                            <input [value]="imagesArray[i]" formControlName="{{i}}" type="text" hidden/>
-                            <button (click)="removeImage(i)" type="button" class="btn btn-danger" *ngIf="i > 0">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-                        @if (imagesArray[i]) {
-                            <img [src]="imagesArray[i]" class="img-fluid rounded-1 image image-admin me-3" width="100px" alt="image">
-                        }
-                    </div>
-                }
+                <label class="label" for="categoryId">القسم</label>
                 <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
-                    <span *ngIf="images?.errors?.['oneImageAtLeast']">يجب اختيار صورة واحدة على الأقل</span>
-                    <span *ngIf="images?.errors?.['required']">يجب اختيار صورة واحدة على الأقل</span>
+                    <span *ngIf="categoryId?.errors?.['required']" selected>القسم مطلوب</span>
+                    <span *ngIf="categoryId?.errors?.['categoryNotSelected']">القسم مطلوب</span>
                 </div>
             </div>
-            <button class="btn btn-primary" type="button" (click)="addImage()" [disabled]="this.images.at(this.imageIndex)? this.images.at(this.imageIndex).value==''? true : false : true">
-                أضف صورة جديدة
-            </button>
-        </div>
-        
-        <div class="form-field col-lg-12">
-            <input class="submit-btn" type="submit" [disabled]="productForm.invalid" value="{{productToEdit ? 'تحديث المنتج' : 'أضف المنتج'}}" >
-        </div>
-    </form>
+    
+            <div class="form-field col-lg-12">
+                <div formArrayName="subCategoriesWithValues" *ngIf="subCategoriesWithValues?.length; else noSubCategories">
+                    <div *ngFor="let subCategory of subCategoriesWithValues.controls; let i = index" [formGroupName]="i" class="form-field col">
+                      <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
+                      <input type="hidden" formControlName="subCategoryId">
+                      <select class="input-text js-input" formControlName="selectedValue">
+                        <option value="-1" selected="true">اختر ال {{ subCategory.get('subCategoryName')?.value }}</option>
+                        <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
+                    </select>
+                    </div>
+                  </div>
+                
+                <ng-template #noSubCategories>
+                  <p class="lead text-center">قم باختيار قسم حتى يتم تحديد الأقسام الفرعية</p>
+                </ng-template>
+                <!-- @for (subCategory of subCategoriesWithValues.controls; track $index) {
+                    <div [formControlName]="$index">
+                        <label formControlName="subCategoryId">{{subCategoriesWithValues.at($index).get("subCategoryName")?.value}}</label>
+                        
+                        <select id="index" formControlName="selectedValue" class="input-text js-input">
+                            <option value="-1">اختر ال {{subCategoriesWithValues.at($index).get("subCategoryName")?.value}}</option>
+                            @for(subCategoryValue of subCategoryValues($index).controls; track i; let i=$index) {
+                                <option [value]="subCategoryValues($index).controls[i].value">{{subCategoryValues($index).controls[i].value}}</option>
+                            }
+                        </select>
+    
+                        <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
+                            <span *ngIf="categoryId?.errors?.['required']">القسم مطلوب</span>
+                            <span *ngIf="categoryId?.errors?.['categoryNotSelected']">القسم مطلوب</span>
+                        </div>
+                    </div>
+                } -->
+            </div>
+            
+            <div class="form-field col-lg-12">
+                <div formArrayName="images">
+                    @for (image of images.controls; track i; let i =$index) {
+                        <div class="form-group mb-2 d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="buttons">
+                                <input #fileInput type="file" (change)="onFileChange($event, i)"/>
+                                <input [value]="imagesArray[i]" formControlName="{{i}}" type="text" hidden/>
+                                <button (click)="removeImage(i)" type="button" class="btn btn-danger" *ngIf="i > 0">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                            @if (imagesArray[i]) {
+                                <img [src]="imagesArray[i]" class="img-fluid rounded-1 image image-admin me-3" width="100px" alt="image">
+                            }
+                        </div>
+                    }
+                    <div class="text-danger" *ngIf="!categoryId?.valid && categoryId?.touched">
+                        <span *ngIf="images?.errors?.['oneImageAtLeast']">يجب اختيار صورة واحدة على الأقل</span>
+                        <span *ngIf="images?.errors?.['required']">يجب اختيار صورة واحدة على الأقل</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="button" (click)="addImage()" [disabled]="this.images.at(this.imageIndex)? this.images.at(this.imageIndex).value==''? true : false : true">
+                    أضف صورة جديدة
+                </button>
+            </div>
+            
+            <div class="form-field col-lg-12">
+                <input class="submit-btn" type="submit" [disabled]="productForm.invalid" value="{{productToEdit ? 'تحديث المنتج' : 'أضف المنتج'}}" >
+            </div>
+        </form>
+    } @else {
+        <app-secondary-spinner></app-secondary-spinner>
+    }
 </section>

@@ -112,7 +112,6 @@ export class AddAdminComponent implements OnInit{
   register(): void {
     let registerModel: IUser = this.registerForm.value as IUser;
     registerModel.role = 0;
-    console.log(this.registerForm.value)
     if (this.adminToEditId) {
       this.UpdateAdmin(registerModel);
     } else {

@@ -8,11 +8,12 @@ import { RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteOfferComponent } from '../delete-offer/delete-offer.component';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-show-all-offers',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe, CommonModule],
+  imports: [RouterLink, CurrencyPipe, CommonModule, SecondarySpinnerComponent],
   templateUrl: './show-all-offers.component.html',
   styleUrl: './show-all-offers.component.scss'
 })
@@ -22,6 +23,8 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
   subscriptions: Subscription[] = [];
   //notifications properties
   notificationDurationInSeconds = 5;
+  //spinners properties
+  isOfersLoading: boolean = false;
 
   constructor(private genericService: GenericService<IOffer>,
               private snackBar: MatSnackBar,
@@ -32,6 +35,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
   //start observers
   offerObserver = {
     next: (data: IOffer[]) => {
+      this.isOfersLoading = false;
       this.offers = data;
     },
     error: (error: any) => {
@@ -39,6 +43,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
         data: 'تعذر تحميل العروض!',
         duration: this.notificationDurationInSeconds * 1000
       })
+      this.isOfersLoading = false;
     },
   }
 
@@ -47,6 +52,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
   }
 
   getAllOffers() {
+    this.isOfersLoading = true;
     this.subscriptions.push(this.genericService.getAll('Offers').subscribe(this.offerObserver));
   }
 

@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
   imports: [MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose,],
+    MatDialogClose],
   templateUrl: './category-details.component.html',
   styleUrl: './category-details.component.scss'
 })

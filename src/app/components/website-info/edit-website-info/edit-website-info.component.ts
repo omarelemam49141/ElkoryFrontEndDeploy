@@ -9,11 +9,12 @@ import { IAddWebInfo } from '../../../Models/i-add-web-info';
 import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { FileService } from '../../../services/file.service';
 import { CommonModule } from '@angular/common';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-edit-website-info',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, SecondarySpinnerComponent],
   templateUrl: './edit-website-info.component.html',
   styleUrl: './../../customer-account/customer-account.scss'
 })
@@ -30,6 +31,9 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
 
   //subscriptions properties
   subscriptions: Subscription[] = [];
+
+  //spinners notifications
+  isWebsiteInfoLoading: boolean = false;
 
   constructor(private snackBar: MatSnackBar,
     private webInfoService: WebInfoService,
@@ -79,18 +83,20 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
   }
 
   async getWebInfoIfExist() {
+    this.isWebsiteInfoLoading = true;
     this.subscriptions.push(this.webInfoService.getWebInfo().subscribe({
       next: (data) => {
-        console.log(data);
         if (data) {
           this.mapWebInfoModelToAddWebInfoModel(data);
         }
+        this.isWebsiteInfoLoading = false;
       },
       error: (err) => {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر جلب معلومات الموقع',
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.isWebsiteInfoLoading = false;
       }
     }))
   }
@@ -129,8 +135,10 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
   }
 
   addNewWebInfo() {
+    this.isWebsiteInfoLoading = true;
     this.webInfoService.addWebInfo(this.webInfoForm.value).subscribe({
       next: (data) => {
+        this.isWebsiteInfoLoading = false;
         this.snackBar.openFromComponent(SuccessSnackbarComponent, {
           data: 'تم حقظ معلومات الموقع بنجاح',
           duration: this.notificationDurationInSeconds * 1000
@@ -138,6 +146,7 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
         this.getWebInfoIfExist();
       },
       error: (err) => {
+        this.isWebsiteInfoLoading = false;
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر حفظ معلومات الموقع',
           duration: this.notificationDurationInSeconds * 1000
@@ -147,18 +156,21 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
   }
 
   updateWebInfo() {
+    this.isWebsiteInfoLoading = true;
     this.webInfoService.updateWebInfo(this.webInfoForm.value).subscribe({
       next: (data) => {
         this.snackBar.openFromComponent(SuccessSnackbarComponent, {
           data: 'تم تحديث معلومات الموقع بنجاح',
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.isWebsiteInfoLoading = false;
       },
       error: (err) => {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر تحديث معلومات الموقع',
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.isWebsiteInfoLoading = false;
       }
     })
   }

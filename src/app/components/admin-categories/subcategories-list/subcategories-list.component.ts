@@ -35,6 +35,7 @@ export class SubcategoriesListComponent {
   public getAll(): void {
     this.subscriptions.push(this.genericService.getAll('subCategory/all').subscribe({
       next: (data: ISubCategory[])=> {
+        console.log(data)
         this.subCategories = data;
       },
       error: (err: Error) => {
