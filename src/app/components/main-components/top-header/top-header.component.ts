@@ -8,6 +8,7 @@ import { WebInfoService } from '../../../services/WebInfo.service';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../../services/account.service';
 import { SearchProductComponent } from '../search-product/search-product.component';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-top-header',
@@ -20,9 +21,13 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
   subscriptions: Subscription[] = [];
   webInfo: IWebInfo | undefined;
   isLogged!: boolean;
+  cartCount: number = 0;
 
-  constructor(library: FaIconLibrary, private webInfoService: WebInfoService,
-    public accountService: AccountService
+  constructor(library: FaIconLibrary,
+     private webInfoService: WebInfoService,
+    public accountService: AccountService,
+    private cartService: CartService
+
   ) {
     library.addIcons(faBars, faChevronDown, faUserTie, faShoppingCart);
   }
@@ -39,7 +44,7 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
         // console.log('Assigned webInfo:', this.webInfo);
       },
       error: (error: any) => {
-        // console.error('Error fetching web info', error);
+         console.error('Error fetching web info', error);
       }
     });
     this.subscriptions.push(subscription);
@@ -53,9 +58,16 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
         this.isLogged = data; 
       }
     })
-    if(localStorage.getItem("token")){
-      this.isLogged = true;
-    }
+    // if(localStorage.getItem("token")){
+    //   this.isLogged = true;
+    // }
+    //     this.cartService.cartCount$.subscribe(count => {
+
+    //       this.cartCount = count;
+    //     });
+    
+    //     // Load initial cart count
+    //     this.cartService.loadCartCount();
   }
 
   logOut() {

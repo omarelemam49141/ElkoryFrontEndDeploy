@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IOffer } from '../../../Models/ioffer';
 import { GenericService } from '../../../services/generic.service';
@@ -20,11 +20,14 @@ import { ProductService } from '../../../services/product.service';
   templateUrl: './offer-details.component.html',
   styleUrl: './offer-details.component.scss'
 })
-export class OfferDetailsComponent implements OnDestroy, OnInit{
+export class OfferDetailsComponent implements OnDestroy, OnInit, OnChanges{
   offer!: IOffer;
+
+  //child component properties
+  @Input() offerId?: number;
   
   //customer view offer details properties
-  isCustomer = false;
+  @Input() isCustomer = false;
 
   productsImage: string[] = [];
   //subscription properties
@@ -59,27 +62,37 @@ export class OfferDetailsComponent implements OnDestroy, OnInit{
     }
   }
 
+  //life cycle hooks
   ngOnInit(): void {
     this.loadOfferInfo();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.loadOfferInfo();
+  }
+
   loadOfferInfo(): void {
-    this.subscriptions.push(this.activatedRoute.paramMap.subscribe(params=>{
-      let offerId = Number(params.get('id'));
-      let role = params.get('role');
-      if (role == "customer") {
-        this.isCustomer = true;
-      }
-      
-      if (!offerId) {
-        this.snackBar.openFromComponent(FailedSnackbarComponent, {
-          data: 'هذا العرض غير موجود!',
-          duration: this.notificationDurationInSeconds * 1000
-        })
-      } else {
-        this.subscriptions.push(this.genericService.getById('Offers', offerId).subscribe(this.offerDetailsObserver));
-      }
-    }))
+    if (this.offerId) {
+      this.subscriptions.push(this.genericService.getById('Offers', this.offerId).subscribe(this.offerDetailsObserver));
+    } else {
+      this.subscriptions.push(this.activatedRoute.paramMap.subscribe(params=>{
+        let offerId = Number(params.get('id'));
+        let role = params.get('role');
+        if (role == "customer") {
+          this.isCustomer = true;
+        }
+        
+        if (!offerId) {
+          this.snackBar.openFromComponent(FailedSnackbarComponent, {
+            data: 'هذا العرض غير موجود!',
+            duration: this.notificationDurationInSeconds * 1000
+          })
+        } else {
+          this.subscriptions.push(this.genericService.getById('Offers', offerId).subscribe(this.offerDetailsObserver));
+        }
+      }))
+    }
+    
   }
 
   addOfferProduct(offerId:number, offerTitle:string, productId?: number, productAmount?: number, discount?: number): void {

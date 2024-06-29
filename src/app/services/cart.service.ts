@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription, catchError, retry, throwError } from 'rxjs';
+import { Observable, Subscription, catchError, retry, throwError, BehaviorSubject } from 'rxjs';
 import { ICart } from '../Models/icart';
 import  * as jwtDecode  from 'jwt-decode';
 import { GenericService } from './generic.service';
@@ -8,6 +8,7 @@ import { environment } from '../../environment/environment';
 import { IUpdateCart } from '../Models/iupdate-cart';
 import { AccountService } from './account.service';
 import { IReviewOrder } from '../Models/ireview-order';
+import { IProduct } from '../Models/iproduct';
 
 @Injectable({
   providedIn: 'root'
@@ -85,23 +86,36 @@ export class CartService{
     );
   }
   
-  public addProductToCart(productId: number, amount: number): Observable<any> {
+
+  public addToCart(product: IProduct,amount:number): Observable<any> {
     let userId = this.accountService.getTokenId();
-    if (!userId) {
-      return throwError(() => new Error("قم بإعادة تسجيل الدخول مرة أخرى"));
-    }
-
-    let addProduct = {
-      userId: userId,
-      productId: productId,
-      amount: amount
-    };
-
     this.genericServcie.addHeaders("Content-Type", "application/json");
-
-    return this.http.post<any>(`${environment.apiUrl}/cart`, addProduct, this.genericServcie.getHeaders()).pipe(
+    return this.http.post<any>(`${environment.apiUrl}/cart?userId=${userId}&productId=${product.productId}&amount=${amount}`, {}, this.genericServcie.httpOptions)
+    .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)
     );
   }
+
+
+  // public addProductToCart(productId: number, amount: number): Observable<any> {
+  //   let userId = this.accountService.getTokenId();
+  //   if (!userId) {
+  //     return throwError(() => new Error("قم بإعادة تسجيل الدخول مرة أخرى"));
+  //   }
+
+  //   let addProduct = {
+  //     userId: userId,
+  //     productId: productId,
+  //     amount: amount
+  //   };
+
+  //   this.genericServcie.addHeaders("Content-Type", "application/json");
+
+  //   return this.http.post<any>(`${environment.apiUrl}/cart`, addProduct, this.genericServcie.getHeaders()).pipe(
+  //     retry(2),
+  //     catchError(this.genericServcie.handlingErrors)
+  //   );
+  // }
+
 }

@@ -41,6 +41,20 @@
                 </mat-error>
             </mat-form-field>
         </div>
+        <div class="form-group mb-3">
+            <!--make a select drop down list to choose the payment method using the mat-select-->
+            <mat-form-field appearance="fill">
+                <mat-label>طريقة الدفع</mat-label>
+                <mat-select formControlName="paymentMethod">
+                    <mat-option *ngFor="let method of paymentMethods" [value]="method.id">
+                        {{method.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!paymentMethod?.valid && paymentMethod?.touched">
+                    <span *ngIf="paymentMethod?.errors?.['required']">طريقة الدفع مطلوبة</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions">

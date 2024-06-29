@@ -1,0 +1,21 @@
+/* src/app/components/review/review.component.css */
+div{
+  margin: 100px 0;
+}
+div[dir="rtl"] {
+  text-align: right;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  margin-top: 5px;
+}
+
+button {
+  margin-top: 15px;
+}

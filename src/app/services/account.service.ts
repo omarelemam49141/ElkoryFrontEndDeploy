@@ -141,6 +141,9 @@ export class AccountService implements OnInit{
     localStorage.removeItem("token");
     this.isLoggedIn = false;
     this.loggedInSubject.next(false);
+    localStorage.removeItem("cart");
+    //redirect to the home page
+    window.location.href = "/";
   }
 
   public verifyEmail(verifyEmail: IVerifyEmail): Observable<any> {

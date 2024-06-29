@@ -16,8 +16,9 @@ import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { IUser } from '../../../Models/iuser';
 import { IwhishListProduct } from '../../../Models/IwishListProduct';
 import { OffersSliderComponent } from '../../main-components/offers-slider/offers-slider.component';
+import { CartService } from '../../../services/cart.service';
+import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { AccountService } from '../../../services/account.service';
-
 @Component({
   selector: 'app-products-list',
   standalone: true,
@@ -55,7 +56,9 @@ wishList?:IProduct[];
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private wishListService:WishListService,
-    private accountService: AccountService,
+    private cartService: CartService,
+    private accountService: AccountService
+
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     throw new Error('Method not implemented.');
@@ -109,27 +112,31 @@ wishList?:IProduct[];
     return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
   }
   addToCart(product: IProduct,locationInlist:number): void {
-    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+ 
+      let cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": '+this.userLoggedID+', "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+  
     
     const existingProduct = (cart.productsAmounts.find(p => p.productId === product.productId));
     
     if (existingProduct) {
-      
-
       if(this.isProductReachedMaxAmount(product)){
         this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
         return;
       }
-
-
       existingProduct.amount += 1;
-      this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      let cartToUpdateInDatabase = this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
 
+      let userId = this.accountService.getTokenId();
+      if (userId) {
+        this.updateCartInDatabase(cartToUpdateInDatabase);
+      } else {
+        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      }
     } else {
-      let newCartItme: IProduct = {
+      
+      let newCartItme={
         productId:product.productId,
         amount:this.quantity[locationInlist],
-        allAmount:product.amount,
         categoryId:product.categoryId,
         categoryName:product.categoryName,
         description:product.description,
@@ -138,20 +145,71 @@ wishList?:IProduct[];
         name:product.name,
         originalPrice:product.originalPrice,
         productImages:product.productImages,
+        allAmount:product.amount
+
+
       }
-      
-     
       cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
-      this.snackBar.open('تم إضافة المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
+
+      let userId = this.accountService.getTokenId();
+      if (userId) {
+        this.addItemToCart(product,this.quantity[locationInlist]);
+      } else {
+        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      }
+
 
     }
+    console.log(this.products[locationInlist].amount)
+  }
 
+  updateCartInDatabase(cart:ICart) {
+    this.cartService.updateCart(cart).subscribe({
+      next: (data) => {
+        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى السلة", true);
+      },
+      error: (err: Error) => {
+        this.showNotification("تعذر أضافة قطعة اخرى من المنتج إلى السلة", false);
+      }
+    })
+  }
+
+  modifyCartAndAddItToLocalStorage(cart: ICart, product: IProduct,locationInlist:number) {
     cart.finalPrice += (product.finalPrice* this.quantity[locationInlist]);
     cart.numberOfProducts += this.quantity[locationInlist];
+
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    
+
+    return cart;
+  }
+
+  addItemToCart(item: IProduct,amount:number) {
+    this.cartService.addToCart(item,amount).subscribe({
+      next: (data) => {
+        this.showNotification("تم أضافة المنتج إلى السلة بنجاح", true);
+        console.log("adding to cart api")
+      },
+      error: (err: Error) => {
+        this.showNotification("تعذر اضافة المنتج الى السلة", false);
+      }
+    });
+  }
+
+  showNotification(message:string, success:boolean) {
+    if (success) {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: message,
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+    } else {
+      this.snackBar.openFromComponent(FailedSnackbarComponent, {
+        data: message,
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+    }
   }
 
 fetchWishList(UserId:number){

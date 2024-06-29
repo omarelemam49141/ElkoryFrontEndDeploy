@@ -142,7 +142,10 @@ export class ProductsWishListComponent implements OnInit {
   }
 
   isProductInCart(productId:number){
+    console.log(productId);
+
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+    console.log(cart)
     return cart.productsAmounts.some(p=>p.productId===productId);
   
   }

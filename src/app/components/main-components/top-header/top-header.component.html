@@ -40,6 +40,7 @@
       <button routerLink="/customer-account/login" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
         <span class="cart-title">تسجيل الدخول</span>
         <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
+
       </button>
     } @else {
       <button (click)="logOut()" routerLinkActive="active" class="nav-link position-relative cart-link arabic text-danger">
