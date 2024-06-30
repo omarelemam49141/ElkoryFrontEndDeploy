@@ -34,10 +34,10 @@
                 <div *ngIf=" getDiscountPercentage(product.originalPrice, product.finalPrice) " class="position-absolute top-0 start-0 translate-middle badge-container" style="margin-left: 27px; margin-top: 8px; font-size: 20px;">
                   <span class="badge bg-danger">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
               </div>
-                <button class="wishbutton" (click)="addProductToWishList({ userId: user.userId!, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
+                <button class="wishbutton" (click)="addProductToWishList({ userId: userId, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
                   <span class="fa-regular fa-heart"></span>
                 </button>
-                <button class="wishbutton" (click)="removeFromWishList({ UserId: user.userId!, ProductId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
+                <button class="wishbutton" (click)="removeFromWishList({ UserId: userId, ProductId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
                   <span class="fa-solid fa-heart"></span>
                 </button>
           
@@ -145,7 +145,7 @@
                     <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity(i)" style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>
 
                   </span>
-                    <button  (click)="addToCart(product,i)" class="btn btn-primary w-100 mt-2 add-to-cart-button ">إضافة لعربة التسوق  </button>
+                    <button  (click)="addToCart(product)" class="btn btn-primary w-100 mt-2 add-to-cart-button ">إضافة لعربة التسوق  </button>
                   </div >
                   <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center ">
           

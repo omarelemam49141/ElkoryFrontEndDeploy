@@ -22,6 +22,7 @@ import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/s
 import { AccountService } from '../../../services/account.service';
 import { PaginatorService } from '../../../services/paginator.service';
 import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+import { JwtPayload } from 'jwt-decode';
 
 @Component({
   selector: 'app-products-list',
@@ -39,6 +40,9 @@ export class ProductsListComponent implements OnInit, OnDestroy{
   pageNumber = 0;
   productsTotalAmount = 0;
   quantity :number[] = [];
+
+  //user properties
+  userId: number = -1;
 
   //sorting properties
   sortingOption = 'all';
@@ -69,6 +73,7 @@ wishList?:IProduct[];
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
+    this.userId = this.accountService.getTokenId();
 
     this.getProductsPaginated(1,12);
     this.userLoggedID=this.accountService.getTokenId();
@@ -83,6 +88,7 @@ wishList?:IProduct[];
 
   listObserver = {
     next: (data: ProductsPagination) => {
+      console.log(data)
       this.isProductsLoading = false;
       this.products = data.items;
 
@@ -118,7 +124,7 @@ wishList?:IProduct[];
   getDiscountPercentage(originalPrice: number, finalPrice: number): number {
     return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
   }
-  addToCart(product: IProduct,locationInlist:number): void {
+  addToCart(product: IProduct): void {
     const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     
     const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
@@ -176,8 +182,8 @@ wishList?:IProduct[];
   }
 
   modifyCartAndAddItToLocalStorage(cart: ICart, product: IProduct) {
-    cart.finalPrice += (product.finalPrice* this.quantity[locationInlist]);
-    cart.numberOfProducts += this.quantity[locationInlist];
+    cart.finalPrice += (product.finalPrice* product.amount);
+    cart.numberOfProducts += product.amount;
 
     
     localStorage.setItem('cart', JSON.stringify(cart));
