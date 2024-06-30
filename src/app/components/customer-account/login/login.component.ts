@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
 import { ICart } from '../../../Models/icart';
 import { CartService } from '../../../services/cart.service';
+import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +31,7 @@ export class LoginComponent {
 
   constructor(private accountService: AccountService,
     private cartService: CartService,
+    private productService: ProductService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router
@@ -130,25 +132,125 @@ console.log("the cart from the local storage",localstoragecart);
 
       //   return;
       // }
+      console.log("the length of cart from database",cart.length);
 
-        if ((cart.productsAmounts == null || cart.productsAmounts.length < 1) && localstoragecart && localstoragecart.productsAmounts.length > 0) {
+        if ( cart.length==0&&localstoragecart && localstoragecart.productsAmounts.length > 0) {
     console.log("the server cart is empty, updating server cart with local storage cart");
-    this.cartService.updateCart(localstoragecart);
+    let cartObject: ICart = {
+      userId: this.accountService.getTokenId(),
+      productsAmounts: localstoragecart.productsAmounts,
+      finalPrice:localstoragecart.finalPrice,
+      numberOfUniqueProducts: localstoragecart.numberOfUniqueProducts,
+      numberOfProducts: localstoragecart.numberOfProducts
+
+
+      
+    }
+    
+    this.cartService.updateCart(cartObject).subscribe({
+      next: (data) => {
+        console.log("the data",data);
+        localStorage.removeItem("cart");
+        this.cartService.changeNumberOfItemsInCart(cartObject.numberOfUniqueProducts);
+      }
+    })
+
     return;
   }
 
   // If the local storage cart is empty, set the cart from the server
-  if ((localstoragecart == null || localstoragecart.productsAmounts.length < 1) && cart.productsAmounts.length > 0) {
+  else if ((localstoragecart == null || localstoragecart.productsAmounts.length < 1) && cart.productsAmounts.length > 0) {
     console.log("the local storage cart is empty");
     localStorage.setItem("cart", JSON.stringify(cart));
-    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
     return;
   }
-  
+
+  else{
+    //covert the two carts to Icart objects
+    console.log("converting the two carts to Icart objects");
+    let cartObject: ICart = {
+      userId: this.accountService.getTokenId(),
+      productsAmounts: cart.productsAmounts,
+      finalPrice: cart.finalPrice,
+      numberOfUniqueProducts: cart.numberOfUniqueProducts,
+      numberOfProducts: cart.numberOfProducts
+    }
+    let localstoragecartObject: ICart = {
+      userId: this.accountService.getTokenId(),
+      productsAmounts: localstoragecart.productsAmounts,
+      finalPrice: localstoragecart.finalPrice,
+      numberOfUniqueProducts: localstoragecart.numberOfUniqueProducts,
+      numberOfProducts: localstoragecart.numberOfProducts
+    }
+
+    //merge the two carts
+    console.log("merging the two carts");
+  let productsIncartfromlocalstorage = localstoragecartObject.productsAmounts;
+  let productsIncartfromserver = cartObject.productsAmounts;
 
 
+
+  if(productsIncartfromserver.length>productsIncartfromlocalstorage.length){
+
+
+  productsIncartfromserver.forEach(productfromserver => {
+
+    productsIncartfromlocalstorage.forEach(productfromlocalstorage => {
+      if (productfromlocalstorage.productId == productfromserver.productId) {
+        this.productService.getById(productfromserver.productId).subscribe({
+          next: (product) => {
+            if(product.amount<(productfromserver.amount+productfromlocalstorage.amount)){
+              productfromserver.amount = product.amount;
+              cartObject.numberOfProducts+=product.amount-productfromlocalstorage.amount;
+              cartObject.finalPrice+=product.amount*productfromserver.finalPrice-productfromlocalstorage.amount*productfromserver.finalPrice;
+
+            }
+            else {
+              productfromserver.amount += productfromlocalstorage.amount;
+              cartObject.numberOfProducts+=productfromlocalstorage.amount;
+              cartObject.finalPrice+=productfromlocalstorage.amount*productfromserver.finalPrice;
+            }
+          }
+        })
+        
+       
+      }
+      else{
+        let projectisaddbefore=productsIncartfromserver.findIndex(product => product.productId == productfromlocalstorage.productId)
+        if(projectisaddbefore==-1){
+        productsIncartfromserver.push(productfromlocalstorage);
+        cartObject.numberOfUniqueProducts++;
+        cartObject.numberOfProducts+=productfromlocalstorage.amount;
+        cartObject.finalPrice+=productfromlocalstorage.amount*productfromlocalstorage.finalPrice;
+        }
+
+
+      }
+
+    })
+
+
+  }
+  )
+  console.log("the cart object",cartObject);
+this.cartService.updateCart(cartObject).subscribe({
+  next: (data) => {
+    console.log("the data",data);
+    localStorage.removeItem("cart");
+    this.cartService.changeNumberOfItemsInCart(cartObject.numberOfUniqueProducts);
+
+
+
+
+
+
+  }
+})
   }
 
 
 
+
+}
+}
 }

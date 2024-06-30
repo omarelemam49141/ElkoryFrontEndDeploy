@@ -284,7 +284,6 @@ isProductInWishlist(productId:number):boolean{
 }
 isProductInCart(productId:number){
   const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
-  console.log(cart.productsAmounts?.some(p=>p.productId===productId));
   return cart.productsAmounts?.some(p=>p.productId===productId);
 
 }

@@ -61,7 +61,6 @@ export class CartService{
     if (!userId) {
       return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
     }
-
     //get the products ids in an array
     let productsIds = cart.productsAmounts.map(product => product.productId);
     //get the products amounts in an array
@@ -72,6 +71,7 @@ export class CartService{
       productsIds: productsIds,
       amounts: productsAmounts
     }
+    console.log("the update cart",updateCart);
 
     //set the headers
     this.genericServcie.addHeaders("Content-Type", "application/json");
