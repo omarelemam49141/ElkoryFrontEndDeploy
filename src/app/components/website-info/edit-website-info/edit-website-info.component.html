@@ -40,6 +40,30 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="label">وصف الموقع</label>
+                <input formControlName="description" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!description?.valid && description?.touched">
+                    <span *ngIf="description?.errors?.['required']">وصف الموقع مطلوب</span>
+                    <span *ngIf="description?.errors?.['minlength']">وصف الموقع يجب أن لا يقل عن 2 حرف</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label">عنوان المتجر</label>
+                <input formControlName="storeAddress" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!storeAddress?.valid && storeAddress?.touched">
+                    <span *ngIf="storeAddress?.errors?.['required']">عنوان المتجر مطلوب</span>
+                    <span *ngIf="storeAddress?.errors?.['minlength']">عنوان المتجر يجب أن لا يقل عن 2 حرف</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label">رقم الهاتف للعملاء</label>
+                <input formControlName="CustomerServicePhone" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!CustomerServicePhone?.valid && CustomerServicePhone?.touched">
+                    <span *ngIf="CustomerServicePhone?.errors?.['required']">رقم الهاتف للعملاء مطلوب</span>
+                    <span *ngIf="CustomerServicePhone?.errors?.['pattern']">رقم الهاتف للعملاء يجب أن يحتوي على 11 رقم</span>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="label">لوجو الموقع</label>
                 <input formControlName="webLogo" type="hidden">
                 <input type="file" class="form-control" (change)="onFileSelected($event)">

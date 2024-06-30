@@ -46,7 +46,7 @@
     
             <div class="form-field col-lg-6">
                 <select id="categoryId" formControlName="categoryId" class="input-text js-input" (change)="displaySubCategories()">
-                    <option value="-1" selected="true">اختر القسم</option>
+                    <option value="-1" selected="true">اختر القسم...</option>
                     <option *ngFor="let category of allCategories" [value]="category.categoryId">{{category.name}}</option>
                 </select>
                 <label class="label" for="categoryId">القسم</label>
@@ -62,7 +62,7 @@
                       <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
                       <input type="hidden" formControlName="subCategoryId">
                       <select class="input-text js-input" formControlName="selectedValue">
-                        <option value="-1" selected="true">اختر ال {{ subCategory.get('subCategoryName')?.value }}</option>
+                        <option value="-1" selected>اختر ال {{ subCategory.get('subCategoryName')?.value }}...</option>
                         <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
                     </select>
                     </div>
