@@ -20,6 +20,7 @@ import { ICategorySubCategoriesValues } from '../../../Models/icategory-sub-cate
 import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 import { IProductSubCategoryValues } from '../../../Models/iproduct-sub-category-values';
 import { ISubCategoryCategoryValues } from '../../../Models/isub-category-category-values';
+import { notMinusOneValidator } from '../../../custom-validators/notMinusOne';
 
 
 @Component({
@@ -231,7 +232,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     this.getAllSubCategoryValuesForTheSelectedCategoryAndPopulateThemToTheForm(productSubCategoryValues.subCategoryId, selectBoxFieldIndex)
     return this.fb.group({
       subCategoryId: [productSubCategoryValues.subCategoryId, [Validators.required]],
-      selectedValue: [productSubCategoryValues.values[0].value, [Validators.required]],
+      selectedValue: [productSubCategoryValues.values[0].value, [Validators.required, notMinusOneValidator()]],
       subCategoryName: [productSubCategoryValues.name, [Validators.required]],
       subCategoryValues: this.fb.array([])
     })
@@ -345,7 +346,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     subCategoriesAndValues.subCategories.forEach(subCategory => {
       this.subCategoriesWithValues.push(this.fb.group({
         subCategoryId: [subCategory.subCategoryId, [Validators.required]],
-        selectedValue: ['-1', [Validators.required]],
+        selectedValue: ['-1', [Validators.required, notMinusOneValidator()]],
         subCategoryName: [subCategory.name, [Validators.required]],
         subCategoryValues: this.fb.array(subCategory.values.map(value => {
           return this.fb.control(value.value);
@@ -356,6 +357,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   getSubCategoryValues(subCategory: any): FormArray {
     return subCategory.get('subCategoryValues') as FormArray;
+  }
+
+  getSubCategoryFormGroup(index: number) : FormGroup {
+    return this.subCategoriesWithValues.controls[index] as FormGroup;
   }
 
   displaySubCategories() {

@@ -58,13 +58,18 @@
     
             <div class="form-field col-lg-12">
                 <div formArrayName="subCategoriesWithValues" *ngIf="subCategoriesWithValues?.length; else noSubCategories">
+                    <hr>
                     <div *ngFor="let subCategory of subCategoriesWithValues.controls; let i = index" [formGroupName]="i" class="form-field col">
-                      <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
-                      <input type="hidden" formControlName="subCategoryId">
-                      <select class="input-text js-input" formControlName="selectedValue">
-                        <option value="-1" selected>اختر ال {{ subCategory.get('subCategoryName')?.value }}...</option>
-                        <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
-                    </select>
+                        <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
+                        <input type="hidden" formControlName="subCategoryId">
+                        <select class="input-text js-input" formControlName="selectedValue">
+                            <option value="-1" selected>اختر ال {{ subCategory.get('subCategoryName')?.value }}...</option>
+                            <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
+                        </select>
+                        <div class="text-danger" *ngIf="!getSubCategoryFormGroup(i).get('selectedValue')?.valid && getSubCategoryFormGroup(i).get('selectedValue')?.touched">
+                            <span *ngIf="getSubCategoryFormGroup(i).get('selectedValue')?.errors?.['required']">القسم الفرعى مطلوب</span>
+                            <span *ngIf="getSubCategoryFormGroup(i).get('selectedValue')?.errors?.['notMinusOne']">القسم الفرعى مطلوب</span>
+                        </div>
                     </div>
                   </div>
                 
