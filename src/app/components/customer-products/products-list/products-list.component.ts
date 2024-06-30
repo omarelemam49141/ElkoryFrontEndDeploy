@@ -22,12 +22,18 @@ import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/s
 import { AccountService } from '../../../services/account.service';
 import { PaginatorService } from '../../../services/paginator.service';
 import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
-import { JwtPayload } from 'jwt-decode';
+import { TooltipService } from '../../../services/tooltip.service';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent, SecondarySpinnerComponent],
+  imports: [RouterLink,
+     CurrencyPipe,
+     MatPaginatorModule,
+     CommonModule,
+     FormsModule, 
+     OffersSliderComponent, 
+     SecondarySpinnerComponent],
   templateUrl: './products-list.component.html',
   providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
   styleUrl: './products-list.component.scss'
@@ -59,10 +65,7 @@ userLoggedID!:number;
 
 wishList?:IProduct[];
 
-
-
   constructor(private productService: ProductService,
-    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private wishListService:WishListService,
     private cartService: CartService,
@@ -88,7 +91,6 @@ wishList?:IProduct[];
 
   listObserver = {
     next: (data: ProductsPagination) => {
-      console.log(data)
       this.isProductsLoading = false;
       this.products = data.items;
 

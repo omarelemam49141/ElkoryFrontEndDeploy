@@ -8,6 +8,7 @@ import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/s
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { AccountService } from '../../../services/account.service';
 import { MatInputModule } from '@angular/material/input';
+import { AdminNotificationsService } from '../../../services/admin-notifications.service';
 
 @Component({
   selector: 'app-customer-order-details',
@@ -30,7 +31,8 @@ export class CustomerOrderDetailsComponent {
     @Inject(MAT_DIALOG_DATA) public data: IPreviousOrders,
   private orderService: OrderService,
   private snackBar: MatSnackBar,
-  public accountService: AccountService) {  
+  public accountService: AccountService,
+private adminNotificationsService: AdminNotificationsService) {  
   }
 
   //observers
@@ -38,6 +40,8 @@ export class CustomerOrderDetailsComponent {
     next: () => {
       this.showNotification("تم تغيير حالة الطلب بنجاح", true);
       this.dialogRef.close(true);
+      this.adminNotificationsService.getNumberOfPendingOrders();
+
     },
     error: (error: Error) => {
       this.showNotification("تعذر تغيير حالة الطلب", false);

@@ -1,35 +1,40 @@
 <div class="container">
     <button class="btn btn-primary mt-2" (click)="addNewSubCategory()">إضافة قسم فرعى جديد</button>
-    @if(subCategories && subCategories.length > 0) {
-    <div class="table-responsive">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">اسم القسم الفرعى</th>
-                    <th scope="col">الاجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (subCategory of subCategories; track subCategory.subCategoryId) {
-                <tr>
-                    <td>
-                        <a class="viewDetailsBtn"
-                        [routerLink]="['/admin-categories/subcategory-details', subCategory.subCategoryId]">
-                            {{subCategory.name}}
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary ms-2" 
-                        [routerLink]="['/admin-categories/subcategories-list', subCategory.subCategoryId]" 
-                        (click)="editSubCategory(subCategory.subCategoryId, subCategory.name)">تعديل</a>
-                        <a class="btn btn-danger" (click)="confirmDelete(subCategory.subCategoryId, subCategory.name)">حذف</a>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    @if(isSubCategoriesLoading) {
+        <app-secondary-spinner></app-secondary-spinner>
     } @else {
+    @if(subCategories && subCategories.length > 0) {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">اسم القسم الفرعى</th>
+                        <th scope="col">الاجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (subCategory of subCategories; track subCategory.subCategoryId) {
+                    <tr>
+                        <td>
+                            <a class="viewDetailsBtn"
+                                [routerLink]="['/admin-categories/subcategory-details', subCategory.subCategoryId]">
+                                {{subCategory.name}}
+                            </a>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary ms-2"
+                                [routerLink]="['/admin-categories/subcategories-list', subCategory.subCategoryId]"
+                                (click)="editSubCategory(subCategory.subCategoryId, subCategory.name)">تعديل</a>
+                            <a class="btn btn-danger"
+                                (click)="confirmDelete(subCategory.subCategoryId, subCategory.name)">حذف</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        } @else {
         <div class="lead h2 text-center bg-light p-4 my-4">لا يوجد أقسام فرعية حتى الآن!</div>
+        }
     }
 </div>
