@@ -1,5 +1,6 @@
 
 import { IProductImage } from "./iproduct-image";
+import { IProductSubCategoryValues } from "./iproduct-sub-category-values";
 
 export interface IProduct {
     productId: number;
@@ -13,6 +14,7 @@ export interface IProduct {
     finalPrice: number;
     categoryId: number;
     productImages?: IProductImage[];
+    categoryValues?: IProductSubCategoryValues[]
 }
 
 
