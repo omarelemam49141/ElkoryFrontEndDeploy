@@ -122,12 +122,33 @@ let localstoragecart = this.getthecartfromlocalstorage();
 
 console.log("the cart from the local storage",localstoragecart);  
 
-if (localstoragecart==null||localstoragecart.productsAmounts.length<1)  {
-        //if the local storage cart is empty set the cart from the server
-        console.log("the local storage cart is empty");
-        localStorage.setItem("cart", JSON.stringify(cart));
-}
+      //   if ((localstoragecart==null||localstoragecart.productsAmounts.length<1)&&cart.productsAmounts.length>0)  {
+      //   //if the local storage cart is empty set the cart from the server
+      //   console.log("the local storage cart is empty");
+      //   localStorage.setItem("cart", JSON.stringify(cart));
+      //   this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
+
+      //   return;
+      // }
+
+        if ((cart.productsAmounts == null || cart.productsAmounts.length < 1) && localstoragecart && localstoragecart.productsAmounts.length > 0) {
+    console.log("the server cart is empty, updating server cart with local storage cart");
+    this.cartService.updateCart(localstoragecart);
+    return;
+  }
+
+  // If the local storage cart is empty, set the cart from the server
+  if ((localstoragecart == null || localstoragecart.productsAmounts.length < 1) && cart.productsAmounts.length > 0) {
+    console.log("the local storage cart is empty");
+    localStorage.setItem("cart", JSON.stringify(cart));
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
+    return;
+  }
+  
 
 
   }
+
+
+
 }

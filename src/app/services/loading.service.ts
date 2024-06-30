@@ -7,6 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LoadingService {
   private loadingSubject: BehaviorSubject<boolean>;
   loading$ : Observable<boolean>;
+
+  loading: boolean = false;
   
 
   constructor() {
@@ -16,9 +18,11 @@ export class LoadingService {
 
   show(): void {
     this.loadingSubject.next(true);
+    this.loading = true;
   }
 
   hide(): void {
     this.loadingSubject.next(false);
+    this.loading = false;
   }
 }

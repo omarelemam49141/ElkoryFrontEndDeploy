@@ -10,11 +10,12 @@ import { CategoryDetailsComponent } from '../category-details/category-details.c
 import { DeleteCategoryComponent } from '../delete-category/delete-category.component';
 import { AddCategoryComponent } from '../add-category/add-category.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-categories-list',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SecondarySpinnerComponent],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.scss'
 })
@@ -24,6 +25,8 @@ export class CategoriesListComponent implements OnDestroy, OnInit{
   subscriptions: Subscription[] = [];
   //notifications properties
   notificationDurationInSeconds = 5;
+  //spinners properties
+  isCategoriesLoading: boolean = false;
 
   constructor(private genericService: GenericService<ICategory>,
               private snackBar: MatSnackBar,
@@ -35,15 +38,18 @@ export class CategoriesListComponent implements OnDestroy, OnInit{
   }
 
   public getAll(): void {
+    this.isCategoriesLoading = true;
     this.subscriptions.push(this.genericService.getAll('category/all').subscribe({
       next: (data: ICategory[])=> {
         this.categories = data;
+        this.isCategoriesLoading = false;
       },
       error: (err: Error) => {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: "تعذر تحميل الفئات",
           duration: this.notificationDurationInSeconds * 1000
         })
+        this.isCategoriesLoading = false;
       }
     }));
   }

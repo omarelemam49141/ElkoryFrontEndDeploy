@@ -13,18 +13,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
 import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/failed-snackbar.component';
 import { FormsModule } from '@angular/forms';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-admin-products-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe, MatPaginatorModule, FormsModule, CommonModule],
+  imports: [RouterLink, CurrencyPipe, MatPaginatorModule, FormsModule, CommonModule, SecondarySpinnerComponent],
   providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
   templateUrl: './admin-products-list.component.html',
   styleUrl: './admin-products-list.component.scss'
 })
 export class AdminProductsListComponent implements OnInit, OnDestroy{
   products!: IProduct[];
-  images: string[][] = [];
   /*pagination properties*/ 
   pageSize = 10;
   pageNumber = 0;
@@ -32,6 +32,9 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
 
   //sorting properties
   sortingOption = 'all';
+
+  //spinners properties
+  isProductsLoading: boolean = false;
 
   //notifications properties
   snackBarDurationInSeconds = 5;
@@ -46,20 +49,18 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
   /*start observers*/
   listObserver = {
     next: (data: ProductsPagination) => {
+      console.log(data)
       this.products = data.items;
-      for (let i = 0; i < this.products.length; i++) {
-        this.productService.getPictures(this.products[i].productId).subscribe((images) => {
-          this.images.push(images);
-        });
-      }
       this.pageSize = data.pageSize;
       this.pageNumber = data.pageNumber-1;
       this.productsTotalAmount = data.totalItems;
+      this.isProductsLoading = false;
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تحميل المنتجات!'
       });
+      this.isProductsLoading = false;
     }
   }
   //delete observer
@@ -84,6 +85,7 @@ export class AdminProductsListComponent implements OnInit, OnDestroy{
   }
 
   getProductsPaginated(pageNumber:number, pageSize:number): void {
+    this.isProductsLoading = true;
     this.pageNumber = pageNumber;
     this.pageSize = pageSize; 
     if (this.sortingOption == "all") {

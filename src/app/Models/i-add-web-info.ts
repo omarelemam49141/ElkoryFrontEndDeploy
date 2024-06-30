@@ -4,4 +4,7 @@ export interface IAddWebInfo {
     webLogo: File;
     instagramAccount: string;
     facebookAccount: string;
+    description: string;
+    storeAddress: string;
+    CustomerServicePhone: string;
 }

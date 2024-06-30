@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
 import { Subscription } from 'rxjs';
@@ -18,23 +18,31 @@ import { IwhishListProduct } from '../../../Models/IwishListProduct';
 import { OffersSliderComponent } from '../../main-components/offers-slider/offers-slider.component';
 import { CartService } from '../../../services/cart.service';
 import { SuccessSnackbarComponent } from '../../notifications/success-snackbar/success-snackbar.component';
+
 import { AccountService } from '../../../services/account.service';
+import { PaginatorService } from '../../../services/paginator.service';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+import { JwtPayload } from 'jwt-decode';
+
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent],
+  imports: [RouterLink, CurrencyPipe,MatPaginatorModule,CommonModule,FormsModule, OffersSliderComponent, SecondarySpinnerComponent],
   templateUrl: './products-list.component.html',
+  providers: [{provide: MatPaginatorIntl, useClass: PaginatorService}],
   styleUrl: './products-list.component.scss'
 })
-export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
+export class ProductsListComponent implements OnInit, OnDestroy{
   hovering = false;
   products!: IProduct[];
-  images: string[][] = [];
   /*pagination properties*/
   pageSize = 12
   pageNumber = 0;
   productsTotalAmount = 0;
   quantity :number[] = [];
+
+  //user properties
+  userId: number = -1;
 
   //sorting properties
   sortingOption = 'all';
@@ -42,13 +50,14 @@ export class ProductsListComponent implements OnInit, OnDestroy,OnChanges{
   //notifications properties
   snackBarDurationInSeconds = 5;
 
+  //spinner properties
+  isProductsLoading = false;
+
   subscriptions?: Subscription[];
 //temp user
 userLoggedID!:number;
 
 wishList?:IProduct[];
-
-
 
 
 
@@ -60,13 +69,11 @@ wishList?:IProduct[];
     private accountService: AccountService
 
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    throw new Error('Method not implemented.');
-  }
   ngOnDestroy(): void {
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
+    this.userId = this.accountService.getTokenId();
 
     this.getProductsPaginated(1,12);
     this.userLoggedID=this.accountService.getTokenId();
@@ -81,11 +88,15 @@ wishList?:IProduct[];
 
   listObserver = {
     next: (data: ProductsPagination) => {
+      console.log(data)
+      this.isProductsLoading = false;
       this.products = data.items;
+
       for (let i = 0; i < this.products.length; i++) {
      
         this.quantity[i]=1;
       }
+
       this.pageSize = data.pageSize;
       this.pageNumber = data.pageNumber-1;
       this.productsTotalAmount = data.totalItems;
@@ -95,12 +106,14 @@ wishList?:IProduct[];
         duration: this.snackBarDurationInSeconds * 1000,
         data: err.message
       });
+      this.isProductsLoading = false;
     }
   };
 
   getProductsPaginated(pageNumber:number, pageSize:number): void {
     this.pageNumber = pageNumber;
     this.pageSize = pageSize; 
+    this.isProductsLoading = true;
     if (this.sortingOption == "all") {
       this.productService.getAllWithPagination(pageNumber, pageSize).subscribe(this.listObserver);
     } else {
@@ -115,6 +128,7 @@ wishList?:IProduct[];
  
       let cart: ICart = JSON.parse(localStorage.getItem('cart')|| '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
       let userId = this.accountService.getTokenId();
+      console.log(cart)
       let newCartItme={
         productId:product.productId,
         amount:this.quantity[locationInlist],
@@ -167,7 +181,7 @@ wishList?:IProduct[];
         } 
       else 
       {
-        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى السلة", true);
+        this.showNotification("تم أضافة قطعة من المنتج إلى السلة", true);
       }
       cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
@@ -175,7 +189,6 @@ wishList?:IProduct[];
 
 
     // }
-    console.log(this.products[locationInlist].amount)
   }
 
   updateCartInDatabase(cart:ICart) {
@@ -196,17 +209,19 @@ wishList?:IProduct[];
     
     localStorage.setItem('cart', JSON.stringify(cart));
 
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
+
     return cart;
   }
 
   addItemToCart(item: IProduct,amount:number) {
     this.cartService.addToCart(item,amount).subscribe({
       next: (data) => {
-        this.showNotification("تم أضافة المنتج إلى السلة بنجاح", true);
+        this.showNotification("تم أضافة المنتج إلى سلة مشترياتك بنجاح", true);
         console.log("adding to cart api")
       },
       error: (err: Error) => {
-        this.showNotification("تعذر اضافة المنتج الى السلة", false);
+        this.showNotification("تعذر اضافة المنتج الى سلة مشترياتك", false);
       }
     });
   }
@@ -269,6 +284,7 @@ isProductInWishlist(productId:number):boolean{
 }
 isProductInCart(productId:number){
   const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+  console.log(cart.productsAmounts?.some(p=>p.productId===productId));
   return cart.productsAmounts?.some(p=>p.productId===productId);
 
 }
@@ -326,6 +342,8 @@ increaseQuantity(index:number): void {
       cart.numberOfProducts -= productAmount;
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
+      this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
+
       if(this.userLoggedID){
         this.cartService.deleteProductFromCart(this.userLoggedID, product.productId).subscribe({
           next: (data) => {

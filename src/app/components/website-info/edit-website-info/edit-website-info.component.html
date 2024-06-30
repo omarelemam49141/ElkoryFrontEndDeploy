@@ -1,54 +1,82 @@
 <div class="account-container">
-    <form [formGroup]="webInfoForm" (ngSubmit)="submitWebInfoForm()" class="account-form">
-        <div class="form-header">
-            <img src="assets/images/logo.png" alt="Form Image" class="form-image">
-            <h2 class="form-title">{{webInfoToEdit ? 'تعديل بيانات الموقع' : 'اضافة بيانات الموقع'}}</h2>
-        </div>
-        <div class="form-group">
-            <label class="label">اسم الموقع</label>
-            <input id="email" formControlName="webName" class="form-control" type="text">
-            <div class="text-danger" *ngIf="!webName?.valid && webName?.touched">
-                <span *ngIf="webName?.errors?.['required']">اسم الموقع مطلوب</span>
-                <span *ngIf="webName?.errors?.['maxlength']">اسم الموقع يجب أن لا يزيد عن 50 حرف</span>
-                <span *ngIf="webName?.errors?.['minlength']">اسم الموقع يجب أن لا يقل عن 2 حرف</span>
+    @if(isWebsiteInfoLoading) {
+        <app-secondary-spinner></app-secondary-spinner>
+    } @else {
+        <form [formGroup]="webInfoForm" (ngSubmit)="submitWebInfoForm()" class="account-form">
+            <div class="form-header">
+                <img src="assets/images/logo.png" alt="Form Image" class="form-image">
+                <h2 class="form-title">{{webInfoToEdit ? 'تعديل بيانات الموقع' : 'اضافة بيانات الموقع'}}</h2>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="label">رقم الهاتف</label>
-            <input formControlName="webPhone" class="form-control" type="text">
-            <div class="text-danger" *ngIf="!webPhone?.valid && webPhone?.touched">
-                <span *ngIf="webPhone?.errors?.['required']">كلمة المرور مطلوبة</span>
+            <div class="form-group">
+                <label class="label">اسم الموقع</label>
+                <input id="email" formControlName="webName" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!webName?.valid && webName?.touched">
+                    <span *ngIf="webName?.errors?.['required']">اسم الموقع مطلوب</span>
+                    <span *ngIf="webName?.errors?.['maxlength']">اسم الموقع يجب أن لا يزيد عن 50 حرف</span>
+                    <span *ngIf="webName?.errors?.['minlength']">اسم الموقع يجب أن لا يقل عن 2 حرف</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="label">رابط حساب الفيسبوك</label>
-            <input formControlName="facebookAccount" class="form-control" type="text">
-            <div class="text-danger" *ngIf="!facebookAccount?.valid && facebookAccount?.touched">
-                <span *ngIf="facebookAccount?.errors?.['required']">رابط حساب الفيسبوك مطلوب</span>
-                <span *ngIf="facebookAccount?.errors?.['minlength']">رابط حساب الفيسبوك يجب أن لا يزيد عن 2 حرف</span>
+            <div class="form-group">
+                <label class="label">رقم الهاتف</label>
+                <input formControlName="webPhone" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!webPhone?.valid && webPhone?.touched">
+                    <span *ngIf="webPhone?.errors?.['required']">كلمة المرور مطلوبة</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="label">رابط حساب الإنستجرام</label>
-            <input formControlName="instagramAccount" class="form-control" type="text">
-            <div class="text-danger" *ngIf="!instagramAccount?.valid && instagramAccount?.touched">
-                <span *ngIf="instagramAccount?.errors?.['required']">رابط حساب الإنستجرام مطلوب</span>
-                <span *ngIf="instagramAccount?.errors?.['minlength']">رابط حساب الإنستجرام يجب أن لا تزيد عن 2 حرف</span>
+            <div class="form-group">
+                <label class="label">رابط حساب الفيسبوك</label>
+                <input formControlName="facebookAccount" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!facebookAccount?.valid && facebookAccount?.touched">
+                    <span *ngIf="facebookAccount?.errors?.['required']">رابط حساب الفيسبوك مطلوب</span>
+                    <span *ngIf="facebookAccount?.errors?.['minlength']">رابط حساب الفيسبوك يجب أن لا يزيد عن 2 حرف</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="label">لوجو الموقع</label>
-            <input formControlName="webLogo" type="hidden">
-            <input type="file" class="form-control" (change)="onFileSelected($event)">
-            @if (webSiteImage) {
-                <img src="{{webSiteImage}}" width="200" class="img-fluid rounded-1 my-2 mx-auto">
-            }
-            <div class="text-danger" *ngIf="!webLogo?.valid && webLogo?.touched">
-                <span *ngIf="webLogo?.errors?.['required']">لوجو الموقع المرور مطلوب</span>
+            <div class="form-group">
+                <label class="label">رابط حساب الإنستجرام</label>
+                <input formControlName="instagramAccount" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!instagramAccount?.valid && instagramAccount?.touched">
+                    <span *ngIf="instagramAccount?.errors?.['required']">رابط حساب الإنستجرام مطلوب</span>
+                    <span *ngIf="instagramAccount?.errors?.['minlength']">رابط حساب الإنستجرام يجب أن لا تزيد عن 2 حرف</span>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn-submit" [disabled]="webInfoForm.invalid">حفظ بيانات الموقع</button>
-        </div>
-    </form>
+            <div class="form-group">
+                <label class="label">وصف الموقع</label>
+                <input formControlName="description" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!description?.valid && description?.touched">
+                    <span *ngIf="description?.errors?.['required']">وصف الموقع مطلوب</span>
+                    <span *ngIf="description?.errors?.['minlength']">وصف الموقع يجب أن لا يقل عن 2 حرف</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label">عنوان المتجر</label>
+                <input formControlName="storeAddress" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!storeAddress?.valid && storeAddress?.touched">
+                    <span *ngIf="storeAddress?.errors?.['required']">عنوان المتجر مطلوب</span>
+                    <span *ngIf="storeAddress?.errors?.['minlength']">عنوان المتجر يجب أن لا يقل عن 2 حرف</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label">رقم الهاتف للعملاء</label>
+                <input formControlName="CustomerServicePhone" class="form-control" type="text">
+                <div class="text-danger" *ngIf="!CustomerServicePhone?.valid && CustomerServicePhone?.touched">
+                    <span *ngIf="CustomerServicePhone?.errors?.['required']">رقم الهاتف للعملاء مطلوب</span>
+                    <span *ngIf="CustomerServicePhone?.errors?.['pattern']">رقم الهاتف للعملاء يجب أن يحتوي على 11 رقم</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label">لوجو الموقع</label>
+                <input formControlName="webLogo" type="hidden">
+                <input type="file" class="form-control" (change)="onFileSelected($event)">
+                @if (webSiteImage) {
+                    <img src="{{webSiteImage}}" width="200" class="img-fluid rounded-1 my-2 mx-auto">
+                }
+                <div class="text-danger" *ngIf="!webLogo?.valid && webLogo?.touched">
+                    <span *ngIf="webLogo?.errors?.['required']">لوجو الموقع المرور مطلوب</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-submit" [disabled]="webInfoForm.invalid">حفظ بيانات الموقع</button>
+            </div>
+        </form>
+    }
 </div>

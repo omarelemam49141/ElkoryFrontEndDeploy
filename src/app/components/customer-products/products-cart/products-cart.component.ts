@@ -100,7 +100,21 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
 
   updateLocalStorageWithCart() {
     this.cartChanged = true;
+    this.changeCartItemsAmount();
     localStorage.setItem('cart', JSON.stringify(this.cart));
+  }
+
+  changeCartItemsAmount() {
+    this.cart.numberOfUniqueProducts = this.cart.productsAmounts.length;
+    this.cart.numberOfProducts = 0;
+    this.cart.productsAmounts.forEach(product => {
+      this.cart.numberOfProducts += product.amount;
+    })
+    this.changeCartNotificationNumber(this.cart.numberOfUniqueProducts);
+  }
+
+  changeCartNotificationNumber(amountOfItemsInCart: number) {
+    this.cartService.changeNumberOfItemsInCart(amountOfItemsInCart);
   }
 
   calculateCartFinalPrice() {
@@ -165,6 +179,7 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
   clearCart(): void {
     localStorage.removeItem("cart");
     this.cart = {} as ICart;
+    this.changeCartNotificationNumber(0)
     let token = localStorage.getItem('token');
     if (token) {
       let userId = this.accountService.getIdFromToken(token);

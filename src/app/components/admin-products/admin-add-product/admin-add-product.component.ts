@@ -17,12 +17,16 @@ import { FileService } from '../../../services/file.service';
 import { GenericService } from '../../../services/generic.service';
 import { IProductCategorySubValues } from '../../../Models/iproduct-category-sub-values';
 import { ICategorySubCategoriesValues } from '../../../Models/icategory-sub-categories-values';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+import { IProductSubCategoryValues } from '../../../Models/iproduct-sub-category-values';
+import { ISubCategoryCategoryValues } from '../../../Models/isub-category-category-values';
+import { notMinusOneValidator } from '../../../custom-validators/notMinusOne';
 
 
 @Component({
   selector: 'app-admin-add-product',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, SecondarySpinnerComponent],
   templateUrl: './admin-add-product.component.html',
   styleUrl: './admin-add-product.component.scss'
 })
@@ -43,6 +47,9 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   imagesToAddWhenUpdate: File[] = [];
   // QueryList to access file input elements
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
+
+  //spinners properties
+  isProductAddingOrUpdating: boolean = false;
 
   //notifications properties
   snackBarDurationInSeconds = 5;
@@ -66,13 +73,12 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         ['', [Validators.required]]
       ], oneImageAtLeast),
       imagesToAdd: fb.array([]),
-      discount: ['0', [Validators.max(100), Validators.min(0)]],
+      discount: ['', [Validators.max(100), Validators.min(0)]],
       originalPrice: ['', [Validators.required, Validators.min(0)]],
       amount: ['', [Validators.required, Validators.min(0)]],
       description: ['', [Validators.required]],
-      categoryId: ['', [Validators.required, CheckCategoryIsSelected]],
+      categoryId: ['-1', [Validators.required, CheckCategoryIsSelected]],
       subCategoriesWithValues: new FormArray([
-
       ])
     })
   }
@@ -81,12 +87,14 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*observers*/
   InsertNewImagesToProduct() {
     if (this.imagesToAdd.length > 0) {
+      this.isProductAddingOrUpdating = true;
       this.productService.insertPictures(this.productToEdit!.productId, this.imagesToAdd.value).subscribe({
         next: data => {
           this.snackBar.openFromComponent(SuccessSnackbarComponent, {
             data: 'تم تحديث المنتج بنجاح!',
             duration: this.snackBarDurationInSeconds * 1000
           });
+          this.isProductAddingOrUpdating = false;
           this.populateEditForm();
         },
         error: (err: Error) => {
@@ -94,6 +102,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             data: 'تعذر تحديث المنتج!',
             duration: this.snackBarDurationInSeconds * 1000
           });
+          this.isProductAddingOrUpdating = false;
         }
       });
     } else {
@@ -101,17 +110,21 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         data: 'تم تحديث المنتج بنجاح!',
         duration: this.snackBarDurationInSeconds * 1000
       });
+      this.isProductAddingOrUpdating = false;
     }
   }
 
   productsObserver = {
     next: (productData: any) => {
       if (!this.productToEdit) {
+        this.isProductAddingOrUpdating = true;
         this.productService.insertPictures(productData.productId, this.images.value).subscribe({
           next: data => {
+            this.isProductAddingOrUpdating = false;
             this.addAllSelectedSubCategoriesValuesToProduct(productData.productId);
           },
           error: (err: Error) => {
+            this.isProductAddingOrUpdating = false;
             this.snackBar.openFromComponent(FailedSnackbarComponent, {
               data: 'تعذر اضافة المنتج!',
               duration: this.snackBarDurationInSeconds * 1000
@@ -119,11 +132,14 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
           }
         });
       } else {        //if there are images to update
+        this.isProductAddingOrUpdating = false;
         if (this.imagesToDeleteWhenUpdate.length > 0) {
           //delete the old pictures
           this.imagesToDeleteWhenUpdate.forEach((image, index) => {
+            this.isProductAddingOrUpdating = true;
             this.productService.deletePicture(this.productToEdit!.productId, image).subscribe(data => {
               if (this.imagesToDeleteWhenUpdate.length == index + 1) {
+                this.isProductAddingOrUpdating = false;
                   this.InsertNewImagesToProduct();
               }
             });
@@ -139,10 +155,12 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر اضافة المنتج!',
         });
+        this.isProductAddingOrUpdating = false;
       } else {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر تحديث المنتج!',
         });
+        this.isProductAddingOrUpdating = false;
       }
     }
   }
@@ -150,23 +168,26 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   categoryObserver = {
     next: (data: ICategory[]) => {
       this.allCategories = data;
+      this.isProductAddingOrUpdating = false;
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تحميل الفئات!',
         duration: this.snackBarDurationInSeconds * 1000,
       });
+      this.isProductAddingOrUpdating = false;
     }
   }
 
   ngOnInit(): void {
+    this.isProductAddingOrUpdating = true;
     this.subscriptions?.push(this.genericService.getAll('category/all').subscribe(this.categoryObserver));
     this.populateEditForm();
   }
 
   addAllSelectedSubCategoriesValuesToProduct(productId: number) {
     //add the product sub categories values
-    if (this.subCategoriesWithValues) {
+    if (this.subCategoriesWithValues && this.subCategoriesWithValues.length > 0) {
       this.subCategoriesWithValues.controls.forEach((subCategoryGroup, index) => {
         let productCategorySubCategoryValue: IProductCategorySubValues 
         = this.mapSubCategoryValueFieldsToproductCategorySubCategoryValue(
@@ -174,11 +195,54 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
           this.productForm.get('categoryId')?.value,
           subCategoryGroup.get('selectedValue')?.value,
           +subCategoryGroup.get('subCategoryId')?.value
-          
         )
 
         this.addSubCategoriesValueToProduct(productCategorySubCategoryValue, index);
       });
+    } else {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: "تم إضافة المنتج بنجاح",
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+      this.router.navigate(["/admin-products"]);
+    }
+  }
+
+  getAllSubCategoryValuesForTheSelectedCategoryAndPopulateThemToTheForm(subCategoryId: number, selectBoxFieldIndex: number) {
+    this.isProductAddingOrUpdating = true;
+    this.categoryService.getCategoriesWithValuesBySubCategoryId(subCategoryId).subscribe({
+      next: (data:ISubCategoryCategoryValues) => {
+        let categoryData = data.categories.find(cat=>cat.categoryId==+this.categoryId?.value);
+        categoryData?.values.forEach(value => {
+          (this.subCategoriesWithValues.controls[selectBoxFieldIndex].get("subCategoryValues") as FormArray).push(this.fb.control(value.value))
+        })
+        this.isProductAddingOrUpdating = false;
+      },
+      error: (err: Error) => {
+        this.isProductAddingOrUpdating = false;
+        this.snackBar.openFromComponent(FailedSnackbarComponent, {
+          data: 'تعذر تحميل قيم الأقسام الفرعية!',
+          duration: this.snackBarDurationInSeconds * 1000
+        });
+      }
+    }) 
+  }
+
+  addSubCategoryValuesToEditForm(productSubCategoryValues: IProductSubCategoryValues, selectBoxFieldIndex: number) {
+    this.getAllSubCategoryValuesForTheSelectedCategoryAndPopulateThemToTheForm(productSubCategoryValues.subCategoryId, selectBoxFieldIndex)
+    return this.fb.group({
+      subCategoryId: [productSubCategoryValues.subCategoryId, [Validators.required]],
+      selectedValue: [productSubCategoryValues.values[0].value, [Validators.required, notMinusOneValidator()]],
+      subCategoryName: [productSubCategoryValues.name, [Validators.required]],
+      subCategoryValues: this.fb.array([])
+    })
+  }
+
+  private populateSubCategoryValues() {
+    if (this.productToEdit) {
+      this.productToEdit.categoryValues?.forEach((categoryValue, index) => {
+        this.subCategoriesWithValues?.push(this.addSubCategoryValuesToEditForm(categoryValue, index))
+      })
     }
   }
 
@@ -193,8 +257,11 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         this.subscriptions?.push(this.productService.getById(id).subscribe(product => {
           this.productToEdit = product;
           this.productForm.patchValue(this.productToEdit);
+          //populate subCategory values
+          this.populateSubCategoryValues()
           this.subscriptions?.push(this.productService.getPictures(id).subscribe(imagesUrls => {
-            if (imagesUrls.length > 0) {
+            console.log(imagesUrls)
+            if (imagesUrls.length > 0 && imagesUrls[0]) {
               this.imagesArray = imagesUrls;
               this.originalImagesOfTheProductToUpdate = this.imagesArray.slice();
               this.imageIndex = imagesUrls.length - 1;
@@ -203,9 +270,9 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
               this.images.clear();
 
               const filePromises = imagesUrls.map(imageUrl => {
-                const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-                const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
-                const mimeType = `image/${extension}`;
+              const imageName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+              const extension = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
+              const mimeType = `image/${extension}`;
 
                 return this.fileService.urlToFile(imageUrl, imageName, mimeType);
               });
@@ -219,7 +286,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             } else {
               this.productForm.get("images")?.setValue(this.fb.array([
                 ['', [Validators.required]]
-              ], oneImageAtLeast));
+              ],  oneImageAtLeast));
             }
           }));
         }));
@@ -279,7 +346,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     subCategoriesAndValues.subCategories.forEach(subCategory => {
       this.subCategoriesWithValues.push(this.fb.group({
         subCategoryId: [subCategory.subCategoryId, [Validators.required]],
-        selectedValue: ['', [Validators.required]],
+        selectedValue: ['-1', [Validators.required, notMinusOneValidator()]],
         subCategoryName: [subCategory.name, [Validators.required]],
         subCategoryValues: this.fb.array(subCategory.values.map(value => {
           return this.fb.control(value.value);
@@ -292,6 +359,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     return subCategory.get('subCategoryValues') as FormArray;
   }
 
+  getSubCategoryFormGroup(index: number) : FormGroup {
+    return this.subCategoriesWithValues.controls[index] as FormGroup;
+  }
+
   displaySubCategories() {
     if (this.categoryId?.value == -1) {
       this.subCategoriesWithValues.clear();
@@ -299,14 +370,15 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
     }
     this.categoryService.getCategorySubCategoriesWithValues(this.categoryId?.value).subscribe({
       next: (data: ICategorySubCategoriesValues) => {
+        this.isProductAddingOrUpdating = false;
         this.addSubCategoriesToForm(data);
       },
       error: (err: Error) => {
-        console.log(err)
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: "تعذر تحميل الأقسام الفرعية",
           duration: this.snackBarDurationInSeconds * 1000
         })
+        this.isProductAddingOrUpdating = false;
       }
     })
   }
@@ -328,6 +400,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   }
 
   addSubCategoriesValueToProduct(productCategorySubCategoryValue: IProductCategorySubValues, subCategoryValueIndex: number) {
+    this.isProductAddingOrUpdating = true;
     this.categoryService.addProductCategorySubCategoryValue(productCategorySubCategoryValue).subscribe({
       next: () => {
         if (subCategoryValueIndex == this.subCategoriesWithValues.controls.length - 1) {
@@ -340,11 +413,12 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         }
       },
       error: (err: Error) => {
-        console.log(err)
+        
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
-          data: "تعذر اض  افة المنتج الى الأقسام الفرعية",
+          data: "تعذر اضافة المنتج الى الأقسام الفرعية",
           duration: this.snackBarDurationInSeconds * 1000
         })
+        this.isProductAddingOrUpdating = false;
       }
     })
   }
@@ -352,6 +426,10 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
   /*submit the form*/
   submitProduct(): void {
     let product: IAddProduct = this.productForm.value;
+    if (!product.discount) {
+      product.discount = 0
+    }
+    this.isProductAddingOrUpdating = true;
     if (this.productToEdit) {
       this.subscriptions?.push(this.productService.update(this.productToEdit.productId, product).subscribe(this.productsObserver));
     } else {

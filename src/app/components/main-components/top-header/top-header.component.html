@@ -30,12 +30,29 @@
             تسجيل الخروج
           </a>
         }
+        @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+          <a (click)="goToPreviousOrders()" class="nav-link arabic text-danger">
+            <!--use an icon for orders-->
+            <i class="fas fa-shipping-fast ms-2 fs-6"></i>
+            طلباتى
+          </a>
+        }
       </div>
     </div>
-    <a routerLink="/customer-products/products-cart" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
-      <span class="cart-title">عربة التسوق</span>
-      <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon"></fa-icon>
-    </a>
+    @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+      <a routerLink="/customer-products/products-cart" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
+        <span class="cart-title">عربة التسوق</span>
+        <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon bell-icon"></fa-icon>
+        <span *ngIf="cartService.getNumberOfItemsInCart() > 0" class="notification-badge">{{ cartService.getNumberOfItemsInCart() }}</span>
+      </a>
+    }
+    
+    @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+      <button (click)="goToPreviousOrders()" routerLinkActive="active" class="nav-link position-relative cart-link arabic text-primary">
+        <span class="cart-title">طلباتى</span>
+        <i class="fas fa-shipping-fast me-2 fs-6"></i>
+      </button>
+    }
     @if(!accountService.isLoggedIn) {
       <button routerLink="/customer-account/login" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
         <span class="cart-title">تسجيل الدخول</span>

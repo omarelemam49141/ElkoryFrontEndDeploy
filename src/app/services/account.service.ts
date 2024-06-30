@@ -11,6 +11,7 @@ import * as jwtDecode  from 'jwt-decode';
 import { IVerifyEmail } from '../Models/iverify-email';
 import { IForgetPassword } from '../Models/iforget-password';
 import { ICart } from '../Models/icart';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class AccountService implements OnInit{
   user?: {}
 
   constructor(private http: HttpClient,
-              private genericService: GenericService<ISignUpModel>
+              private genericService: GenericService<ISignUpModel>,
+              private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -146,7 +148,7 @@ export class AccountService implements OnInit{
     this.loggedInSubject.next(false);
     localStorage.removeItem("cart");
     //redirect to the home page
-    window.location.href = "/";
+    this.router.navigate(["/customer-account/login"])
   }
 
   public verifyEmail(verifyEmail: IVerifyEmail): Observable<any> {

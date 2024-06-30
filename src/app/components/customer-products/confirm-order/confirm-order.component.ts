@@ -14,11 +14,12 @@ import { IOffer } from '../../../Models/ioffer';
 import { OfferDetailsComponent } from '../../admin-offers/offer-details/offer-details.component';
 import { OrderService } from '../../../services/order.service';
 import { IOrderModifiedPrice } from '../../../Models/iorder-modified-price';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-confirm-order',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, OfferDetailsComponent],
+  imports: [CommonModule, RouterLink, FormsModule, OfferDetailsComponent, SecondarySpinnerComponent],
   templateUrl: './confirm-order.component.html',
   styleUrl: './confirm-order.component.scss'
 })
@@ -28,6 +29,9 @@ export class ConfirmOrderComponent implements OnInit {
   //selected offer properties
   selectedOfferId?: number;
   selectedOffer?: IOffer;
+
+  //spinner properties
+  isOrderLoading = false;
 
   //notification properties
   notificationDurationInSeconds = 5;
@@ -54,10 +58,11 @@ export class ConfirmOrderComponent implements OnInit {
   //observers
   reviewOrderObserver = {
     next: (data: IReviewOrder) => {
+      this.isOrderLoading = false;
       this.reviewOrderModel = data
     },
     error: (err: Error) => {
-      console.log(err)
+      this.isOrderLoading = false;
       this.showNotification("تعذر تحميل الطلب. الرجاء المحاولة مرة أخرى", false);
     }
   }
@@ -65,18 +70,19 @@ export class ConfirmOrderComponent implements OnInit {
 
   getOfferModifiedPriceObserver = {
     next: (data: IOrderModifiedPrice) => {
-      console.log(data)
+      this.isOrderLoading = false;
       this.reviewOrderModel.finalPriceAfterOffer = data.offerFinalPrice;
       this.reviewOrderModel.finalPrice = data.cartFinalPrice;
     },
     error: (err: Error) => {
-      console.log(err)
+      this.isOrderLoading = false;
       this.showNotification("تعذر تحميل الطلب. الرجاء المحاولة مرة أخرى", false);
     }
   }
   
   //methods
   getUserOrderInfo(userId: number) {
+    this.isOrderLoading = true;
     this.cartService.getOrderInfo(userId).subscribe(this.reviewOrderObserver)
   }
   showNotification(message: string, success: boolean) {
@@ -103,6 +109,7 @@ export class ConfirmOrderComponent implements OnInit {
   }
 
   getOrderModifiedPrice(offerId: number) {
+    this.isOrderLoading = true;
     this.orderService.getOrderModifiedPrice(offerId, this.getUserId()).subscribe(this.getOfferModifiedPriceObserver)
   }
 
@@ -120,6 +127,7 @@ export class ConfirmOrderComponent implements OnInit {
       if (result) {
         this.showNotification("تم تأكيد الطلب بنجاح", true);
         localStorage.removeItem("cart");
+        this.cartService.changeNumberOfItemsInCart(0);
         this.router.navigate(['/customer-products/products-list'])
       }
     })

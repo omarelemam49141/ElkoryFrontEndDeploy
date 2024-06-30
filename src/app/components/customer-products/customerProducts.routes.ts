@@ -15,5 +15,6 @@ export const routes: Routes = [
     {path: "products-cart", component: ProductsCartComponent},
     {path: "products-checkout", component: ProductsOrderComponent},
     {path: "confirm-order", component: ConfirmOrderComponent},
-    {path: "customer-previous-orders/:id", component: CustomerPreviousOrdersComponent},
+    {path: "customer-previous-orders", component: CustomerPreviousOrdersComponent},
+    {path: "customer-previous-orders/:role", component: CustomerPreviousOrdersComponent}
 ]

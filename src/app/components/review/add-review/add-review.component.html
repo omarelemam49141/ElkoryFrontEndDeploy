@@ -1,5 +1,5 @@
 <!-- src/app/components/review/review.component.html -->
-<div dir="rtl">
+<!-- <div dir="rtl">
   <h2>إضافة تقييم</h2>
   <form (ngSubmit)="addReview()">
     <label for="productId">معرف المنتج:</label>
@@ -19,8 +19,8 @@
 
     <button type="submit">إرسال التقييم</button>
   </form>
-</div>
-<!--
+</div> -->
+
 <div dir="rtl">
   <h2>إضافة تقييم</h2>
   <form (ngSubmit)="addReview()">
@@ -30,24 +30,26 @@
     <label for="customerId">معرف العميل:</label>
     <input type="number" id="customerId" [(ngModel)]="rate.customerId" name="customerId" required>
 
-
-
-    <label for="numOfStars">عدد النجوم:</label>
+    <label for="numOfStars">التقييم:</label>
     <div class="star-rating">
-      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
-      <i class="fa-regular fa-star" style="color: #FFD43B;"></i>
+      <div class="stars">
+        <fa-icon [class.rated]="rating >= 5" [icon]="faStar"  (click)="setRating(5)"></fa-icon>
+        <fa-icon [class.rated]="rating >= 4" [icon]="faStar"  (click)="setRating(4)"></fa-icon>
+        <fa-icon [class.rated]="rating >= 3" [icon]="faStar"  (click)="setRating(3)"></fa-icon>
+        <fa-icon [class.rated]="rating >= 2" [icon]="faStar"  (click)="setRating(2)"></fa-icon>
+        <fa-icon [class.rated]="rating >= 1" [icon]="faStar"  (click)="setRating(1)"></fa-icon>
+      </div>
+      <!-- <div>
+        <p>{{rating}}</p>
+      </div> -->
     </div>
 
     <label for="comment">أضف تعليق:</label>
-    <textarea id="comment" [(ngModel)]="rate.comment" name="comment" required></textarea>
+    <textarea id="comment" [(ngModel)]="rate.comment" name="comment" placeholder="عبر عن رأيك في المنتج"></textarea>
 
-    <label for="rateDate">تاريخ التقييم:</label>
-    <input type="date" id="rateDate" [(ngModel)]="rate.rateDate" name="rateDate" required>
+    <input type="hidden" id="rateDate" [(ngModel)]="rate.rateDate" name="rateDate" required>
 
     <button type="submit">إرسال التقييم</button>
   </form>
 </div>
- -->
+

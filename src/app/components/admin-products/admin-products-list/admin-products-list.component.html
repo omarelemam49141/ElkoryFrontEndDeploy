@@ -20,58 +20,61 @@
         </div>
     </div>
 
-    <div>
-        @for (product of products; let i= $index; track product.productId;) {
-            <div class="card rounded-3 mb-4">
-                <div class="card-body p-4">
-                    <div class="row d-flex justify-content-between align-items-center">
-                        <div class="col-lg-2 text-center mb-3 mb-md-0">
-                            <img
-                            src="{{images[i] ? images[i][0] : ''}}"
-                            class="img-fluid rounded-3 image image-admin" alt="image">
-                        </div>
-                        <div class="col-lg-3">
-                            <p class="lead fw-normal mb-2 proTitle">{{product.name}}</p>
-                            <p><span class="text-muted">سعر المنتج: </span><span class="badge text-bg-success">{{product.finalPrice | currency: "ج.م"}}</span></p>
-                            @if (product.originalPrice != product.finalPrice) {
-                                <p><span class="text-muted">السعر قبل الخصم: </span><span class="badge text-bg-danger">{{product.originalPrice | currency: "ج.م"}}</span></p>
-                            }
-                        </div>
-            
-                        <div class="amount d-flex col-lg-2">
-                            <p>
-                                <span class="text-muted">الكمية: </span>
-                                <ng-container [ngSwitch]="product.amount">
-                                    <span class="fw-bold ms-1 text-danger" *ngSwitchCase="0">نفذ من المخزون</span>
-                                    <span class="fw-bold ms-1 text-warning" *ngSwitchCase="1">اخر قطعة</span>
-                                    <span class="fw-bold ms-1" *ngSwitchDefault>{{product.amount}}</span>
-                                </ng-container>
-                            </p>
-                        </div>
-
-                        <div class="amount d-flex col-lg-2">
-                            <p><span class="text-muted">الفئة</span><span class="fw-bold ms-1">: {{product.categoryName}}</span></p>
-                        </div>
-            
-                        <div class="col-lg-3 mt-2 mt-lg-0 d-flex flex-wrap justify-content-around my-btns">
-                            <a class="btn btn-warning w-50" style="color: white;" [routerLink]="['/admin-products/admin-edit-product', product.productId]">تعديل</a>
-                            <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)" style="cursor: pointer;"><i class="fa-solid fa-trash"></i></a>
+    @if (isProductsLoading) {
+        <app-secondary-spinner></app-secondary-spinner>
+    } @else {
+        <div>
+            @for (product of products; let i= $index; track product.productId;) {
+                <div class="card rounded-3 mb-4">
+                    <div class="card-body p-4">
+                        <div class="row d-flex justify-content-between align-items-center">
+                            <div class="col-lg-2 text-center mb-3 mb-md-0">
+                                <img
+                                src="{{(product.productImages && product.productImages[0] && product.productImages[0].imageUri) ? (product.productImages[0].imageUri) : 'assets/images/no-image.png'}}"
+                                class="img-fluid rounded-3 image image-admin" alt="image">
+                            </div>
+                            <div class="col-lg-3">
+                                <p class="lead fw-normal mb-2 proTitle">{{product.name}}</p>
+                                <p><span class="text-muted">سعر المنتج: </span><span class="badge text-bg-success">{{product.finalPrice | currency: "ج.م"}}</span></p>
+                                @if (product.originalPrice != product.finalPrice) {
+                                    <p><span class="text-muted">السعر قبل الخصم: </span><span class="badge text-bg-danger">{{product.originalPrice | currency: "ج.م"}}</span></p>
+                                }
+                            </div>
+                
+                            <div class="amount d-flex col-lg-2">
+                                <p>
+                                    <span class="text-muted">الكمية: </span>
+                                    <ng-container [ngSwitch]="product.amount">
+                                        <span class="fw-bold ms-1 text-danger" *ngSwitchCase="0">نفذ من المخزون</span>
+                                        <span class="fw-bold ms-1 text-warning" *ngSwitchCase="1">اخر قطعة</span>
+                                        <span class="fw-bold ms-1" *ngSwitchDefault>{{product.amount}}</span>
+                                    </ng-container>
+                                </p>
+                            </div>
+    
+                            <div class="amount d-flex col-lg-2">
+                                <p><span class="text-muted">الفئة</span><span class="fw-bold ms-1">: {{product.categoryName}}</span></p>
+                            </div>
+                
+                            <div class="col-lg-3 mt-2 mt-lg-0 d-flex flex-wrap justify-content-around my-btns">
+                                <a class="btn btn-warning w-50" style="color: white;" [routerLink]="['/admin-products/admin-edit-product', product.productId]">تعديل</a>
+                                <a class="fs-3 text-danger" (click)="openDeleteDialog(product.productId , product.name)" style="cursor: pointer;"><i class="fa-solid fa-trash"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-
-    <div>
-        <mat-paginator [length]="productsTotalAmount"
-                [pageSize]="pageSize"
-                [showFirstLastButtons]="true"
-                [pageSizeOptions]="[5, 10, 25, 100]"
-                [pageIndex]="pageNumber"
-                (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)"
-                aria-label="Select page">
-        </mat-paginator>
-    </div>
+            }
+        </div>
     
+        <div>
+            <mat-paginator [length]="productsTotalAmount"
+                    [pageSize]="pageSize"
+                    [showFirstLastButtons]="true"
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    [pageIndex]="pageNumber"
+                    (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)"
+                    aria-label="Select page">
+            </mat-paginator>
+        </div>
+    }
 </div>
