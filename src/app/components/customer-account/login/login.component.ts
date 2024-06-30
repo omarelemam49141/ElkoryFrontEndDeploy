@@ -8,6 +8,7 @@ import { ILoginModel } from '../../../Models/ilogin-model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
+import { AdminNotificationsService } from '../../../services/admin-notifications.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent {
   constructor(private accountService: AccountService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private adminNotificationsService: AdminNotificationsService
   ) {
     this.loginForm = fb.group({
       email: ["", [Validators.required, Validators.email, Validators.maxLength(50)]],
@@ -39,16 +41,35 @@ export class LoginComponent {
         data: 'تم تسجيل الدخول بنجاح',
         duration: this.snackBarDurationInSeconds * 100
       });
-      localStorage.setItem("token", "Bearer " + token);
-      this.accountService.isLoggedIn = true;
-      this.accountService.activateLogin();
-      this.router.navigate(["/customer-account/view-profile"])
+      
+      this.saveToken(JSON.stringify(token));
+      this.navigateToMainPage();
+      if(this.accountService.getTokenRole().toLowerCase() == "admin") {
+        this.getUpdatedOrdersStats();
+      }
     },
     error: (err: Error) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تسجيل الدخول',
         duration: this.snackBarDurationInSeconds * 1000
       });
+    }
+  }
+
+  //methods
+  saveToken(token: string) {
+    localStorage.setItem("token", "Bearer " + token);
+    this.accountService.isLoggedIn = true;
+    this.accountService.activateLogin();
+  }
+  getUpdatedOrdersStats() {
+    this.adminNotificationsService.getNumberOfPendingOrders();
+  }
+  navigateToMainPage() {
+    if(this.accountService.getTokenRole().toLowerCase() == "customer") {
+      this.router.navigate(["/customer-products/products-list"])
+    } else if (this.accountService.getTokenRole().toLowerCase() == "admin") {
+      this.router.navigate(["/admin-products/admin-products-list"])
     }
   }
 

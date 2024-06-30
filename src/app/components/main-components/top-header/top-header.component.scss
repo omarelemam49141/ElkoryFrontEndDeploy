@@ -103,3 +103,26 @@
     transform: scale(1);
   }
 }
+
+//start tooltip styles
+.custom-tooltip {
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #333333;
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.custom-tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.custom-tooltip.hide {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+//end tooltip styles
