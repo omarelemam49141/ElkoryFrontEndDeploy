@@ -8,6 +8,8 @@ import { ILoginModel } from '../../../Models/ilogin-model';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
+import { CartService } from '../../../services/cart.service';
+import { ICart } from '../../../Models/icart';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,8 @@ export class LoginComponent {
   constructor(private accountService: AccountService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private cartService: CartService
   ) {
     this.loginForm = fb.group({
       email: ["", [Validators.required, Validators.email, Validators.maxLength(50)]],
@@ -41,8 +44,8 @@ export class LoginComponent {
       });
       localStorage.setItem("token", "Bearer " + token);
       this.accountService.isLoggedIn = true;
-      
       this.accountService.activateLogin();
+      this.getUserCartFromDatabaseIfExist();
       this.router.navigate(["/customer-account/view-profile"])
     },
     error: (err: Error) => {
@@ -51,6 +54,46 @@ export class LoginComponent {
         duration: this.snackBarDurationInSeconds * 1000
       });
     }
+  }
+
+  updateCartObserver = {
+    next: ()=> {
+      this.showNotifications("تم تحديث بيانات العربة", true);
+    },
+    error: (err: Error) => {
+      this.showNotifications("تعذر تحديث بيانات العربة", false);
+    }
+  }
+
+  //methods
+  showNotifications(message: string, success: boolean) {
+    if (success) {
+      this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+        data: message,
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+    } else {
+      this.snackBar.openFromComponent(FailedSnackbarComponent, {
+        data: message,
+        duration: this.snackBarDurationInSeconds * 1000
+      })
+    }
+  }
+  addCartToDatabaseAndSaveItInLocalStorage(cart: ICart) {
+    this.cartService.updateCart(cart).subscribe(this.updateCartObserver);
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+  getUserCartFromDatabaseIfExist() {
+    let userId = this.accountService.getTokenId();
+    this.cartService.displayCart(userId).subscribe((cart) => {
+      if(cart.numberOfUniqueProducts > 0) { //user already has cart in the database, then save it in the local storage
+        localStorage.setItem("cart", JSON.stringify(cart));
+      } else if (localStorage.getItem("cart")) { //user doesn't have cart in the database, but he had a cart as an anonymous user
+        let cart: ICart = JSON.parse(localStorage.getItem("cart")!) as ICart
+        cart.userId = userId;
+        this.addCartToDatabaseAndSaveItInLocalStorage(cart);
+      }
+    })
   }
 
   login(): void {

@@ -11,11 +11,12 @@ import { DeleteSubcategoryComponent } from '../delete-subcategory/delete-subcate
 import { AddSubCategoryValueComponent } from '../add-sub-category-value/add-sub-category-value.component';
 import { ICategory } from '../../../Models/icategory';
 import { JsonPipe } from '@angular/common';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-sub-category-details',
   standalone: true,
-  imports: [RouterLink, JsonPipe],
+  imports: [RouterLink, JsonPipe, SecondarySpinnerComponent],
   templateUrl: './sub-category-details.component.html',
   styleUrl: './sub-category-details.component.scss'
 })
@@ -26,6 +27,9 @@ export class SubCategoryDetailsComponent implements OnInit{
   subscriptions: Subscription[] = [];
   //notifications properties
   notificationDurationInSeconds = 5;
+
+  //spinner properties
+  isSubCategoryDetailsLoading: boolean = false;
 
   constructor(private genericService: GenericService<ISubCategory>,
     private snackBar: MatSnackBar,
@@ -41,14 +45,15 @@ export class SubCategoryDetailsComponent implements OnInit{
 
   private subCategoryDetailsObserver = {
     next: (data: ISubCategory) => {
-      console.log(data);
       this.subCategory = data;
+      this.isSubCategoryDetailsLoading = false;
     },
     error: (error: any) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {
         data: 'تعذر تحميل القسم الفرعى!',
         duration: this.notificationDurationInSeconds * 1000
       })
+      this.isSubCategoryDetailsLoading = false;
     }
   }
 
@@ -61,13 +66,13 @@ export class SubCategoryDetailsComponent implements OnInit{
           duration: this.notificationDurationInSeconds * 1000
         })
       } else {
+        this.isSubCategoryDetailsLoading = true;
         this.subscriptions.push(this.genericService.getById('subCategoryDetails', subCategoryId).subscribe(this.subCategoryDetailsObserver));
       }
     }))
   }
 
   editSubCategory(subCategoryId: number, subCategoryName: string) {
-    console.log(subCategoryId);
     const dialogRef = this.dialog.open(AddSubcategoryComponent, {
       data: {subCategoryId, subCategoryName},
     });

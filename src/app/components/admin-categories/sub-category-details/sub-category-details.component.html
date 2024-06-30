@@ -1,51 +1,56 @@
-@if (subCategory) {
-    <section class="dark" dir="ltr">
-        <div class="container">
-            <h1 class="h1 text-center" id="pageHeaderTitle">تفاصيل القسم الفرعى {{subCategory.name}}</h1>
-            <article class="postcard dark blue">
-                <div class="postcard__text">
-                    <h1 class="postcard__title blue"><a>{{subCategory.name}}</a></h1>
-                    <div class="postcard__bar"></div>
-                    <ul class="postcard__tagbox">
-                        <li class="tag__item play red">
-                            <a 
-                            style="cursor: pointer;"
-                            (click)="confirmSubCategoryDelete(subCategory.subCategoryId, subCategory.name)"><i class="fas fa-trash me-2"></i>حذف القسم الفرعى</a>
-                        </li>
-                        <li class="tag__item play blue">
-                            <a 
-                            (click)="editSubCategory(subCategory.subCategoryId, subCategory.name)"
-                            [routerLink]="['/admin-categories/subcategory-details', subCategory.subCategoryId]" ><i class="fas fa-edit me-2"></i>تعديل القسم الفرعى</a>
-                        </li>
-                    </ul>
-                </div>
-            </article>
-            
-            <div class="row mt-4" id="ads">
-                <button class="btn btn-primary w-50 m-auto" type="button" (click)="SubCategoryValueModal(subCategory.subCategoryId)">اضافة قيمة الى القسم الفرعى</button>
-                <h3 class="text-center text-light my-4">القيم التي يمتلكها القسم الفرعى</h3>
-                @for (categoryValues of subCategory.categories; track subCategory.subCategoryId;) {
-                    @for (value of categoryValues.values; track $index) {
-                        <div class="col-md-4 col-lg-3 mb-3">
-                            <div class="card rounded">
-                                <div class="card-image">
-                                    <img class="img-fluid" [src]="!value.imageUrl ? 'assets/images/no-image.png' : value.imageUrl" alt="Alternate Text" />
-                                </div>
-                                <div class="card-body text-center">
-                                    <div class="ad-title m-auto">
-                                        <h4>{{value.value}}</h4>
-                                        <h5>القسم: <span class="text-success">{{categoryValues.name}}</span></h5>
+@if(!isSubCategoryDetailsLoading) {
+    @if (subCategory) {
+        <section class="dark" dir="ltr">
+            <div class="container">
+                <h1 class="h1 text-center" id="pageHeaderTitle">تفاصيل القسم الفرعى {{subCategory.name}}</h1>
+                <article class="postcard dark blue">
+                    <div class="postcard__text">
+                        <h1 class="postcard__title blue"><a>{{subCategory.name}}</a></h1>
+                        <div class="postcard__bar"></div>
+                        <ul class="postcard__tagbox">
+                            <li class="tag__item play red">
+                                <a 
+                                style="cursor: pointer;"
+                                (click)="confirmSubCategoryDelete(subCategory.subCategoryId, subCategory.name)"><i class="fas fa-trash me-2"></i>حذف القسم الفرعى</a>
+                            </li>
+                            <li class="tag__item play blue">
+                                <a 
+                                (click)="editSubCategory(subCategory.subCategoryId, subCategory.name)"
+                                [routerLink]="['/admin-categories/subcategory-details', subCategory.subCategoryId]" ><i class="fas fa-edit me-2"></i>تعديل القسم الفرعى</a>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+                
+                <div class="row mt-4" id="ads">
+                    <button class="btn btn-primary w-50 m-auto" type="button" (click)="SubCategoryValueModal(subCategory.subCategoryId)">اضافة قيمة الى القسم الفرعى</button>
+                    <h3 class="text-center text-light my-4">القيم التي يمتلكها القسم الفرعى</h3>
+                    @for (categoryValues of subCategory.categories; track subCategory.subCategoryId;) {
+                        @for (value of categoryValues.values; track $index) {
+                            <div class="col-md-4 col-lg-3 mb-3">
+                                <div class="card rounded">
+                                    <div class="card-image">
+                                        <img class="img-fluid" [src]="!value.imageUrl ? 'assets/images/no-image.png' : value.imageUrl" alt="Alternate Text" />
                                     </div>
-                                    <!-- <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a> -->
+                                    <div class="card-body text-center">
+                                        <div class="ad-title m-auto">
+                                            <h4>{{value.value}}</h4>
+                                            <h5>القسم: <span class="text-success">{{categoryValues.name}}</span></h5>
+                                        </div>
+                                        <!-- <a class="ad-btn delete" (click)="deleteOfferProduct(offer.offerId, prod.productId)">حذف</a> -->
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     }
-                }
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    }
+} @else {
+    <app-secondary-spinner></app-secondary-spinner>
 }
+
 
 
 
