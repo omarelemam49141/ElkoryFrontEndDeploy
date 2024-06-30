@@ -62,21 +62,7 @@ export class AccountService implements OnInit{
     )
     
   }
-  isCartEmpty(): boolean {
-    let cart: ICart = JSON.parse(localStorage.getItem('cart')||'')
 
-    // let cart:ICart = localStorage.getItem("cart");
-    if (cart) {
-      if (cart.productsAmounts.length > 0) {
-        return false;
-      }
-      else {
-        return true;
-      }
-
-    }
-    return true;
-  }
 
   public resetPassword(resetPasswordModel: IResetPassword): Observable<any> {
     let token = localStorage.getItem("token");

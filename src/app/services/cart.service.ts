@@ -96,7 +96,10 @@ export class CartService{
       catchError(this.genericServcie.handlingErrors)
     );
   }
-
+public deleteProductFromCart(userId: number, productId: number): Observable<any> {
+  return this.http.delete<any>(`${environment.apiUrl}/cart/${userId}/${productId}`)
+  
+}
 
   // public addProductToCart(productId: number, amount: number): Observable<any> {
   //   let userId = this.accountService.getTokenId();

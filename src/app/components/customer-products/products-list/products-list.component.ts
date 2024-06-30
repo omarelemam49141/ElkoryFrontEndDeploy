@@ -113,9 +113,23 @@ wishList?:IProduct[];
   }
   addToCart(product: IProduct,locationInlist:number): void {
  
-      let cart: ICart = JSON.parse(localStorage.getItem('cart')
-       || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
-  
+      let cart: ICart = JSON.parse(localStorage.getItem('cart')|| '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
+      let userId = this.accountService.getTokenId();
+      let newCartItme={
+        productId:product.productId,
+        amount:this.quantity[locationInlist],
+        categoryId:product.categoryId,
+        categoryName:product.categoryName,
+        description:product.description,
+        discount:product.discount,
+        finalPrice:product.finalPrice,
+        name:product.name,
+        originalPrice:product.originalPrice,
+        productImages:product.productImages,
+        allAmount:product.amount
+
+
+      }
     
     // const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
     
@@ -142,30 +156,18 @@ wishList?:IProduct[];
     //   }
     // } else {
       
-      let newCartItme={
-        productId:product.productId,
-        amount:this.quantity[locationInlist],
-        categoryId:product.categoryId,
-        categoryName:product.categoryName,
-        description:product.description,
-        discount:product.discount,
-        finalPrice:product.finalPrice,
-        name:product.name,
-        originalPrice:product.originalPrice,
-        productImages:product.productImages,
-        allAmount:product.amount
+    
 
 
-      }
-
-
-      let userId = this.accountService.getTokenId();
-      if (userId) {
+      if (userId) 
+        {
         cart.userId=this.userLoggedID;
 
         this.addItemToCart(product,this.quantity[locationInlist]);
-      } else {
-        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+        } 
+      else 
+      {
+        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى السلة", true);
       }
       cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
@@ -179,10 +181,10 @@ wishList?:IProduct[];
   updateCartInDatabase(cart:ICart) {
     this.cartService.updateCart(cart).subscribe({
       next: (data) => {
-        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى السلة", true);
+        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى سلة مشترياتك", true);
       },
       error: (err: Error) => {
-        this.showNotification("تعذر أضافة قطعة اخرى من المنتج إلى السلة", false);
+        this.showNotification("تعذر أضافة قطعة اخرى من المنتج إلى سلة مشترياتك", false);
       }
     })
   }
@@ -317,14 +319,26 @@ increaseQuantity(index:number): void {
     const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     const productIndex = cart.productsAmounts.findIndex((p: any) => p.productId === product.productId);
     if (productIndex !== -1) {
+
       const productAmount = cart.productsAmounts[productIndex].amount;
       cart.productsAmounts.splice(productIndex, 1);
       cart.numberOfUniqueProducts -= 1;
       cart.numberOfProducts -= productAmount;
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
-      this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+      if(this.userLoggedID){
+        this.cartService.deleteProductFromCart(this.userLoggedID, product.productId).subscribe({
+          next: (data) => {
+            this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+          },
+          error: (err: Error) => {
+            this.snackBar.open('حدث خطأ أثناء إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+          }
+        });
+      }
+this.showNotification("تم إزالة المنتج من السلة", false);
     }
+    
   }
 
 }

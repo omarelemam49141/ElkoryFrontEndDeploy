@@ -127,6 +127,15 @@ export class ProductsCartComponent implements OnDestroy, OnInit{
     if(this.validateSelectedPRoductAmount(product, productAmount)){
       return;
     }
+    if(productAmount > product.amount){
+      this.cart.numberOfProducts += productAmount - product.amount;
+      this.cart.finalPrice += product.finalPrice * (productAmount - product.amount);
+    }
+    else{
+      this.cart.numberOfProducts -= product.amount - productAmount;
+      this.cart.finalPrice -= product.finalPrice * (product.amount - productAmount);
+    }
+
     product.amount = productAmount;
     this.updateProductAmountInCart(product);
     this.calculateCartFinalPrice();
@@ -191,7 +200,13 @@ if(product){
     this.cart.numberOfUniqueProducts--;
     this.cart.numberOfProducts -= product.amount;
     this.cart.finalPrice -= product.finalPrice * product.amount;
-    this.updateLocalStorageWithCart();}
+    this.updateLocalStorageWithCart();
+    if (this.cart.productsAmounts.length == 0) {
+      this.clearCart();
+    } else {
+    this.cartService.updateCart(this.cart).subscribe(this.updateCartObserver);
+    }
+  }
   }
 
   openSendOrder() {
