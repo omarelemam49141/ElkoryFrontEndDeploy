@@ -21,6 +21,7 @@ import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spi
 import { IProductSubCategoryValues } from '../../../Models/iproduct-sub-category-values';
 import { ISubCategoryCategoryValues } from '../../../Models/isub-category-category-values';
 import { notMinusOneValidator } from '../../../custom-validators/notMinusOne';
+import { discountIsLessThanFinalPrice } from '../../../custom-validators/discountLessThanFinalPrice';
 
 
 @Component({
@@ -73,14 +74,13 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
         ['', [Validators.required]]
       ], oneImageAtLeast),
       imagesToAdd: fb.array([]),
-      discount: ['', [Validators.max(100), Validators.min(0)]],
+      discount: ['', [Validators.min(0)]],
       originalPrice: ['', [Validators.required, Validators.min(0)]],
       amount: ['', [Validators.required, Validators.min(0)]],
       description: ['', [Validators.required]],
       categoryId: ['-1', [Validators.required, CheckCategoryIsSelected]],
-      subCategoriesWithValues: new FormArray([
-      ])
-    })
+      subCategoriesWithValues: new FormArray([])
+    }, {validators: discountIsLessThanFinalPrice()});
   }
 
 

@@ -37,7 +37,6 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
   fetchWebInfo(): void {
     const subscription = this.webInfoService.getWebInfo().subscribe({
       next: (webInfo: IWebInfo) => {
-        console.log(this.webInfo);
         this.webInfo = webInfo;
         // console.log('Assigned webInfo:', this.webInfo);
       },

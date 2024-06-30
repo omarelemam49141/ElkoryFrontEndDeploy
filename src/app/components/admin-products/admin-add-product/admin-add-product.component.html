@@ -28,11 +28,10 @@
     
             <div class="form-field col-lg-6">
                 <input id="discount" formControlName="discount" class="input-text js-input" type="number" min="0" max="100">
-                <label class="label" for="discount">الخصم</label>
-                <div class="text-danger" *ngIf="!discount?.valid && discount?.touched">
-                    <span *ngIf="discount?.errors?.['required']">الخصم مطلوب</span>
+                <label class="label" for="discount">الخصم (ج.م)</label>
+                <div class="text-danger" *ngIf="(!discount?.valid && discount?.touched) || (!productForm.valid)">
                     <span *ngIf="discount?.errors?.['min']">الخصم لا يمكن أن يقل عن صفر%</span>
-                    <span *ngIf="discount?.errors?.['max']">الخصم لا يمكن أن يزيد عن 100%</span>
+                    <span *ngIf="productForm?.errors?.['discountIsLessThanFinalPrice']">الخصم لا يمكن أن يزيد عن السعر الأصلى للمنتج%</span>
                 </div>
             </div>
     
