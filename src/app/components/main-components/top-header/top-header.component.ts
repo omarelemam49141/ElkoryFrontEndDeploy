@@ -9,13 +9,14 @@ import { Router, RouterLink } from '@angular/router';
 import { AccountService } from '../../../services/account.service';
 import { SearchProductComponent } from '../search-product/search-product.component';
 import { CartService } from '../../../services/cart.service';
+import { NotifyBellComponent } from "../notify-bell/notify-bell.component";
 
 @Component({
-  selector: 'app-top-header',
-  standalone: true,
-  imports: [CommonModule, FontAwesomeModule, RouterLink, AsyncPipe, SearchProductComponent],
-  templateUrl: './top-header.component.html',
-  styleUrls: ['./top-header.component.scss']
+    selector: 'app-top-header',
+    standalone: true,
+    templateUrl: './top-header.component.html',
+    styleUrls: ['./top-header.component.scss'],
+    imports: [CommonModule, FontAwesomeModule, RouterLink, AsyncPipe, SearchProductComponent, NotifyBellComponent]
 })
 export class TopHeaderComponent implements OnDestroy, OnInit {
   subscriptions: Subscription[] = [];
