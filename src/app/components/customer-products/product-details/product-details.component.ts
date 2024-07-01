@@ -12,6 +12,7 @@ import { WishListService } from '../../../services/wishList.service';
 import { IUser } from '../../../Models/iuser';
 import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { ICart } from '../../../Models/icart';
+import { AccountService } from '../../../services/account.service';
 
 
 @Component({
@@ -29,20 +30,10 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   images: string[][] = [];
   quantity: number = 1; // Initialize quantity to 1
   wishList:IProduct [] = [];
-  user: IUser = {
-    userId: 3,
-    fName: 'Ahmad',
-    lName: 'Esam',
-    email: 'ahmad.esam@ex.com',
-    password: '123',
-    phone: "1015328933",
-    governorate: 'Ghatbia',
-    city: 'MAhalla',
-    street: 'Farouk21',
-    postalCode: "12345",
-    isDeleted: false,
-    role: 1
-  };
+  
+ 
+  userId: number = -1;
+
   
   snackBarDurationInSeconds = 5;
   // isProductInCart: boolean = false; // Track if the product is in the cart
@@ -53,7 +44,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private categoryService: CategoryService,
     private snackBar: MatSnackBar, // Add MatSnackBar here
-    private wishListService:WishListService
+    private wishListService:WishListService,
+    private accountService:AccountService
   ) {}
 
   ngOnInit(): void {
@@ -61,7 +53,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       const productId = Number(params.get('id'));
       this.fetchProductDetails(productId);
     });
-    this.fetchWishList(this.user.userId!);
+    this.userId=this.accountService.getTokenId();
+    if(this.userId){    this.fetchWishList(this.userId);
+    }
   }
 
   fetchProductDetails(productId: number): void {
@@ -201,7 +195,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       () => {
         console.log("from success section")
         this.snackBar.open('تم إضافة المنتج إلى القائمة المفضلة ', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
-        this.fetchWishList(this.user.userId!);
+        this.fetchWishList(this.userId!);
 
       },
       (error) => {
@@ -223,7 +217,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.wishListService.deleteWishListProduct(wishListProduct.userId, wishListProduct.productId).subscribe(
       () => {
 
-        this.fetchWishList(this.user.userId!);
+        this.fetchWishList(this.userId);
         this.snackBar.open('تم حذف المنتج من القائمة المفضلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 })
       },
       (error) => {

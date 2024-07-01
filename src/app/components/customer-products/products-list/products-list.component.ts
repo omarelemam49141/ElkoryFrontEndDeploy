@@ -76,9 +76,10 @@ wishList?:IProduct[];
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
-    this.userId = this.accountService.getTokenId();
 
     this.getProductsPaginated(1,12);
+    this.userId = this.accountService.getTokenId();
+
     this.userLoggedID=this.accountService.getTokenId();
 
     if(this.userLoggedID){this.fetchWishList(this.userLoggedID);}

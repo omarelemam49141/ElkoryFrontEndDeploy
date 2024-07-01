@@ -61,10 +61,15 @@ export class CartService{
     if (!userId) {
       return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
     }
+    console.log(cart)
     //get the products ids in an array
     let productsIds = cart.productsAmounts.map(product => product.productId);
     //get the products amounts in an array
+    for (let i = 0; i < cart.productsAmounts.length; i++) {
+    console.log("the product amount",cart.productsAmounts[i].amount)
+    }
     let productsAmounts = cart.productsAmounts.map(product => product.amount);
+    
     //make an IUpdateCart object
     let updateCart: IUpdateCart = {
       userId: userId,

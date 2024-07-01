@@ -4,10 +4,12 @@ import { TopHeaderComponent } from './components/main-components/top-header/top-
 import { NavbarComponent } from './components/main-components/navbar/navbar.component';
 import { NotFoundComponent } from './components/main-components/not-found/not-found.component';
 import { adminAuthGuard } from './guards/admin-auth.guard';
+import { CategoryDetailsComponent } from './components/customer-categories/category-details/category-details.component';
 
 export const routes: Routes = [
     {path: "", redirectTo: "/home", pathMatch: "full"},
     {path: "home", component: HomeComponent},
+    {path:"categoryDetails/:categoryId", component: CategoryDetailsComponent},
     {path: "top-header", component: TopHeaderComponent},
     {path: "navbar",component: NavbarComponent},
     {path: "admin-offers", loadChildren:()=>import('./components/admin-offers/adminOffers.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},

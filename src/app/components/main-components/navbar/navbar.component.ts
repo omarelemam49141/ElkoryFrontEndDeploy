@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { WebInfoService } from '../../../services/WebInfo.service';
 import { IWebInfo } from '../../../Models/IwebsiteInfo';
 import { environment } from '../../../../environment/environment';
+import { ICategoryDetails } from '../../../Models/IcategoryDetails';
 
 @Component({
   selector: 'app-navbar',
@@ -16,24 +17,35 @@ import { environment } from '../../../../environment/environment';
   styleUrls: ['./navbar.component.scss'] // Corrected styleUrls property
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  Categories: ICategory[] = [];
+  Categories: ICategoryDetails[] = [];
+  oldCatogries: ICategory[] = [];
   subscriptions: Subscription[] = [];
   webInfo: IWebInfo | undefined;
   activeCategory: string = ''; // Property to track the active category
 
   constructor(private categoryService: CategoryService, private webInfoServise: WebInfoService) {}
 
-  fetchCategories(): void {
-    const subscription = this.categoryService.getAll().subscribe({
-      next: (categories: ICategory[]) => {
-        this.Categories = categories;
-        console.log('Fetched categories:', this.Categories);
-      },
-      error: (error: any) => console.error('Error fetching categories', error)
-    });
-    this.subscriptions.push(subscription);
-  }
+  // fetchCategories(): void {
+  //   const subscription = this.categoryService.getAll().subscribe({
+  //     next: (categories: ICategory[]) => {
+  //       this.oldCatogries = categories;
+  //       console.log('Fetched categories:', this.oldCatogries);
+  //     },
+  //     error: (error: any) => console.error('Error fetching categories', error)
+  //   });
+  //   this.subscriptions.push(subscription);
+  // }
+fetchCatogorieswithDetails():void{
+  const subscription = this.categoryService.getAllCategory().subscribe({
+    next: (categories) => {
+      this.Categories = categories;
+      console.log('Fetched categories:', this.Categories);
+    },
+    error: (error: any) => console.error('Error fetching categories', error)
+  });
+  this.subscriptions.push(subscription);
 
+}
   setActiveCategory(category: string): void { // Method to set the active category
     this.activeCategory = category;
   }
@@ -43,7 +55,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetchCategories();
+    // this.fetchCategories();
+    this.fetchCatogorieswithDetails();
+    // this.fetchCategories();
+    // console.log(this.oldCatogries)
     console.log(this.Categories)
   }
 }

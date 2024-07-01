@@ -264,18 +264,23 @@
 
 /* Optional: Style subcategory links */
 .categories .subcategories li {
+
   padding: 8px 12px;
+  display: inline-block; /* Displays list items horizontally */
+
 }
 
 .categories .subcategories li a {
-  color: #333;
+  color: #b51cb0;
   text-decoration: none;
-  display: block;
+  display: inline-block; /* Displays list items horizontally */
+  //make it bold
+  font-weight:900;
+
+
 }
 
-.categories .subcategories li a:hover {
-  background-color: #f0f0f0;
-}
+
 
 
 
@@ -289,3 +294,50 @@ p:hover{
   font-weight:900;
   font-size: x-large;
 }
+hr{
+  border: none; /* Remove default border */
+  height: 5px; /* Set the thickness of the hr */
+  background-color: #b51cb0; /* Color of the hr */
+  margin-top: 0; /* Remove top margin */
+  margin-bottom: 0; /* Remove bottom margin */
+  width: 40px; /* Width of the hr */
+  border-radius: 5px; /* Optional: Round the corners of the hr */
+margin-right: 150px;
+}
+
+
+
+
+.horizontal-list {
+  list-style-type: none; /* Removes default bullets */
+  margin-right: 0px; /* Removes default margin */
+}
+
+.horizontal-list li {
+  display: inline-block; /* Displays list items horizontally */
+  margin-right: 100px; /* Adjust spacing between items as needed */
+float: right;
+
+}
+
+
+
+
+
+.vertical-list {
+  display: flex;
+  flex-direction: column; /* Display items vertically */
+  margin: 0;
+  padding:0;
+}
+
+.vertical-list li {
+  font-weight: 700;
+  //make it align to right
+  text-align: right;
+  padding: -100px;
+  
+  
+}
+
+
