@@ -1,28 +1,45 @@
+.notification-container {
+  position: relative;
+}
+
+#showNotificationList {
+  &:hover i {
+    animation: rotate-icon 2s ease-in-out;
+  }
+}
+
 .dropdown-menu {
   max-height: 300px;
   overflow-y: auto;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 0;
+  display: none; /* Initially hide the dropdown */
+}
+
+.dropdown-menu.show {
+  display: block; /* Show the dropdown when the 'show' class is added */
+  opacity: 1;
 }
 
 .dropdown-item {
   border-bottom: 1px solid #ddd;
-  margin: 10px, 5px;
   padding: 10px;
-}
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
 
-.dropdown-item:last-child {
-  border-bottom: none;
-}
+  &.unread {
+    background-color: #d1e7dd; /* Darker green background for unread notifications */
+    transform: scale(1.05);
+    animation: notification-entry 0.3s ease-in-out;
+  }
 
-.unread {
-  background-color: #d1e7dd; /* Darker green background for unread notifications */
-}
+  &.read {
+    background-color: #e9ecef; /* Light gray background for read notifications */
+    transform: scale(1);
+  }
 
-.read {
-  background-color: #e9ecef; /* Light gray background for read notifications */
-}
-.notification-container {
-  position: relative;
-  padding: auto;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 #notificationDropdown {
@@ -33,24 +50,30 @@
   max-width: 300px; /* Adjust the width as needed */
   max-height: 400px; /* Limit the maximum height */
   overflow-y: auto; /* Enable scrolling if the content overflows */
-  display: none; /* Initially hide the dropdown */
   z-index: 1000; /* Ensure it appears above other content */
   background-color: white; /* Background color */
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* Add some shadow for better visibility */
 }
 
-#notificationDropdown.show {
-  display: block; /* Show the dropdown when the 'show' class is added */
+@keyframes notification-entry {
+  from {
+    opacity: 0;
+    transform: translateY(-20%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.notification-container .dropdown-item {
-  padding: 10px;
-}
-
-.notification-container .dropdown-item.read {
-  background-color: #f8f9fa; /* Example background for read notifications */
-}
-
-.notification-container .dropdown-item.unread {
-  background-color: #ffffff; /* Example background for unread notifications */
+@keyframes rotate-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-45deg); /* Rotate anticlockwise */
+  }
+  100% {
+    transform: rotate(45deg); /* Rotate clockwise */
+  }
 }

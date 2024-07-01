@@ -3,11 +3,16 @@ import { NotificationService } from '../../../services/notification.service';
 import { inotification } from '../../../Models/inotification'; // Adjust path as per your application
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { registerLocaleData } from '@angular/common';
+import localeAr from '@angular/common/locales/ar';
+// Register the Arabic locale data
+registerLocaleData(localeAr, 'ar');
 
 @Component({
   selector: 'app-notify-bell',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './notify-bell.component.html',
   styleUrls: ['./notify-bell.component.scss'],
 })
@@ -25,11 +30,11 @@ export class NotifyBellComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.notificationService.onReceiveNotification((message) =>
-      this.handleNewNotification(message)
+    this.notificationService.onReceiveNotification((message, hiddenLink) =>
+      this.handleNewNotification(message, hiddenLink)
     );
     this.notificationService.onReceiveNotificationCount((count) => {
-      this.notificationCount = count;
+      this.updateUnreadCount();
       this.cdr.detectChanges();
     });
 
@@ -53,34 +58,44 @@ export class NotifyBellComponent implements OnInit, OnDestroy {
       .getAllNotifications()
       .subscribe((notifications) => {
         this.notifications = notifications;
-        this.notificationCount = notifications.length;
+        console.log('Notifications loaded:', this.notifications);
+        this.updateUnreadCount();
         this.cdr.detectChanges(); // Manually trigger change detection
       });
   }
 
-  private handleNewNotification(message: string) {
-    debugger;
-    console.log('New notification received: ' + message);
-
+  private handleNewNotification(message: string, hiddenLink: string) {
     const newNotification: inotification = {
-      msgId: Date.now(), // Generate a unique ID for the notification
-      userId: 11, // Replace with logic to get the current user ID
-      title: 'New Notification',
+      title: 'إشعار',
       msgContent: message,
       sendingDate: new Date(),
-      hiddenLink: '',
+      hiddenLink: hiddenLink,
       seen: false,
     };
 
     this.notifications.unshift(newNotification);
-    this.notificationCount++;
+    this.updateUnreadCount();
+    this.playNotificationSound();
     this.cdr.detectChanges(); // Manually trigger change detection
   }
+
   private markAllNotificationsAsRead() {
     this.notificationService.markAllAsRead().subscribe(() => {
-      this.notificationCount = 0;
       this.notifications.forEach((notification) => (notification.seen = true));
+      this.updateUnreadCount();
       this.cdr.detectChanges(); // Manually trigger change detection
     });
+  }
+
+  private updateUnreadCount() {
+    debugger;
+    this.notificationCount = this.notifications.filter(
+      (notification) => !notification.seen
+    ).length;
+  }
+
+  private playNotificationSound() {
+    const audio = new Audio('assets/notification.mp3');
+    audio.play();
   }
 }
