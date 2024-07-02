@@ -1,1 +1,24 @@
-<p>category-details works!</p>
+
+<div class="category-details">
+    <div class="category-header">
+        <img [src]="'assets/images/no-image.png'" alt="">
+
+      <h1>{{ category?.name }}</h1>
+
+    </div>
+  
+    <div class="subcategories-container">
+      <div class="subcategory" *ngFor="let subcategory of category?.subCategories">
+        <h2>{{ subcategory.name }}</h2>
+        <div class="values-container">
+          <div class="value" *ngFor="let value of subcategory.values">
+            <img [src]="value.imageUrl || 'assets/images/no-image.png'" alt="{{ value.value }}">
+            <p>{{ value.value }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  

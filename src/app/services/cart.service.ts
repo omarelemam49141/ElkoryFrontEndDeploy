@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription, catchError, retry, throwError } from 'rxjs';
+import { Observable, Subscription, catchError, retry, throwError, BehaviorSubject } from 'rxjs';
 import { ICart } from '../Models/icart';
 import  * as jwtDecode  from 'jwt-decode';
 import { GenericService } from './generic.service';
@@ -61,17 +61,22 @@ export class CartService{
     if (!userId) {
       return throwError(()=> new Error("قم بإعادة تسجيل الدخول مرة أخرى"))
     }
-
+    console.log(cart)
     //get the products ids in an array
     let productsIds = cart.productsAmounts.map(product => product.productId);
     //get the products amounts in an array
+    for (let i = 0; i < cart.productsAmounts.length; i++) {
+    console.log("the product amount",cart.productsAmounts[i].amount)
+    }
     let productsAmounts = cart.productsAmounts.map(product => product.amount);
+    
     //make an IUpdateCart object
     let updateCart: IUpdateCart = {
       userId: userId,
       productsIds: productsIds,
       amounts: productsAmounts
     }
+    console.log("the update cart",updateCart);
 
     //set the headers
     this.genericServcie.addHeaders("Content-Type", "application/json");
@@ -93,15 +98,39 @@ export class CartService{
   }
   
 
-  public addToCart(product: IProduct): Observable<any> {
+  public addToCart(product: IProduct,amount:number): Observable<any> {
     let userId = this.accountService.getTokenId();
     this.genericServcie.addHeaders("Content-Type", "application/json");
-    return this.http.post<any>(`${environment.apiUrl}/cart?userId=${userId}&productId=${product.productId}&amount=${product.amount}`, {}, this.genericServcie.httpOptions)
+    return this.http.post<any>(`${environment.apiUrl}/cart?userId=${userId}&productId=${product.productId}&amount=${amount}`, {}, this.genericServcie.httpOptions)
     .pipe(
       retry(2),
       catchError(this.genericServcie.handlingErrors)
     );
   }
+public deleteProductFromCart(userId: number, productId: number): Observable<any> {
+  return this.http.delete<any>(`${environment.apiUrl}/cart/${userId}/${productId}`)
+  
+}
+
+  // public addProductToCart(productId: number, amount: number): Observable<any> {
+  //   let userId = this.accountService.getTokenId();
+  //   if (!userId) {
+  //     return throwError(() => new Error("قم بإعادة تسجيل الدخول مرة أخرى"));
+  //   }
+
+  //   let addProduct = {
+  //     userId: userId,
+  //     productId: productId,
+  //     amount: amount
+  //   };
+
+  //   this.genericServcie.addHeaders("Content-Type", "application/json");
+
+  //   return this.http.post<any>(`${environment.apiUrl}/cart`, addProduct, this.genericServcie.getHeaders()).pipe(
+  //     retry(2),
+  //     catchError(this.genericServcie.handlingErrors)
+  //   );
+  // }
 
   changeNumberOfItemsInCart(numberOfItems: number) {
     this.numberOfItemsInCart = numberOfItems;

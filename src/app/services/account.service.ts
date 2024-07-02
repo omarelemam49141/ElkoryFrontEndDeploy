@@ -10,6 +10,7 @@ import { IEditProfile } from '../Models/iedit-profile';
 import * as jwtDecode  from 'jwt-decode';
 import { IVerifyEmail } from '../Models/iverify-email';
 import { IForgetPassword } from '../Models/iforget-password';
+import { ICart } from '../Models/icart';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -61,7 +62,9 @@ export class AccountService implements OnInit{
       retry(2),
       catchError(this.genericService.handlingErrors)
     )
+    
   }
+
 
   public resetPassword(resetPasswordModel: IResetPassword): Observable<any> {
     let token = localStorage.getItem("token");
@@ -143,6 +146,8 @@ export class AccountService implements OnInit{
     localStorage.removeItem("token");
     this.isLoggedIn = false;
     this.loggedInSubject.next(false);
+    localStorage.removeItem("cart");
+    //redirect to the home page
     this.router.navigate(["/customer-account/login"])
   }
 

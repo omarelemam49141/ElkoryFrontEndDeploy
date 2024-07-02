@@ -76,9 +76,10 @@ wishList?:IProduct[];
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
-    this.userId = this.accountService.getTokenId();
 
     this.getProductsPaginated(1,12);
+    this.userId = this.accountService.getTokenId();
+
     this.userLoggedID=this.accountService.getTokenId();
 
     if(this.userLoggedID){this.fetchWishList(this.userLoggedID);}
@@ -126,66 +127,87 @@ wishList?:IProduct[];
   getDiscountPercentage(originalPrice: number, finalPrice: number): number {
     return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
   }
-  addToCart(product: IProduct): void {
-    const cart: ICart = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
-    
-    const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
-    
-    if (existingProduct) {
-      if(this.isProductReachedMaxAmount(product)){
-        this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-        return;
-      }
-      existingProduct.amount += 1;
-      let cartToUpdateInDatabase = this.modifyCartAndAddItToLocalStorage(cart, product)
-
+  addToCart(product: IProduct,locationInlist:number): void {
+ 
+      let cart: ICart = JSON.parse(localStorage.getItem('cart')|| '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
       let userId = this.accountService.getTokenId();
-      if (userId) {
-        this.updateCartInDatabase(cartToUpdateInDatabase);
-      } else {
-        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+      console.log(cart)
+      let newCartItme={
+        productId:product.productId,
+        amount:this.quantity[locationInlist],
+        categoryId:product.categoryId,
+        categoryName:product.categoryName,
+        description:product.description,
+        discount:product.discount,
+        finalPrice:product.finalPrice,
+        name:product.name,
+        originalPrice:product.originalPrice,
+        productImages:product.productImages,
+        allAmount:product.amount
+
+
       }
-    } else {
-      let newCartItme: IProduct = {
-        productId: product.productId,
-        amount: 1,
-        finalPrice: product.finalPrice,
-        originalPrice: product.originalPrice,
-        discount: product.discount,
-        name: product.name,
-        description: product.description,
-        productImages: product.productImages,
-        categoryId: product.categoryId,
-        allAmount: product.amount,
-        categoryName: product.categoryName,
-      };
+    
+    // const existingProduct = (cart.productsAmounts?.find(p => p.productId === product.productId));
+    
+    // if (existingProduct) {
+    //   if(this.isProductReachedMaxAmount(product)){
+    //     this.snackBar.open('تم بلوغ الحد الأقصى للمنتج', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    //     return;
+    //   }
+    //   let userId = this.accountService.getTokenId();
+
+    
+    //   if(userId){
+    //     cart.userId=this.userLoggedID;
+    //   }
+
+    //   existingProduct.amount += 1;
+    //   let cartToUpdateInDatabase = this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
+
+    //   if (userId) {
+    //     this.updateCartInDatabase(cartToUpdateInDatabase);
+    //     cart.userId=this.userLoggedID;
+    //   } else {
+    //     this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
+    //   }
+    // } else {
+      
+    
+
+
+      if (userId) 
+        {
+        cart.userId=this.userLoggedID;
+
+        this.addItemToCart(product,this.quantity[locationInlist]);
+        } 
+      else 
+      {
+        this.showNotification("تم أضافة قطعة من المنتج إلى السلة", true);
+      }
       cart.productsAmounts.push(newCartItme);
       cart.numberOfUniqueProducts += 1;
-      this.modifyCartAndAddItToLocalStorage(cart, newCartItme)
+      this.modifyCartAndAddItToLocalStorage(cart, product,locationInlist)
 
-      let userId = this.accountService.getTokenId();
-      if (userId) {
-        this.addItemToCart(newCartItme);
-      } else {
-        this.snackBar.open('تم أضافة قطعة اخرى من المنتج إلى السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1500 });
-      }
-    }
+
+    // }
   }
 
   updateCartInDatabase(cart:ICart) {
     this.cartService.updateCart(cart).subscribe({
       next: (data) => {
-        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى السلة", true);
+        this.showNotification("تم أضافة قطعة اخرى من المنتج إلى سلة مشترياتك", true);
       },
       error: (err: Error) => {
-        this.showNotification("تعذر أضافة قطعة اخرى من المنتج إلى السلة", false);
+        this.showNotification("تعذر أضافة قطعة اخرى من المنتج إلى سلة مشترياتك", false);
       }
     })
   }
 
-  modifyCartAndAddItToLocalStorage(cart: ICart, product: IProduct) {
-    cart.finalPrice += (product.finalPrice* product.amount);
-    cart.numberOfProducts += product.amount;
+  modifyCartAndAddItToLocalStorage(cart: ICart, product: IProduct,locationInlist:number) {
+    cart.finalPrice += (product.finalPrice* this.quantity[locationInlist]);
+    cart.numberOfProducts += this.quantity[locationInlist];
 
     
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -195,13 +217,14 @@ wishList?:IProduct[];
     return cart;
   }
 
-  addItemToCart(item: IProduct) {
-    this.cartService.addToCart(item).subscribe({
+  addItemToCart(item: IProduct,amount:number) {
+    this.cartService.addToCart(item,amount).subscribe({
       next: (data) => {
-        this.showNotification("تم أضافة المنتج إلى السلة بنجاح", true);
+        this.showNotification("تم أضافة المنتج إلى سلة مشترياتك بنجاح", true);
+        console.log("adding to cart api")
       },
       error: (err: Error) => {
-        this.showNotification("تعذر اضافة المنتج الى السلة", false);
+        this.showNotification("تعذر اضافة المنتج الى سلة مشترياتك", false);
       }
     });
   }
@@ -314,14 +337,28 @@ increaseQuantity(index:number): void {
     const cart: any = JSON.parse(localStorage.getItem('cart') || '{"userId": null, "productsAmounts": [], "finalPrice": 0, "numberOfUniqueProducts": 0, "numberOfProducts": 0}');
     const productIndex = cart.productsAmounts.findIndex((p: any) => p.productId === product.productId);
     if (productIndex !== -1) {
+
       const productAmount = cart.productsAmounts[productIndex].amount;
       cart.productsAmounts.splice(productIndex, 1);
       cart.numberOfUniqueProducts -= 1;
       cart.numberOfProducts -= productAmount;
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
-      this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+      this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
+
+      if(this.userLoggedID){
+        this.cartService.deleteProductFromCart(this.userLoggedID, product.productId).subscribe({
+          next: (data) => {
+            this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+          },
+          error: (err: Error) => {
+            this.snackBar.open('حدث خطأ أثناء إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+          }
+        });
+      }
+this.showNotification("تم إزالة المنتج من السلة", false);
     }
+    
   }
 
 }

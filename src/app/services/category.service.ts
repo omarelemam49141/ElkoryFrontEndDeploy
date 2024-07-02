@@ -12,6 +12,7 @@ import { ISubCategory } from '../Models/isub-category';
 import { ICategorySubCategoriesValues } from '../Models/icategory-sub-categories-values';
 import { IProductCategorySubValues } from '../Models/iproduct-category-sub-values';
 import { ISubCategoryCategoryValues } from '../Models/isub-category-category-values';
+import { ICategoryDetails } from '../Models/IcategoryDetails';
 
 @Injectable({
   providedIn: 'root'
@@ -79,4 +80,17 @@ export class CategoryService {
       catchError(this.genericService.handlingErrors)
     )
   }
-}
+  public getAllCategory():Observable<ICategoryDetails[]>{
+  return this.http.get<ICategoryDetails[]>(`${environment.apiUrl}/CategoryDetails/All`).pipe(
+    retry(2),
+    catchError(this.genericService.handlingErrors)
+    );
+  }
+  public getCategoryDetails(categoryID:number):Observable<ICategoryDetails>
+{
+  return this.http.get<ICategoryDetails>(`${environment.apiUrl}/CategoryDetails/${categoryID}`)
+  .pipe(
+    retry(2),
+  catchError(this.genericService.handlingErrors)
+)
+}}
