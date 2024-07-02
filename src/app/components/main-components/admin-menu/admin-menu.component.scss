@@ -45,3 +45,25 @@
 .icon {
     margin-right: 10px;
 }
+
+//number of orders
+.icon {
+    position: relative;
+    font-size: 24px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold
+}

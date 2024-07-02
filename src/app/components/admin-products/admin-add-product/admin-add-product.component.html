@@ -28,11 +28,10 @@
     
             <div class="form-field col-lg-6">
                 <input id="discount" formControlName="discount" class="input-text js-input" type="number" min="0" max="100">
-                <label class="label" for="discount">الخصم</label>
-                <div class="text-danger" *ngIf="!discount?.valid && discount?.touched">
-                    <span *ngIf="discount?.errors?.['required']">الخصم مطلوب</span>
+                <label class="label" for="discount">الخصم (ج.م)</label>
+                <div class="text-danger" *ngIf="(!discount?.valid && discount?.touched) || (!productForm.valid)">
                     <span *ngIf="discount?.errors?.['min']">الخصم لا يمكن أن يقل عن صفر%</span>
-                    <span *ngIf="discount?.errors?.['max']">الخصم لا يمكن أن يزيد عن 100%</span>
+                    <span *ngIf="productForm?.errors?.['discountIsLessThanFinalPrice']">الخصم لا يمكن أن يزيد عن السعر الأصلى للمنتج%</span>
                 </div>
             </div>
     
@@ -46,7 +45,7 @@
     
             <div class="form-field col-lg-6">
                 <select id="categoryId" formControlName="categoryId" class="input-text js-input" (change)="displaySubCategories()">
-                    <option value="-1" selected="true">اختر القسم</option>
+                    <option value="-1" selected="true">اختر القسم...</option>
                     <option *ngFor="let category of allCategories" [value]="category.categoryId">{{category.name}}</option>
                 </select>
                 <label class="label" for="categoryId">القسم</label>
@@ -58,13 +57,18 @@
     
             <div class="form-field col-lg-12">
                 <div formArrayName="subCategoriesWithValues" *ngIf="subCategoriesWithValues?.length; else noSubCategories">
+                    <hr>
                     <div *ngFor="let subCategory of subCategoriesWithValues.controls; let i = index" [formGroupName]="i" class="form-field col">
-                      <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
-                      <input type="hidden" formControlName="subCategoryId">
-                      <select class="input-text js-input" formControlName="selectedValue">
-                        <option value="-1" selected="true">اختر ال {{ subCategory.get('subCategoryName')?.value }}</option>
-                        <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
-                    </select>
+                        <label class="label">{{ subCategory.get('subCategoryName')?.value }}</label>
+                        <input type="hidden" formControlName="subCategoryId">
+                        <select class="input-text js-input" formControlName="selectedValue">
+                            <option value="-1" selected>اختر ال {{ subCategory.get('subCategoryName')?.value }}...</option>
+                            <option *ngFor="let subCategoryValue of getSubCategoryValues(subCategory).controls" [value]="subCategoryValue.value">{{ subCategoryValue.value }}</option>
+                        </select>
+                        <div class="text-danger" *ngIf="!getSubCategoryFormGroup(i).get('selectedValue')?.valid && getSubCategoryFormGroup(i).get('selectedValue')?.touched">
+                            <span *ngIf="getSubCategoryFormGroup(i).get('selectedValue')?.errors?.['required']">القسم الفرعى مطلوب</span>
+                            <span *ngIf="getSubCategoryFormGroup(i).get('selectedValue')?.errors?.['notMinusOne']">القسم الفرعى مطلوب</span>
+                        </div>
                     </div>
                   </div>
                 

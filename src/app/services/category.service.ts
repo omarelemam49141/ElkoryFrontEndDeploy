@@ -11,6 +11,7 @@ import { IProduct } from '../Models/iproduct';
 import { ISubCategory } from '../Models/isub-category';
 import { ICategorySubCategoriesValues } from '../Models/icategory-sub-categories-values';
 import { IProductCategorySubValues } from '../Models/iproduct-category-sub-values';
+import { ISubCategoryCategoryValues } from '../Models/isub-category-category-values';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +54,7 @@ export class CategoryService {
     return this.http.get<ISubCategory[]>(`${environment.apiUrl}/subCategoryFromCategory/${categoryId}`);
   }
 
-  getCategorySubCategoriesWithValues(categoryId: number): Observable<ICategorySubCategoriesValues> {
+  public getCategorySubCategoriesWithValues(categoryId: number): Observable<ICategorySubCategoriesValues> {
     return this.http.get<ICategorySubCategoriesValues>(`${environment.apiUrl}/CategoryDetails/${categoryId}`)
     .pipe(
       retry(2),
@@ -61,10 +62,18 @@ export class CategoryService {
     )
   }
 
-  addProductCategorySubCategoryValue(value: IProductCategorySubValues) {
+  public addProductCategorySubCategoryValue(value: IProductCategorySubValues) {
     console.log(value)
     this.genericService.addHeaders("Content-Type", "application/json");
     return this.http.post(`${environment.apiUrl}/ProductCategorySubCategoryValues`, value, this.genericService.httpOptions)
+    .pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    )
+  }
+
+  public getCategoriesWithValuesBySubCategoryId(subCategoryId: number): Observable<ISubCategoryCategoryValues> {
+    return this.http.get<ISubCategoryCategoryValues>(`${environment.apiUrl}/SubCategoryDetails/${subCategoryId}`)
     .pipe(
       retry(2),
       catchError(this.genericService.handlingErrors)

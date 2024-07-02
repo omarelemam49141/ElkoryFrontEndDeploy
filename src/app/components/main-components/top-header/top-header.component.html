@@ -44,7 +44,7 @@
         
       </div>
     </div>
-    @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+    @if (accountService.getTokenRole().toLowerCase() != 'admin') {
       <a routerLink="/customer-products/products-cart" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
         <span class="cart-title">عربة التسوق</span>
         <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon bell-icon"></fa-icon>

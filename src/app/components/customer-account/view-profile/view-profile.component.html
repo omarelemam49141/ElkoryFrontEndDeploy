@@ -2,18 +2,18 @@
     <div class="col-md-7">
         <div class="card p-3 py-4">
             <div class="text-center">
-                <img src="https://i.imgur.com/bDLhJiP.jpg" width="100" class="rounded-circle">
+                <img src="assets/images/user.png" width="100" class="rounded-circle">
             </div>
             <div class="text-center mt-3">
-                <span class="bg-secondary p-1 px-4 rounded text-white">عميل</span>
+                <span class="bg-secondary p-1 px-4 rounded text-white">{{profileRole == "customer" ? "عميل" : "مدير موقع"}}</span>
                 <h5 class="mt-2 mb-0">{{profileInfo.fName}} {{profileInfo.lName}}</h5>
-                <div class="px-4 mt-1">
+                <div class="px-4 mt-1 text-right">
                     <p class="fonts">البريد الإلكتروني: {{profileInfo.email}}</p>
                     <p class="fonts">الاسم الأول: {{profileInfo.fName}}</p>
                     <p class="fonts">الاسم الأخير: {{profileInfo.lName}}</p>
                     <p class="fonts">رقم الهاتف: {{profileInfo.phone}}</p>
-                    <div class="address">
-                        <h4 class="badge bg-info">العنوان</h4>
+                    <div class="address text-right">
+                        <h6 class="badge bg-info d-block">العنوان</h6>
                         <p class="fonts">المحافظة: 
                             <span *ngIf="profileInfo.governorate; else NotRegistered">{{profileInfo.governorate}}</span>
                         </p>

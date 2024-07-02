@@ -24,7 +24,12 @@ export class WebInfoService {
     let formData = new FormData();
     formData.append('webLogo', webInfo.webLogo);
     return this.http.post<any>(this.apiUrl + 
-      '?webPhone=' + webInfo.webPhone + '&webName=' + webInfo.webName + '&instagramAccount=' + webInfo.instagramAccount + '&facebookAccount=' + webInfo.facebookAccount,
+      '?webPhone=' + webInfo.webPhone + '&webName=' + webInfo.webName + 
+      '&instagramAccount=' + webInfo.instagramAccount + 
+      '&facebookAccount=' + webInfo.facebookAccount + 
+      '&description=' + webInfo.description + 
+      '&storeAddress=' + webInfo.storeAddress + 
+      '&CustomerServicePhone=' + webInfo.CustomerServicePhone,
       formData, this.genericService.httpOptions)
     .pipe(
       retry(2),
@@ -36,7 +41,13 @@ export class WebInfoService {
     let formData = new FormData();
     formData.append('webLogo', webInfo.webLogo);
     return this.http.put<any>(this.apiUrl + 
-      '?webPhone=' + webInfo.webPhone + '&webName=' + webInfo.webName + '&instagramAccount=' + webInfo.instagramAccount + '&facebookAccount=' + webInfo.facebookAccount,
+      '?webPhone=' + webInfo.webPhone + '&webName=' +
+       webInfo.webName + '&instagramAccount=' + 
+       webInfo.instagramAccount + '&facebookAccount=' + 
+       webInfo.facebookAccount + '&description=' + 
+       webInfo.description + '&storeAddress=' + 
+       webInfo.storeAddress + '&CustomerServicePhone=' + 
+       webInfo.CustomerServicePhone,
       formData, this.genericService.httpOptions)
     .pipe(
       retry(2),

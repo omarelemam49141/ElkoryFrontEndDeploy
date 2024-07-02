@@ -31,8 +31,14 @@
             </a>
         </li>
         <li>
-            <a [routerLink]="['/customer-products/customer-previous-orders/admin']" routerLinkActive="active">
+            <a [routerLink]="['/customer-products/customer-previous-orders/admin']" routerLinkActive="active"> 
                 <i class="fas fa-shipping-fast icon"></i> طلبات العملاء
+                <div class="d-inline" style="position: relative;">
+                    <i class="fas fa-bell icon"></i>
+                    @if(adminNotificationsService.numberOfPendingOrders > 0) {
+                        <span class="notification-badge">{{ adminNotificationsService.numberOfPendingOrders }}</span>
+                    } 
+                </div>
             </a>
         </li>
     </ul>

@@ -19,6 +19,8 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
   user!: {email: string, password: string};
 
   profileInfo!: IEditProfile;
+
+  profileRole: string = 'customer';
   
   //notifications properties
   snackBarDuration = 5;
@@ -42,6 +44,7 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
     },
   }
   ngOnInit(): void {
+    this.profileRole = this.accountService.getTokenRole().toLowerCase();
     this.subscriptions?.push(this.accountService.viewProfile().subscribe(this.profileObserver));
   }
 

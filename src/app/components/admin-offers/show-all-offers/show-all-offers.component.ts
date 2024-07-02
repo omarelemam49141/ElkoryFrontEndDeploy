@@ -24,7 +24,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
   //notifications properties
   notificationDurationInSeconds = 5;
   //spinners properties
-  isOfersLoading: boolean = false;
+  isoffersLoading: boolean = false;
 
   constructor(private genericService: GenericService<IOffer>,
               private snackBar: MatSnackBar,
@@ -35,7 +35,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
   //start observers
   offerObserver = {
     next: (data: IOffer[]) => {
-      this.isOfersLoading = false;
+      this.isoffersLoading = false;
       this.offers = data;
     },
     error: (error: any) => {
@@ -43,7 +43,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
         data: 'تعذر تحميل العروض!',
         duration: this.notificationDurationInSeconds * 1000
       })
-      this.isOfersLoading = false;
+      this.isoffersLoading = false;
     },
   }
 
@@ -52,7 +52,7 @@ export class ShowAllOffersComponent implements OnInit, OnDestroy{
   }
 
   getAllOffers() {
-    this.isOfersLoading = true;
+    this.isoffersLoading = true;
     this.subscriptions.push(this.genericService.getAll('Offers').subscribe(this.offerObserver));
   }
 

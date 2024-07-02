@@ -61,7 +61,10 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
         webName: webInfoModel.webName,
         webLogo: file,
         instagramAccount: webInfoModel.instagramAccount,
-        facebookAccount: webInfoModel.facebookAccount
+        facebookAccount: webInfoModel.facebookAccount,
+        description: webInfoModel.description,
+        storeAddress: webInfoModel.storeAddress,
+        CustomerServicePhone: webInfoModel.customerServicePhone
       }
 
       this.createWebInfoForm();
@@ -130,7 +133,10 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
       webName: [this.webInfoToEdit?.webName, [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       webLogo: ['', [Validators.required]],
       instagramAccount: [this.webInfoToEdit?.instagramAccount, [Validators.required, Validators.minLength(2)]],
-      facebookAccount: [this.webInfoToEdit?.facebookAccount, [Validators.required, Validators.minLength(2)]]
+      facebookAccount: [this.webInfoToEdit?.facebookAccount, [Validators.required, Validators.minLength(2)]],
+      description: [this.webInfoToEdit?.description, [Validators.required, Validators.minLength(2)]],
+      storeAddress: [this.webInfoToEdit?.storeAddress, [Validators.required, Validators.minLength(2)]],
+      CustomerServicePhone: [this.webInfoToEdit?.CustomerServicePhone, [Validators.required, Validators.pattern("^(010|011|012|015)\\d{8}$")]],
     })
   }
 
@@ -146,6 +152,7 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
         this.getWebInfoIfExist();
       },
       error: (err) => {
+        console.log(err)
         this.isWebsiteInfoLoading = false;
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر حفظ معلومات الموقع',
@@ -166,6 +173,7 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
         this.isWebsiteInfoLoading = false;
       },
       error: (err) => {
+        console.log(err)
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر تحديث معلومات الموقع',
           duration: this.notificationDurationInSeconds * 1000
@@ -203,5 +211,17 @@ export class EditWebsiteInfoComponent implements OnInit, OnDestroy{
 
   get facebookAccount() {
     return this.webInfoForm.get("facebookAccount");
+  }
+
+  get description() {
+    return this.webInfoForm.get("description");
+  }
+
+  get storeAddress() {
+    return this.webInfoForm.get("storeAddress");
+  }
+
+  get CustomerServicePhone() {
+    return this.webInfoForm.get("CustomerServicePhone");
   }
 }

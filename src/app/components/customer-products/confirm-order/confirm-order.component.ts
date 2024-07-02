@@ -15,6 +15,7 @@ import { OfferDetailsComponent } from '../../admin-offers/offer-details/offer-de
 import { OrderService } from '../../../services/order.service';
 import { IOrderModifiedPrice } from '../../../Models/iorder-modified-price';
 import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+import { AdminNotificationsService } from '../../../services/admin-notifications.service';
 
 @Component({
   selector: 'app-confirm-order',
@@ -40,7 +41,8 @@ export class ConfirmOrderComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private adminNotificationsService: AdminNotificationsService
   ) {
   }
 
@@ -125,10 +127,11 @@ export class ConfirmOrderComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result=>{
       if (result) {
+        this.adminNotificationsService.getNumberOfPendingOrders();
         this.showNotification("تم تأكيد الطلب بنجاح", true);
         localStorage.removeItem("cart");
         this.cartService.changeNumberOfItemsInCart(0);
-        this.router.navigate(['/customer-products/products-list'])
+        this.router.navigate(['/customer-products/customer-previous-orders/customer'])
       }
     })
   }

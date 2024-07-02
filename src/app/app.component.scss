@@ -26,9 +26,17 @@
 }
 
 .content {
-  background-image: url("../assets/images/bg.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  min-height: 100vh;
+
+    background-image: url('../assets/images/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    transform: translateY(100%);
 }

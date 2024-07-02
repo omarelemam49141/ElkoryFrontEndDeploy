@@ -8,11 +8,12 @@ import { FailedSnackbarComponent } from '../../notifications/failed-snackbar/fai
 import { DeleteSubcategoryComponent } from '../delete-subcategory/delete-subcategory.component';
 import { AddSubcategoryComponent } from '../add-subcategory/add-subcategory.component';
 import { RouterLink } from '@angular/router';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
 
 @Component({
   selector: 'app-subcategories-list',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SecondarySpinnerComponent],
   templateUrl: './subcategories-list.component.html',
   styleUrl: './subcategories-list.component.scss'
 })
@@ -22,6 +23,9 @@ export class SubcategoriesListComponent {
   subscriptions: Subscription[] = [];
   //notifications properties
   notificationDurationInSeconds = 5;
+
+  //spinner properties
+  isSubCategoriesLoading: boolean = false;
 
   constructor(private genericService: GenericService<ISubCategory>,
               private snackBar: MatSnackBar,
@@ -33,12 +37,14 @@ export class SubcategoriesListComponent {
   }
 
   public getAll(): void {
+    this.isSubCategoriesLoading = true;
     this.subscriptions.push(this.genericService.getAll('subCategory/all').subscribe({
       next: (data: ISubCategory[])=> {
-        console.log(data)
+        this.isSubCategoriesLoading = false;
         this.subCategories = data;
       },
       error: (err: Error) => {
+        this.isSubCategoriesLoading = false;
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: "تعذر تحميل الفئات",
           duration: this.notificationDurationInSeconds * 1000
