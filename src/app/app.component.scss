@@ -1,31 +1,32 @@
 .spinner {
-    transition: all 0.5s ease-in-out;
-} 
+  transition: all 0.5s ease-in-out;
+}
 
 .hidden {
-    visibility: hidden;
-    opacity: 0;
-    z-index: -100;
+  visibility: hidden;
+  opacity: 0;
+  z-index: -100;
 }
 
 .show {
-    opacity: 1;
-    visibility: visible;
+  opacity: 1;
+  visibility: visible;
 }
 
 .footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
-  
+
 .page {
-    position: relative;
-    height: 100%;
+  position: relative;
+  height: 100%;
 }
 
 .content {
+
     background-image: url('../assets/images/bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
