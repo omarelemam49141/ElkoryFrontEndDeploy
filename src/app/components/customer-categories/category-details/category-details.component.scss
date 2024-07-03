@@ -27,6 +27,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 2rem;
+      //shadow
 
   
       .subcategory {
@@ -34,12 +35,16 @@
         flex-direction: column;
         width: 100%;
         background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
 
   
         h2 {
           font-size: 1.5rem;
           margin-bottom: 1rem;
           font-weight: normal;
+          padding: 1rem;
+          margin-top: -2rem;
         }
   
         .values-container {
@@ -62,10 +67,26 @@
               object-fit: cover;
               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
+            img:hover {
+              cursor: pointer;
+              //scale the image when hover
+              transform: scale(1.1);
+              //make the image scale smoothly
+              transition: all 0.5s ease;
+              //shadow when hover
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
   
             p {
               margin: 0;
               font-size: 0.875rem;
+            }
+            a{
+              //remove the uderline 
+              text-decoration: none;
+              color: #000;
+              font-family: cairo;
+              font-size: 1rem;
             }
           }
         }

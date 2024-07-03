@@ -72,6 +72,7 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
 
   logOut() {
     this.accountService.logout();
+    this.cartService.changeNumberOfItemsInCart(0)
   }
 
   goToPreviousOrders() {

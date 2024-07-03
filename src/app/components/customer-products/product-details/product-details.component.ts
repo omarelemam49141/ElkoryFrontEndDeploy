@@ -76,13 +76,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     if (this.product?.categoryId) {
       const subscription = this.categoryService.getCategoryProducts(this.product.categoryId).subscribe({
         next: (products: IProduct[]) => {
+          products = products.filter(p => p.productId !== this.product?.productId);
           this.relatedProducts = this.getRandomSubset(products, 4);          
-          for (let i = 0; i < this.relatedProducts.length; i++) {
-            this.productService.getPictures(this.relatedProducts[i].productId).subscribe({
-              next: (images: string[]) => this.images[i] = images,
-              error: (err: any) => console.error('Error fetching product images:', err)
-            });
-          }
+       
         },
         error: (err: any) => console.error('Error fetching related products:', err)
       });

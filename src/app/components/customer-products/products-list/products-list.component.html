@@ -1,157 +1,176 @@
-
-
 <div dir="rtl">
   <app-offers-slider></app-offers-slider>
   <div class="row">
-      <div class="col mb-3 d-flex flex-wrap">
-      
-      </div>
-      <div class="col mb-3 d-flex justify-content-between align-items-center gap-3">
-          <label for="sorting">الترتيب</label>
-          <select class="form-select" id="sorting" (change)="getProductsPaginated(pageNumber+1, pageSize)" [(ngModel)]="sortingOption">
-              <option value="all">الكل</option>
-              <option value="price_des">الأعلى سعرا</option>
-              <option value="price_asc">الأقل سعرا</option>
-              <option value="amount_des">ألأكثر كمية</option>
-              <option value="amount_asc">ألأقل كمية</option>
-              <option value="discount_des">الأعلى خصما</option>
-              <option value="discount_asc">الأقل خصما</option>
-          </select>
-      </div>
+    <div class="col mb-3 d-flex flex-wrap">
+
+    </div>
+    <div class="col mb-3 d-flex justify-content-between align-items-center gap-3">
+      <label for="sorting">الترتيب</label>
+      <select class="form-select" id="sorting" (change)="getProductsPaginated(pageNumber+1, pageSize)"
+        [(ngModel)]="sortingOption">
+        <option value="all">الكل</option>
+        <option value="price_des">الأعلى سعرا</option>
+        <option value="price_asc">الأقل سعرا</option>
+        <option value="amount_des">ألأكثر كمية</option>
+        <option value="amount_asc">ألأقل كمية</option>
+        <option value="discount_des">الأعلى خصما</option>
+        <option value="discount_asc">الأقل خصما</option>
+      </select>
+    </div>
   </div>
 
 
-
+  @if(!isProductsLoading) {
   <div class="product-list-container">
     <div *ngFor="let product of products; let i = index" class="product-card">
       <div class="card rounded-3 mb-4">
         <div class="card-body p-4">
-       
+
           <div class="image-container text-center">
-            <img src="{{ (product.productImages?.[0]?.imageUri) || 'assets/images/no-image.png'}}" class="img-fluid rounded-3 image" alt="{{product.name}}" />
-            <div *ngIf=" getDiscountPercentage(product.originalPrice, product.finalPrice) " class="position-absolute top-0 start-0 translate-middle badge-container" style="margin-left: 27px; margin-top: 8px; font-size: 20px;">
-              <span class="badge bg-success">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
-          </div>
-            <button class="wishbutton" (click)="addProductToWishList({ userId: userLoggedID!, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)" title="اضافة لقائمة المفضلة">
+            <img src="{{ (product.productImages?.[0]?.imageUri) || 'assets/images/no-image.png'}}"
+              class="img-fluid rounded-3 image" alt="{{product.name}}" />
+            <div *ngIf=" getDiscountPercentage(product.originalPrice, product.finalPrice) "
+              class="position-absolute top-0 start-0 translate-middle badge-container"
+              style="margin-top: -15px; margin-left: 13px; font-size: 20px;">
+              <span class="badge bg-success " style=" box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}%
+                خصم</span>
+            </div>
+            <button class="wishbutton"
+              (click)="addProductToWishList({ userId: userLoggedID!, productId: product.productId })"
+              *ngIf="!isProductInWishlist(product.productId)" title="اضافة لقائمة المفضلة">
               <span class="fa-regular fa-heart"></span>
             </button>
-            <button class="wishbutton" (click)="removeFromWishList({ UserId: userLoggedID!, ProductId: product.productId })" *ngIf="isProductInWishlist(product.productId)" title="حذف من قائمة المفضلة">
+            <button class="wishbutton"
+              (click)="removeFromWishList({ UserId: userLoggedID!, ProductId: product.productId })"
+              *ngIf="isProductInWishlist(product.productId)" title="حذف من قائمة المفضلة">
               <span class="fa-solid fa-heart"></span>
             </button>
-      
-    
-                    <button (click)="addToCart(product,i)" class="cartbutton "*ngIf="!isProductInCart(product.productId)" title="إضافة قطعة واحدة فقط"  >
-                <i class="fas fa-shopping-cart"></i> </button>
 
-                 
-                <button (click)="addToCart(product,i)" class="cartbutton"*ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)" >
-                  <i class="fas fa-shopping-cart"></i> </button>
-                   <button  class="cartbutton"*ngIf="isProductInCart(product.productId)"  >
-                    <i class="fas fa-shopping-cart"></i> </button> 
-                    <button  class="cartbutton"*ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)" style="background-color: rgba(255, 255, 255, 0); color: red;" title="حذف المنتج من سلة المشتريات">
-                      <i class="fa-solid fa-ban"></i></button> 
-  
-                  
-              </div>
 
-                
-            
-            
-              
-          
-          <!-- <div class="image-container text-center">
-<img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg" class="img-fluid rounded-3 image" alt="{{product.name}}" />
-<button class="wishbutton" (click)="addToWishList({ UserId: user.userId, ProductId: product.productId })">
-  <span class="fa-solid fa-heart"></span>
-</button>
+            <button (click)="addToCart(product,i)" class="cartbutton " *ngIf="!isProductInCart(product.productId)"
+              title="إضافة قطعة واحدة فقط">
+              <i class="fas fa-shopping-cart"></i> </button>
 
-</div> -->
 
-          
-          
+            <button (click)="addToCart(product,i)" class="cartbutton"
+              *ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
+              <i class="fas fa-shopping-cart"></i> </button>
+            <button class="cartbutton" *ngIf="isProductInCart(product.productId)">
+              <i class="fas fa-shopping-cart"></i> </button>
+            <button class="cartbutton" *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)"
+              style="background-color: rgba(255, 255, 255, 0); color: red;" title="حذف المنتج من سلة المشتريات">
+              <i class="fa-solid fa-ban"></i></button>
 
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="badge bg-success">متوفر</span>
-          
-            <span class="badge bg-primary">{{ product.categoryName }}</span>
-            
-          
-          
+
           </div>
 
 
-          <div style="margin-top: -30px;">
-              <h5 class="mt-3">{{ product.name }}</h5>
-              <p>
+
+
+
+
+          <!-- <div class="image-container text-center">
+  <img src="../../../../assets/images/306447380_1539843303101374_3738913682683006763_n.jpg" class="img-fluid rounded-3 image" alt="{{product.name}}" />
+  <button class="wishbutton" (click)="addToWishList({ UserId: user.userId, ProductId: product.productId })">
+    <span class="fa-solid fa-heart"></span>
+  </button>
+  
+  </div> -->
+
+
+
+
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge bg-success" *ngIf="product.amount>0">متوفر</span>
+            <span class="badge bg-danger" *ngIf="product.amount<=0"> غير متوفر</span>
+
+            <span class="badge bg-primary">{{ product.categoryName }}</span>
+
+
+
+          </div>
+
+
+          <div style="margin-top: -30px;" style="margin-top: 1px;">
+            <h5 class="mt-3">{{ product.name }}</h5>
+            <p>
               <span class="price"><strong>{{ product.finalPrice | currency: "USD" }}</strong></span>
             </p>
             <p *ngIf="product.originalPrice !== product.finalPrice">
               <span class="original-price">{{ product.originalPrice | currency: "USD" }}</span>
-              
+
             </p>
           </div>
 
-        
 
+
+
+
+
+
+          <!-- Add to Cart Button -->
+          <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
+            <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button>
+            <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
+              <i class="fas fa-shopping-cart" ></i> &nbsp;إضافة المزيد إلى السلة</button>
+  
+              <button (click)="addToCart(product)" class="btn btn-danger w-100 mt-2" *ngIf="isProductReachedMaxAmount(product)">
+                <i class="fas fa-shopping-cart" ></i> &nbsp;لا يمكن إضافة المزيد إلى السلة</button> -->
+
+
+
+
+          <div *ngIf="!isProductInCart(product.productId)" class="d-flex align-items-center mb-3 quantity-section">
+            <span class="d-flex " style="margin-top: 7px;">
+              <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity(i)"
+                style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;">-</button>
+              <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity[i]" min="1" (keyup)="validateSelectedProductAmount( i);">
 
             
-          
-         
-        <!-- Add to Cart Button -->
-        <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
-          <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button>
-          <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
-            <i class="fas fa-shopping-cart" ></i> &nbsp;إضافة المزيد إلى السلة</button>
 
-            <button (click)="addToCart(product)" class="btn btn-danger w-100 mt-2" *ngIf="isProductReachedMaxAmount(product)">
-              <i class="fas fa-shopping-cart" ></i> &nbsp;لا يمكن إضافة المزيد إلى السلة</button> -->
+              <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity(i)"
+                style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>
 
+            </span>
+            <button (click)="addToCart(product,i)" class="btn btn-primary w-100 mt-2 add-to-cart-button" [disabled]="product.amount < 1">إضافة لعربة التسوق</button>
+          </div>
+          <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center ">
 
+          </div>
+          <div style="margin-top: -10px;">
+            <button *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)"
+              class="btn btn-danger w-100 mt-2">إزالة من السلة</button>
 
-
-              <div *ngIf="!isProductInCart(product.productId)" class="d-flex align-items-center mb-3 quantity-section">
-                <span class="d-flex " style="margin-top: 7px;">
-                  <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity(i)" style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;" >-</button>
-                  <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity[i]" min="1">
-   
-                  <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity(i)" style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>
-
-                </span>
-                  <button  (click)="addToCart(product,i)" class="btn btn-primary w-100 mt-2 add-to-cart-button ">إضافة لعربة التسوق  </button>
-                </div >
-                <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center ">
-        
-                </div>
-                <div style="margin-top: -10px;">
-                <button *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)" class="btn btn-danger w-100 mt-2" >إزالة من السلة</button>
-
-              </div>
-              <a routerLink='/customer-products/product-details/{{product.productId }}' class="btn btn-primary w-100 mt-2">تفاصيل</a>
-                <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)" >
-                  <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button> -->
+          </div>
+          <a routerLink='/customer-products/product-details/{{product.productId }}'
+            class="btn btn-primary w-100 mt-2">تفاصيل</a>
+          <!-- <button (click)="addToCart(product)" class="btn btn-success w-100 mt-2" *ngIf="!isProductInCart(product.productId)" >
+                    <i class="fas fa-shopping-cart" ></i> &nbsp;أضف إلى السلة</button> -->
         </div>
-      
+        <div class="d-flex justify-content-between align-items-center">
+         
+            <span *ngIf="product.amount > 0" class="float-start  " style="font-size: medium; margin-bottom: 5px; margin-right: 5px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);">الكمية: {{ product.amount }}</span>
+
+
+        </div>
+
       </div>
+
     </div>
+
   </div>
-  
-    
+
+
 
   <div style="padding-bottom: 100px;">
-      <mat-paginator [length]="productsTotalAmount"
-              [pageSize]="pageSize"
-              [showFirstLastButtons]="true"
-              [pageSizeOptions]="[10, 15, 25, 50]"
-              [pageIndex]="pageNumber"
-              (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)"
-              aria-label="Select page">
-      </mat-paginator>
+    <mat-paginator [length]="productsTotalAmount" [pageSize]="pageSize" [showFirstLastButtons]="true"
+      [pageSizeOptions]="[12, 16, 20, 24]" [pageIndex]="pageNumber"
+      (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)" aria-label="Select page">
+    </mat-paginator>
   </div>
-  
+  } @else {
+  <app-secondary-spinner></app-secondary-spinner>
+  }
+
+
 </div>
-
-
-
-
-
-

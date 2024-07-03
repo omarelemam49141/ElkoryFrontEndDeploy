@@ -1,7 +1,7 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import {MatPaginatorIntl, MatPaginatorModule} from '@angular/material/paginator';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService } from '../../../services/product.service';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -69,15 +69,36 @@ wishList?:IProduct[];
     private snackBar: MatSnackBar,
     private wishListService:WishListService,
     private cartService: CartService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private route: ActivatedRoute,
+
 
   ) {}
   ngOnDestroy(): void {
     this.subscriptions?.forEach(sub => sub.unsubscribe());
   }
   ngOnInit(): void {
+    let categoryId=0;
+    let subCategoryID=0;
+    let value="";
+this.route.paramMap.subscribe(
 
-    this.getProductsPaginated(1,12);
+  param=>{
+    //    {path:"Subcategory-value-products/:categoryID/:subCategoryID/:value",component:ProductsListComponent},
+
+     categoryId=Number(param.get('categoryID'));
+      subCategoryID=Number(param.get('subCategoryID'));
+     value=(param.get('value'))+'';
+
+  }
+)
+if(categoryId!=0&&subCategoryID!=0&&value!=""){
+
+}
+else{
+  this.getProductsPaginated(1,12);
+
+}
     this.userId = this.accountService.getTokenId();
 
     this.userLoggedID=this.accountService.getTokenId();
@@ -361,4 +382,16 @@ this.showNotification("تم إزالة المنتج من السلة", false);
     
   }
 
+
+  validateSelectedProductAmount(index:number){ 
+    if( this.quantity[index]< 1){
+      this.quantity[index] = 1;
+      return 
+    }
+    else if(this.quantity[index] > this.products[index].amount){
+      this.quantity[index] = this.products[index].amount;
+      return 
+    }
+  
+}
 }

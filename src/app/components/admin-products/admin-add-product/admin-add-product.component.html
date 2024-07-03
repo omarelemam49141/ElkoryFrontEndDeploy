@@ -27,7 +27,7 @@
             </div>
     
             <div class="form-field col-lg-6">
-                <input id="discount" formControlName="discount" class="input-text js-input" type="number" min="0" max="100">
+                <input id="discount" formControlName="discount" class="input-text js-input" type="number" min="0" >
                 <label class="label" for="discount">الخصم (ج.م)</label>
                 <div class="text-danger" *ngIf="(!discount?.valid && discount?.touched) || (!productForm.valid)">
                     <span *ngIf="discount?.errors?.['min']">الخصم لا يمكن أن يقل عن صفر%</span>
