@@ -1,0 +1,37 @@
+<div class="notification-container">
+  <button
+    type="button"
+    id="showNotificationList"
+    class="btn btn-secondary position-relative rounded-circle"
+    (click)="toggleNotifications()"
+  >
+    <i class="fa fa-bell" id="bell"></i>
+    <span
+      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+      id="notificationCount"
+    >
+      {{ notificationCount }}
+    </span>
+  </button>
+  <ul
+    id="notificationDropdown"
+    class="dropdown-menu p-0"
+    [class.show]="showNotifications"
+  >
+    <li
+      *ngFor="let notification of notifications"
+      [ngClass]="{
+        'dropdown-item': true,
+        read: notification.seen,
+        unread: !notification.seen
+      }"
+    >
+      <a [href]="notification.hiddenLink" class="d-block text-decoration-none">
+        <div class="ms-2">{{ notification.msgContent }}</div>
+        <div class="ms-2">
+          {{ notification.sendingDate | date : "shortDate" : "" : "ar" }}
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>

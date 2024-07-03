@@ -6,12 +6,13 @@
     <img [src]="webInfo?.webLogoImageUrl || '../../../../assets/images/Elkory-Phone-Logo-High-Quality.png'" alt="Ashraf-Logo" class="logo">
     <span class="logo-text">{{ webInfo?.webName || 'الكورى فون' }}</span>
   </a>
-
+  
   <a [href]="'tel:' + (webInfo?.webPhone || '+01023596074')" class="phone">{{ webInfo?.webPhone || '+01023596074' }}</a>
   <div class="search__container">
     <app-search-product></app-search-product>
   </div>
   <div class="menu flex navbar-nav ms-md-auto align-items-center flex-row-reverse flex-lg-row">
+    
     <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation" class="navbar-toggler">
       <fa-icon [icon]="['fas', 'bars']"></fa-icon>
     </button>
@@ -39,6 +40,10 @@
             طلباتى
           </a>
         }
+
+       
+          
+        
       </div>
     </div>
     @if (accountService.getTokenRole().toLowerCase() != 'admin') {
@@ -66,6 +71,7 @@
         <span class="cart-title">تسجيل الخروج</span>
         <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
       </button>
+      <div class="cart-link arabic mx-2 "><app-notify-bell></app-notify-bell></div>
     }
   </div>
   <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sidebarModal">
