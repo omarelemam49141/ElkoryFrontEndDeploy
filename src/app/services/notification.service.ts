@@ -38,7 +38,7 @@ export class NotificationService {
   }
 
   public onReceiveNotification(callback: (message: string,hiddenLink:string) => void): void {
-    debugger;
+    // debugger;
     console.log('NotificationService: onReceiveNotification called');
     this.signalrService.onReceiveNotification(callback);
   }

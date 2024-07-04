@@ -12,7 +12,7 @@
         <h2>{{ subcategory.name }}</h2>
         <div class="values-container">
           <div class="value" *ngFor="let value of subcategory.values">
-            <a routerLink="/Subcategory-value-products/{{category.categoryId}}/{{subcategory.subCategoryId}}/{{value.value}}">
+            <a routerLink="/customer-products/subcategoryproducts/{{category.categoryId}}/{{subcategory.subCategoryId}}/{{value.value}}">
             <img [src]="value.imageUrl || 'assets/images/no-image.png'" alt="{{ value.value }}">
             <p>{{ value.value }}</p>
           </a>

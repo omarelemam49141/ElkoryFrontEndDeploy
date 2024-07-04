@@ -95,10 +95,10 @@ this.route.paramMap.subscribe(
 if(categoryId!=0&&subCategoryID!=0&&value!=""){
 
 }
-else{
+
   this.getProductsPaginated(1,12);
 
-}
+
     this.userId = this.accountService.getTokenId();
 
     this.userLoggedID=this.accountService.getTokenId();
@@ -333,11 +333,7 @@ isProductReachedMaxAmount(product:IProduct):boolean{
 }
 
 increaseQuantity(index:number): void {
-    // if (this.product && this.quantity < this.product.amount) {
-    //   this.quantity++;
-    // } else {
-    //   this.snackBar.open('لا يوجد كمية كافية في المخزون', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
-    // }
+  
     if (this.quantity[index] < this.products[index].amount) {
       this.quantity[index]++;
     }
@@ -347,9 +343,7 @@ increaseQuantity(index:number): void {
   }
 
   decreaseQuantity(index:number): void {
-    // if (this.quantity > 1) {
-    //   this.quantity--;
-   // }
+  
     if (this.quantity[index] > 1) {
       this.quantity[index]--;
     }
