@@ -88,7 +88,7 @@ export class NotifyBellComponent implements OnInit, OnDestroy {
   }
 
   private updateUnreadCount() {
-    debugger;
+    // debugger;
     this.notificationCount = this.notifications.filter(
       (notification) => !notification.seen
     ).length;

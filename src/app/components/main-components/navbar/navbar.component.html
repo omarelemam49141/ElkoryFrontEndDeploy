@@ -84,15 +84,19 @@
 
 
           <li *ngFor="let category of Categories" class="nav-item">
-            <p class="nav-link {{category.name}}" [routerLink]="['/categoryDetails/', category.categoryId]" [ngClass]="{'active-category': activeCategory === category.name}" (click)="setActiveCategory(category.name)" tabindex="0">{{category.name}}</p>
+            <p class="nav-link {{category.name}} " [routerLink]="['/categoryDetails/', category.categoryId]" [ngClass]="{'active-category': activeCategory === category.name}" (click)="setActiveCategory(category.name)" tabindex="0">{{category.name}}</p>
             <ul class="horizontal-list subcategories">
               <!-- <li><img src="assets/images/no-image.png" alt="" class="img-fluid rounded-3 image">
               </li> -->
-                  <li *ngFor="let subcategory of category.subCategories"><a >{{subcategory.name}}</a>
+                  <li *ngFor="let subcategory of category.subCategories">
+                    <a  class=" subcategorytitle">{{subcategory.name}}</a>
                   <!-- <hr/> -->
                 <ul class="vertical-list" >
-                  <li style="margin-left: -15px;"  *ngFor="let value of subcategory.values">
-                    {{value.value}}
+                  <li  style="margin-left: -15px;"  *ngFor="let value of subcategory.values">
+                    <a routerLink="/customer-products/subcategoryproducts/{{category.categoryId}}/{{subcategory.subCategoryId}}/{{value.value}}">   
+                                        {{value.value}}
+                    </a>
+                    
                   </li>
                 </ul>
               </li>

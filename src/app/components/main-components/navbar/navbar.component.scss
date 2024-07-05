@@ -270,7 +270,7 @@
 
 }
 
-.categories .subcategories li a {
+.categories .subcategories li .subcategorytitle {
   color: #b51cb0;
   text-decoration: none;
   display: inline-block; /* Displays list items horizontally */
@@ -329,6 +329,11 @@ float: right;
   flex-direction: column; /* Display items vertically */
   margin: 0;
   padding:0;
+  a{
+    text-decoration: none;
+
+    
+  }
 }
 
 .vertical-list li {

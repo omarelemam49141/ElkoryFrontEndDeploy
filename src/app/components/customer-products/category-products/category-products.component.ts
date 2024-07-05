@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { IProduct } from '../../../Models/iproduct';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../../services/product.service';
@@ -31,7 +31,7 @@ import { ICart } from '../../../Models/icart';
   templateUrl: './category-products.component.html',
   styleUrl: './category-products.component.scss'
 })
-export class CategoryProductsComponent implements OnInit ,OnDestroy
+export class CategoryProductsComponent implements OnInit ,OnDestroy, OnChanges
  {
   hovering = false;
   products!: IProduct[];
@@ -73,6 +73,7 @@ constructor(private productService: ProductService,
 
 
 
+
   ngOnInit(): void {
 
 this.route.paramMap.subscribe(
@@ -84,11 +85,14 @@ this.route.paramMap.subscribe(
       this.subCategoryID=Number(param.get('subCategoryID'));
      this.value=(param.get('value'))+'';
 
+     console.log(this.categoryId)
+      console.log(this.subCategoryID)
+      console.log(this.value)
+      this.fetchproductsInSucategoryValue(this.categoryId,this.subCategoryID,this.value);
+
   }
+  
 )
-if(this.categoryId!=0&&this.subCategoryID!=0&&this.value!=""){
-  this.fetchproductsInSucategoryValue(this.categoryId,this.subCategoryID,this.value);
-}
 
 
 
@@ -101,11 +105,45 @@ if(this.userLoggedID){
 }
 
 
+
+  }
+
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.route.paramMap.subscribe(
+
+      param=>{
+        //    {path:"Subcategory-value-products/:categoryID/:subCategoryID/:value",component:ProductsListComponent},
+    
+        this.categoryId=Number(param.get('categoryID'));
+          this.subCategoryID=Number(param.get('subCategoryID'));
+         this.value=(param.get('value'))+'';
+    
+      }
+    )
+
+      this.fetchproductsInSucategoryValue(this.categoryId,this.subCategoryID,this.value);
+    
+    
+    
+    console.log(this.categoryId)
+    console.log(this.subCategoryID)
+    console.log(this.value)
+    
+    
+    this.userLoggedID=this.accountService.getTokenId();
+    if(this.userLoggedID){  
+        this.fetchWishList(this.userLoggedID);
+      
+    }
   }
 fetchproductsInSucategoryValue(categoryId:number,subCategoryID:number,value:string){
 const subscription=  this.productService.getproductsbycategorySubcategoryValue(categoryId,subCategoryID,value).subscribe({
   next: (products: IProduct[]) => {
+    console.log(products);
     this.products = products;
+
     for(let i=0;i<this.products.length;i++){
       this.quantity.push(1);
     }

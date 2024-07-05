@@ -44,7 +44,7 @@ export class SignalrService {
 
   public onReceiveNotification(callback: (message: string,hiddenLink:string) => void): void {
     if (this.hubConnection) {
-      debugger;
+      // debugger;
       this.hubConnection.on('ReceiveNotification', callback);
     }
   }

@@ -29,7 +29,7 @@
           <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity()">-</button>
           <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity" min="1">
           <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity()">+</button>
-          <button  (click)="addToCart(product)" class="btn btn-primary add-to-cart-button ms-2">أضف إلى السلة</button>
+          <button  (click)="addToCart(product)" class="  add-to-cart-button ms-2">أضف إلى السلة</button>
         </div >
         <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center mb-3 quantity-section">
             <button  (click)="removeFromCart(product)" class="btn btn-danger ms-2">إزالة من السلة</button>
@@ -50,6 +50,7 @@
       </div>
     </div>
     <div class="related-products">
+      <app-add-review *ngIf="userId" [productId]="product.productId" [customerId]="userId"></app-add-review>
       <h3>منتجات ذات صلة</h3>
       <div class="row">
         <div *ngFor="let relatedProduct of relatedProducts; let i=index" class="col-md-3 product-card">

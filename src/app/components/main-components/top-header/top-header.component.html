@@ -32,6 +32,9 @@
             <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
             تسجيل الخروج
           </a>
+
+        
+        
         }
         @if (accountService.getTokenRole().toLowerCase() == 'customer') {
           <a (click)="goToPreviousOrders()" class="nav-link arabic text-danger">
@@ -39,8 +42,10 @@
             <i class="fas fa-shipping-fast ms-2 fs-6"></i>
             طلباتى
           </a>
+         
         }
-
+          
+        
        
           
         
@@ -52,9 +57,16 @@
         <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon bell-icon"></fa-icon>
         <span *ngIf="cartService.getNumberOfItemsInCart() > 0" class="notification-badge">{{ cartService.getNumberOfItemsInCart() }}</span>
       </a>
+      
+     
     }
     
     @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+      <a routerLink="/customer-products/products-wish-list" class=" btn nav-link arabic cart-link " style="margin-right: 5px;"  >
+        قائمة الرغبات
+        <i class="fas fa-heart ms-2 fs-6"></i>
+
+      </a>
       <button (click)="goToPreviousOrders()" routerLinkActive="active" class="nav-link position-relative cart-link arabic text-primary">
         <span class="cart-title">طلباتى</span>
         <i class="fas fa-shipping-fast me-2 fs-6"></i>
@@ -71,7 +83,13 @@
         <span class="cart-title">تسجيل الخروج</span>
         <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
       </button>
-      <div class="cart-link arabic mx-2 "><app-notify-bell></app-notify-bell></div>
+
+
+
+      <div class="cart-link arabic mx-2 " ><app-notify-bell></app-notify-bell></div>
+
+
+    
     }
   </div>
   <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sidebarModal">

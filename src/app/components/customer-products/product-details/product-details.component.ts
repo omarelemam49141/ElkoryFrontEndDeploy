@@ -13,6 +13,8 @@ import { IUser } from '../../../Models/iuser';
 import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { ICart } from '../../../Models/icart';
 import { AccountService } from '../../../services/account.service';
+import { AddReviewComponent } from '../../review/add-review/add-review.component';
+import { GetReviewComponent } from '../../review/get-review/get-review.component';
 
 
 @Component({
@@ -20,7 +22,7 @@ import { AccountService } from '../../../services/account.service';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
   standalone: true,
-  imports: [RouterLink, CommonModule, CurrencyPipe,FormsModule],
+  imports: [RouterLink, CommonModule, CurrencyPipe,FormsModule,AddReviewComponent,GetReviewComponent],
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
   product: IProduct | undefined;
