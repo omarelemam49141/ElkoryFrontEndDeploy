@@ -1,3 +1,22 @@
+
+<div class="row">
+    <div class="col mb-3 d-flex flex-wrap">
+
+    </div>
+    <div class="col mb-3 d-flex justify-content-between align-items-center gap-3">
+      <label for="sorting">الترتيب</label>
+      <select class="form-select" id="sorting" (change)="getProductsPaginated(pageNumber, pageSize)"
+        [(ngModel)]="sortingOption">
+        <option value="all">الكل</option>
+        <option value="price_des">الأعلى سعرا</option>
+        <option value="price_asc">الأقل سعرا</option>
+        <option value="amount_des">ألأكثر كمية</option>
+        <option value="amount_asc">ألأقل كمية</option>
+        <option value="discount_des">الأعلى خصما</option>
+        <option value="discount_asc">الأقل خصما</option>
+      </select>
+    </div>
+  </div>
 <!-- @if(!isProductsLoading) { -->
     <div class="product-list-container">
       <div *ngFor="let product of products; let i = index" class="product-card">
@@ -140,13 +159,13 @@
   
   
   
-    <!-- <div style="padding-bottom: 100px;">
+    <div style="padding-bottom: 100px;">
       <mat-paginator [length]="productsTotalAmount" [pageSize]="pageSize" [showFirstLastButtons]="true"
         [pageSizeOptions]="[12, 16, 20, 24]" [pageIndex]="pageNumber"
-        (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)" aria-label="Select page">
+        (page)="getProductsPaginated($event.pageIndex, $event.pageSize)" aria-label="Select page">
       </mat-paginator>
-    </div> -->
+    </div>
     <!-- } @else {
     <app-secondary-spinner></app-secondary-spinner>
-    } -->
-    <p>{{products|json}}</p>
+    }
+    -->

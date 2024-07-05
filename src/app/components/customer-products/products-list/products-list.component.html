@@ -162,7 +162,7 @@
 
 
 
-  <div style="padding-bottom: 100px;">
+  <div >
     <mat-paginator [length]="productsTotalAmount" [pageSize]="pageSize" [showFirstLastButtons]="true"
       [pageSizeOptions]="[12, 16, 20, 24]" [pageIndex]="pageNumber"
       (page)="getProductsPaginated($event.pageIndex+1, $event.pageSize)" aria-label="Select page">

@@ -58,7 +58,9 @@ export class CategoryProductsComponent implements OnInit ,OnDestroy
 userLoggedID!:number;
 
 wishList?:IProduct[];
-
+ categoryId=0;
+ subCategoryID=0;
+  value="";
 
 constructor(private productService: ProductService,
   private snackBar: MatSnackBar,
@@ -72,36 +74,42 @@ constructor(private productService: ProductService,
 
 
   ngOnInit(): void {
-    let categoryId=0;
-    let subCategoryID=0;
-    let value="";
+
 this.route.paramMap.subscribe(
 
   param=>{
     //    {path:"Subcategory-value-products/:categoryID/:subCategoryID/:value",component:ProductsListComponent},
 
-     categoryId=Number(param.get('categoryID'));
-      subCategoryID=Number(param.get('subCategoryID'));
-     value=(param.get('value'))+'';
+    this.categoryId=Number(param.get('categoryID'));
+      this.subCategoryID=Number(param.get('subCategoryID'));
+     this.value=(param.get('value'))+'';
 
   }
 )
-if(!(categoryId!=0&&subCategoryID!=0&&value!="")){
+if(this.categoryId!=0&&this.subCategoryID!=0&&this.value!=""){
+  this.fetchproductsInSucategoryValue(this.categoryId,this.subCategoryID,this.value);
+}
 
-this.fetchproductsInSucategoryValue(categoryId,subCategoryID,value);} 
+
+
 
 
 this.userLoggedID=this.accountService.getTokenId();
-if(this.userLoggedID){    this.fetchWishList(this.userLoggedID);
+if(this.userLoggedID){  
+    this.fetchWishList(this.userLoggedID);
   
 }
 
 
   }
 fetchproductsInSucategoryValue(categoryId:number,subCategoryID:number,value:string){
-  this.productService.getproductsbycategorySubcategoryValue(categoryId,subCategoryID,value).subscribe({
+const subscription=  this.productService.getproductsbycategorySubcategoryValue(categoryId,subCategoryID,value).subscribe({
   next: (products: IProduct[]) => {
     this.products = products;
+    for(let i=0;i<this.products.length;i++){
+      this.quantity.push(1);
+    }
+    // this.getProductsPaginated(this.pageNumber,this.pageSize);
     this.isProductsLoading = false;
 
   },
@@ -110,6 +118,7 @@ fetchproductsInSucategoryValue(categoryId:number,subCategoryID:number,value:stri
 
   }
   })
+  this.subscriptions?.push(subscription);
 }
 
   getDiscountPercentage(originalPrice: number, finalPrice: number): number {
@@ -335,6 +344,56 @@ isProductReachedMaxAmount(product:IProduct):boolean{
 
 
 ngOnDestroy(): void {
-  throw new Error('Method not implemented.');
+this.subscriptions?.forEach(sub => sub.unsubscribe());}
+
+
+getProductsPaginated(pageNumber:number, pageSize:number): void {
+  this.isProductsLoading = true;
+this.pageNumber=pageNumber
+this.pageSize=pageSize
+console.log(this.sortingOption)
+console.log(this.pageNumber);
+console.log(this.pageSize);
+if(this.sortingOption=="all"){
+
+ 
+    this.fetchproductsInSucategoryValue(this.categoryId,this.subCategoryID,this.value);
+    this.products=this.products.slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+  
 }
+else if(this.sortingOption=="price_des"){
+  //sort the products desending by price 
+  
+  this.products=this.products.sort((a,b)=>b.finalPrice-a.finalPrice).slice(this.pageNumber * this.pageSize, (this.pageNumber + 1) * this.pageSize);
+  console.log(this.products)
+
 }
+else if(this.sortingOption=="price_asc"){
+  //sort the products desending by price 
+  
+  this.products=this.products.sort((a,b)=>a.finalPrice-b.finalPrice).slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+
+}
+else if(this.sortingOption=="amount_des"){
+  //sort the products desending by price 
+  
+  this.products=this.products.sort((a,b)=>b.amount-a.amount).slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+}
+else if(this.sortingOption=="amount_asc"){
+  //sort the products desending by price 
+  
+  this.products=this.products.sort((a,b)=>a.amount-b.amount).slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+ }
+ else if(this.sortingOption=="discount_des"){
+  //sort the products desending by price 
+  
+  this.products=this.products.sort((a,b)=>b.discount-a.discount).slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+}
+  
+    else if(this.sortingOption=="discount_asc"){
+      //sort the products desending by price 
+      
+      this.products=this.products.sort((a,b)=>a.discount-b.discount).slice(pageNumber * pageSize, (pageNumber + 1) * pageSize);
+    }
+}
+ }

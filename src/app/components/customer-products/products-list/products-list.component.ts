@@ -388,4 +388,6 @@ this.showNotification("تم إزالة المنتج من السلة", false);
     }
   
 }
+
+
 }
