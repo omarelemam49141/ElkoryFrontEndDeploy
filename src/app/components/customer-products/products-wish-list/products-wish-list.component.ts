@@ -10,6 +10,7 @@ import { ICart } from '../../../Models/icart';
 import { ProductService } from '../../../services/product.service';
 import { RouterLink } from '@angular/router';
 import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-products-wish-list',
@@ -31,7 +32,8 @@ export class ProductsWishListComponent implements OnInit {
     private wishListService: WishListService,
     private accountService: AccountService,
     private snackBar: MatSnackBar,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService:CartService
 
   ) {}
 
@@ -119,7 +121,7 @@ export class ProductsWishListComponent implements OnInit {
 
     cart.finalPrice += (product.finalPrice);
     cart.numberOfProducts += 1;
-    
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
     localStorage.setItem('cart', JSON.stringify(cart));
     
   }
@@ -135,6 +137,7 @@ export class ProductsWishListComponent implements OnInit {
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
       this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+      this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
     }
   }
   isProductReachedMaxAmount(product:IProduct):boolean{
