@@ -234,4 +234,27 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     return cart.productsAmounts.some(p=>p.productId===productId);
   
   }
+
+
+  validateSelectedProductAmount(){ 
+    if (this.product === undefined || this.product.amount === undefined) {
+      console.warn("Product or product amount is undefined");
+      return;
+    }
+  
+    // Ensure this.quantity is not undefined (optional if already guaranteed)
+    if (this.quantity === undefined) {
+      this.quantity = 1;
+      return;
+    }
+    if( this.quantity< 1){
+      this.quantity = 1;
+      return 
+    }
+    else if(this.quantity> this.product.amount){
+      this.quantity = this.product.amount;
+      return 
+    }
+  
+}
 }

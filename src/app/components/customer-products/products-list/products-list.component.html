@@ -35,11 +35,16 @@
               <span class="badge bg-success " style=" box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}%
                 خصم</span>
             </div>
-            <button class="wishbutton"
-              (click)="addProductToWishList({ userId: userLoggedID!, productId: product.productId })"
-              *ngIf="!isProductInWishlist(product.productId)" title="اضافة لقائمة المفضلة">
+
+            <!-- add to wish list -->
+            <button 
+            class="wishbutton"(click)="addProductToWishList({ userId: userLoggedID!, productId: product.productId })
+            "*ngIf="!isProductInWishlist(product.productId)&&userLoggedID"
+             title="اضافة لقائمة المفضلة">
               <span class="fa-regular fa-heart"></span>
             </button>
+
+            <!-- remove from wishList -->
             <button class="wishbutton"
               (click)="removeFromWishList({ UserId: userLoggedID!, ProductId: product.productId })"
               *ngIf="isProductInWishlist(product.productId)" title="حذف من قائمة المفضلة">
@@ -47,14 +52,14 @@
             </button>
 
 
-            <button (click)="addToCart(product,i)" class="cartbutton " *ngIf="!isProductInCart(product.productId)"
-              title="إضافة قطعة واحدة فقط">
+            <button (click)="addToCart(product,i)" class="cartbutton " *ngIf="!isProductInCart(product.productId)&&product.amount>0"
+              title="إضافة قطعة واحدة فقط" >
               <i class="fas fa-shopping-cart"></i> </button>
 
-
+<!-- 
             <button (click)="addToCart(product,i)" class="cartbutton"
               *ngIf="isProductInCart(product.productId)&&!isProductReachedMaxAmount(product)">
-              <i class="fas fa-shopping-cart"></i> </button>
+              <i class="fas fa-shopping-cart"></i> </button> -->
             <button class="cartbutton" *ngIf="isProductInCart(product.productId)">
               <i class="fas fa-shopping-cart"></i> </button>
             <button class="cartbutton" *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)"
@@ -132,7 +137,7 @@
                 style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;">+</button>
 
             </span>
-            <button (click)="addToCart(product,i)" class="btn btn-primary w-100 mt-2 add-to-cart-button" [disabled]="product.amount < 1">إضافة لعربة التسوق</button>
+            <button (click)="addToCart(product,i)" class="btn w-100 mt-2 add-to-cart-button" [disabled]="product.amount ==0">إضافة لعربة التسوق</button>
           </div>
           <div *ngIf="isProductInCart(product.productId)" class="d-flex align-items-center ">
 
@@ -149,7 +154,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center">
          
-            <span *ngIf="product.amount > 0" class="float-start  " style="font-size: medium; margin-bottom: 5px; margin-right: 5px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);">الكمية: {{ product.amount }}</span>
+            <span  class="float-start  " style="font-size: medium; margin-bottom: 5px; margin-right: 5px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);">الكمية: {{ product.amount }}</span>
 
 
         </div>

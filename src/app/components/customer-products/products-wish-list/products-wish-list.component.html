@@ -1,4 +1,5 @@
 <div class="wish-list-container">
+  @if(!isProductsLoading) {
   <div *ngIf="wishListProducts.length === 0; else wishListContent">
     <p class="text-muted">قائمة الرغبات فارغة</p>
   </div>
@@ -43,4 +44,9 @@
       </tbody>
     </table>
   </ng-template>
+
+}
+ @else {
+  <app-secondary-spinner></app-secondary-spinner>
+  }
 </div>

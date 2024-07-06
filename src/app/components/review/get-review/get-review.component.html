@@ -1,10 +1,11 @@
 
 @if(reviewsList.length > 0) {
 
-  <div class="card" *ngFor="let review of reviewsList">
+  <div class="card" *ngFor="let review of reviewsList;let i = index">
     <div class="user-info">
       <i class="fa-solid fa-user fa-2x" style="color: #B197FC;"></i>
-      <h3>{{ review.customerId }}</h3>
+      <!-- <h3>{{ review.customerId }}</h3> -->
+       <h6>{{customrsNames[i]}}</h6>
     </div>
     <div class="review">
       <div class="stars" style="color: #FFD43B" [innerHTML]="getStars(review.numOfStars)"></div>
