@@ -315,7 +315,7 @@ margin-right: 150px;
 
 .horizontal-list li {
   display: inline-block; /* Displays list items horizontally */
-  margin-right: 100px; /* Adjust spacing between items as needed */
+  margin-right: 6em; /* Adjust spacing between items as needed */
 float: right;
 
 }
@@ -331,7 +331,7 @@ float: right;
   padding:0;
   a{
     text-decoration: none;
-
+// float: right;
     
   }
 }
@@ -339,8 +339,8 @@ float: right;
 .vertical-list li {
   font-weight: 700;
   //make it align to right
-  text-align: right;
-  padding: -100px;
+  
+ 
   
   
 }

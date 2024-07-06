@@ -92,7 +92,7 @@
                     <a  class=" subcategorytitle">{{subcategory.name}}</a>
                   <!-- <hr/> -->
                 <ul class="vertical-list" >
-                  <li  style="margin-left: -15px;"  *ngFor="let value of subcategory.values">
+                  <li    *ngFor="let value of subcategory.values">
                     <a routerLink="/customer-products/subcategoryproducts/{{category.categoryId}}/{{subcategory.subCategoryId}}/{{value.value}}">   
                                         {{value.value}}
                     </a>

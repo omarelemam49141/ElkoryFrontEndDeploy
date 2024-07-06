@@ -5,18 +5,33 @@
         <div *ngIf="getDiscountPercentage(product.originalPrice, product.finalPrice)" class="position-absolute top-0 start-0 badge-container">
           <span class="badge bg-success">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
         </div>
-        <img src="{{product.productImages?.[0]?.imageUri || ''}}" class="img-fluid rounded-3 image" alt="{{product.name}}" />
-        <button class="wishbutton" (click)="addProductToWishList({ userId: userId!, productId: product.productId })" *ngIf="!isProductInWishlist(product.productId)">
+        <img src="{{product.productImages?.[0]?.imageUri ||  'assets/images/no-image.png'}}" class="img-fluid rounded-3 image" alt="{{product.name}}" />
+        <button class="wishbutton" 
+                (click)="addProductToWishList({ userId: userId!, productId: product.productId })" 
+                *ngIf="!isProductInWishlist(product.productId)&&userId">
           <span class="fa-regular fa-heart"></span>
         </button>
-        <button class="wishbutton" (click)="removeFromWishList({ userId: userId!, productId: product.productId })" *ngIf="isProductInWishlist(product.productId)">
+        <button class="wishbutton" 
+                (click)="removeFromWishList({ userId: userId!, productId: product.productId })" 
+                *ngIf="isProductInWishlist(product.productId)&&userId">
           <span class="fa-solid fa-heart"></span>
         </button>
       </div>
     </div>
     <div class="col-md-6 product-info">
       <h2>{{ product.name }}</h2>
-      <h4 class="text-muted">{{ product.categoryName }}</h4>
+      <a [routerLink]="['/categoryDetails', product.categoryId]">
+        <h6 class="text-muted">{{ product.categoryName }}</h6>
+      </a>
+      <ng-container *ngFor="let categoryValue of product.categoryValues" class="d-flex flex-wrap gap-2">
+        <ng-container *ngFor="let value of categoryValue.values" class="d-inline-block">
+          <a class="category-link" 
+             [routerLink]="['/customer-products/subcategoryproducts', product.categoryId, categoryValue.subCategoryId, value.value]">
+            {{ value.value }}
+          </a>
+        </ng-container>
+      </ng-container>
+      
       <p>
         <span class="price"><strong>{{ product.finalPrice | currency: "USD" }}</strong></span>
       </p>
@@ -24,10 +39,14 @@
         <span class="original-price">{{ product.originalPrice | currency: "USD" }}</span>
       </p>
       <div class="d-flex align-items-center mb-3 quantity-section" *ngIf="!isProductInCart(product.productId)">
-        <button class="btn btn-outline-secondary quantity-button" type="button" (click)="decreaseQuantity()">-</button>
+        <button class="btn btn-outline-secondary quantity-button" 
+                style="border-top-right-radius: 20%; border-bottom-right-radius: 20%;" 
+                type="button" (click)="decreaseQuantity()">-</button>
         <input type="number" class="form-control quantity-input QuantityValue" [(ngModel)]="quantity" min="1" (keyup)="validateSelectedProductAmount()">
-        <button class="btn btn-outline-secondary quantity-button" type="button" (click)="increaseQuantity()">+</button>
-        <button (click)="addToCart(product)" class="add-to-cart-button ms-2">أضف إلى السلة</button>
+        <button class="btn btn-outline-secondary quantity-button" 
+                style="border-top-left-radius: 20%; border-bottom-left-radius: 20%;" 
+                type="button" (click)="increaseQuantity()">+</button>
+        <button (click)="addToCart(product)" class=" btn add-to-cart-button ms-2"  [disabled]="product.amount ==0" >أضف إلى السلة</button>
       </div>
       <div class="d-flex align-items-center mb-3 quantity-section" *ngIf="isProductInCart(product.productId)">
         <button (click)="removeFromCart(product)" class="btn btn-danger ms-2">إزالة من السلة</button>
@@ -51,7 +70,7 @@
     <div class="row">
       <div *ngFor="let relatedProduct of relatedProducts; let i=index" class="col-md-4 col-lg-3 d-flex">
         <div class="product-card card">
-          <img src="{{relatedProduct.productImages?.[0]?.imageUri || ''}}" class="card-img-top img-fluid rounded-3" alt="{{ relatedProduct.name }}">
+          <img src="{{relatedProduct.productImages?.[0]?.imageUri || 'assets/images/no-image.png'}}" class="card-img-top img-fluid rounded-3" alt="{{ relatedProduct.name }}">
           <div class="card-body">
             <h5 class="card-title">{{ relatedProduct.name }}</h5>
             <p class="card-text">{{ relatedProduct.finalPrice | currency: 'USD' }}</p>
@@ -59,7 +78,6 @@
           </div>
         </div>
       </div>
-      
     </div>
   </div>
 </div>

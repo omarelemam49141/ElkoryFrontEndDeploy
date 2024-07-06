@@ -34,10 +34,16 @@
 }
 
 .product-info h2 {
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 20px;
+  margin-top: -10px;
 }
 
+.product-info h6 {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  margin-top: -10px;
+}
 .price {
   font-size: 1.5rem;
   margin-bottom: 10px;
@@ -80,9 +86,12 @@
   border-left: 0;
   border-right: 0;
   width: 50px;
+  border-radius: 0;
+
   text-align: center;
   height: 30px;
 }
+
 
 .add-to-cart-button {
   border: 1px solid #ced4da;
@@ -111,7 +120,6 @@
 .related-products h3 {
   margin-bottom: 20px;
   font-size: 1.5rem;
-  font-weight: bold;
 }
 
 .product-card {
@@ -221,3 +229,28 @@
   left: 5px;
 }
 
+.product-info a{//hide the underline
+  color: rgba(128, 128, 128, 0.418);
+  text-decoration: none;
+  }
+.product-info a:hover{//show the underline
+  color: rgb(29, 28, 28);
+  text-decoration: underline;
+  }
+
+  .d-flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .category-link {
+    margin-right: 10px; /* Adjust the spacing as needed */
+    margin-bottom: 10px; /* Adjust for wrapping if needed */
+    text-decoration: none; /* Optional: Remove underline from links */
+    color: #000; /* Optional: Change link color */
+  }
+  
+  .category-link:hover {
+    text-decoration: underline; /* Optional: Add underline on hover */
+  }
+  
