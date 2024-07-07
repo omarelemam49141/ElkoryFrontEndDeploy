@@ -1,6 +1,7 @@
 <div class="container product-details-container" *ngIf="product">
   <div class="row product-main-details">
-    <div class="col-md-6 product-image">
+    
+    <div class="col-lg-4 product-image">
       <div class="image-container text-center position-relative">
         <div *ngIf="getDiscountPercentage(product.originalPrice, product.finalPrice)" class="position-absolute top-0 start-0 badge-container">
           <span class="badge bg-success">{{ getDiscountPercentage(product.originalPrice, product.finalPrice) }}% خصم</span>
@@ -18,8 +19,8 @@
         </button>
       </div>
     </div>
-    <div class="col-md-6 product-info">
-      <h2>{{ product.name }}</h2>
+    <div class="col-lg-4 product-info">
+      <h4>{{ product.name }}</h4>
       <a [routerLink]="['/categoryDetails', product.categoryId]">
         <h6 class="text-muted">{{ product.categoryName }}</h6>
       </a>
@@ -51,8 +52,17 @@
       <div class="d-flex align-items-center mb-3 quantity-section" *ngIf="isProductInCart(product.productId)">
         <button (click)="removeFromCart(product)" class="btn btn-danger ms-2">إزالة من السلة</button>
       </div>
+
+      
+    </div>
+    <div class="col-lg-4">
+      <app-product-offers [productId]="product.productId"></app-product-offers>
+    
+
     </div>
   </div>
+
+  
   <div class="row">
     <div class="col-12">
       <h3>الوصف</h3>

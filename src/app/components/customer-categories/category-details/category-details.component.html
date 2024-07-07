@@ -1,7 +1,7 @@
 
 <div class="category-details">
     <div class="category-header">
-        <img [src]="'assets/images/no-image.png'" alt="">
+        <img src="{{category?.imageUri ||'assets/images/no-image.png'}}" alt="{{category?.name}}">
 
       <h1>{{ category?.name }}</h1>
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { OfferService } from '../../../services/offer.service';
 import { IOffer } from '../../../Models/ioffer';
 import { Subscription } from 'rxjs';
@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './product-offers.component.scss'
 })
 export class ProductOffersComponent implements OnInit,OnDestroy{
-  productId: number=22;
+  @Input()productId: number=0;
 
   offers!: IOffer[];
   //subscription properties
@@ -39,7 +39,7 @@ export class ProductOffersComponent implements OnInit,OnDestroy{
    offerObserver = {
     next: (data: IOffer[]) => {
       this.isoffersLoading = false;
-      this.offers = data;
+      this.offers = data.sort(() => Math.random() - Math.random()).slice(0, 2);;
     },
     error: (error: any) => {
       // this.snackBar.openFromComponent(FailedSnackbarComponent, {
@@ -63,7 +63,9 @@ getOffersByProductID(){
   this.subscriptions.forEach(sub=>sub.unsubscribe());
   }
   ngOnInit(): void {
+    if(this.productId)
     this.getOffersByProductID();
+
   }
 
 }

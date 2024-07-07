@@ -15,6 +15,7 @@ import { ICart } from '../../../Models/icart';
 import { AccountService } from '../../../services/account.service';
 import { AddReviewComponent } from '../../review/add-review/add-review.component';
 import { GetReviewComponent } from '../../review/get-review/get-review.component';
+import { ProductOffersComponent } from '../product-offers/product-offers.component';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { GetReviewComponent } from '../../review/get-review/get-review.component
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
   standalone: true,
-  imports: [RouterLink, CommonModule, CurrencyPipe,FormsModule,AddReviewComponent,GetReviewComponent],
+  imports: [RouterLink, CommonModule, CurrencyPipe,FormsModule,AddReviewComponent,GetReviewComponent,ProductOffersComponent],
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
   product: IProduct | undefined;
@@ -257,4 +258,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
   
 }
+
+
+
+
 }
