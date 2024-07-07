@@ -1,0 +1,27 @@
+<div class="product-offers-container" *ngIf="!isoffersLoading; else loading">
+    <ng-container *ngIf="offers && offers.length > 0; else noOffers">
+      <div class="offer-card" *ngFor="let offer of offers">
+        <div class="offer-image-container">
+          <img class="offer-image" [src]="offer.image" alt="{{ offer.title }}">
+          <div class="offer-text-overlay">
+            <h2>{{ offer.title }}</h2>
+            <p>{{ offer.description }}</p>
+            <p>Offer Date: {{ offer.offerDate | date }}</p>
+            <p *ngIf="offer.duration">Duration: {{ offer.duration }} days</p>
+            <p *ngIf="offer.packageDiscount">Discount: {{ offer.packageDiscount }}%</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  
+  <ng-template #loading>
+    <app-secondary-spinner></app-secondary-spinner>
+  </ng-template>
+  
+  <ng-template #noOffers>
+    <div class="no-offers-message">
+      <p>No offers available at the moment.</p>
+    </div>
+  </ng-template>
+  

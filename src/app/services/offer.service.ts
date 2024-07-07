@@ -4,6 +4,7 @@ import { Observable, catchError, retry, throwError } from 'rxjs';
 import { IOfferProduct } from '../Models/ioffer-product';
 import { environment } from '../../environment/environment';
 import { GenericService } from './generic.service';
+import { IOffer } from '../Models/ioffer';
 
 @Injectable({
   providedIn: 'root'
@@ -55,5 +56,11 @@ export class OfferService {
       retry(2),
       catchError(this.genericService.handlingErrors)
     )
+  }
+  public getProductOffers(productId: number): Observable<IOffer[]> {
+    return this.http.get<IOffer[]>(`${environment.apiUrl}/Offers/byProductId/${productId}`).pipe(
+      retry(2),
+      catchError(this.genericService.handlingErrors)
+    );
   }
 }
