@@ -27,6 +27,7 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
     this.webInfoService.getWebInfo().subscribe((data) => {
       this.iwebInfo = data;
+      console.log(this.iwebInfo);
     });
   }
 
@@ -52,7 +53,7 @@ export class FooterComponent implements OnInit {
 
   goToWishlist() {
     if (this.accountService.getTokenId()) {
-      // this.router.navigate(["/customer-products/customer-previous-orders"]);
+      this.router.navigate(["/customer-products/products-wish-list"]);
     } else {
       this.router.navigate(["/customer-account/login"]);
     }

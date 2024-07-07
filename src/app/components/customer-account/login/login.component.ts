@@ -135,7 +135,6 @@ let localstoragecart = this.getthecartfromlocalstorage();
 // If the server cart is empty, update the server cart with the local storage cart
         if ( cart.length==0&&localstoragecart && localstoragecart.productsAmounts.length > 0) 
           {
-    console.log("the server cart is empty, updating server cart with local storage cart");
     let cartObject: ICart = {
       userId: this.accountService.getTokenId(),
       productsAmounts: localstoragecart.productsAmounts,
@@ -149,7 +148,6 @@ let localstoragecart = this.getthecartfromlocalstorage();
     
     this.cartService.updateCart(cartObject).subscribe({
       next: (data) => {
-        console.log("the data",data);
         localStorage.removeItem("cart");
         this.cartService.changeNumberOfItemsInCart(cartObject.numberOfUniqueProducts);
       }
@@ -160,7 +158,6 @@ let localstoragecart = this.getthecartfromlocalstorage();
 
   // If the local storage cart is empty, set the cart from the server
   else if ((localstoragecart == null || localstoragecart.productsAmounts.length < 1) && cart.productsAmounts.length > 0) {
-    console.log("the local storage cart is empty");
     localStorage.setItem("cart", JSON.stringify(cart));
     this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
     return;
@@ -169,6 +166,7 @@ let localstoragecart = this.getthecartfromlocalstorage();
 
 
 else{
+  
   cart.productsAmounts.forEach((productfromserver:any) => {
   console.log("the product from the server",productfromserver);
   let locationOfProductInLocalCart=localstoragecart.productsAmounts.findIndex((p:any)=>p.productId==productfromserver.productId)

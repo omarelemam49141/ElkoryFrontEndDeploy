@@ -16,6 +16,7 @@ import { AccountService } from '../../../services/account.service';
 import { AddReviewComponent } from '../../review/add-review/add-review.component';
 import { GetReviewComponent } from '../../review/get-review/get-review.component';
 import { ProductOffersComponent } from '../product-offers/product-offers.component';
+import { CartService } from '../../../services/cart.service';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private snackBar: MatSnackBar, // Add MatSnackBar here
     private wishListService:WishListService,
-    private accountService:AccountService
+    private accountService:AccountService,
+    private cartService:CartService
   ) {}
 
   ngOnInit(): void {
@@ -171,6 +173,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     cart.finalPrice +=( product.finalPrice* this.quantity);
     cart.numberOfProducts += this.quantity;
     
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
+
     localStorage.setItem('cart', JSON.stringify(cart));
     
   }
@@ -186,6 +190,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
       this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+      this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
+
     }
   }
 
