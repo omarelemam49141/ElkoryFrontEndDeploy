@@ -151,6 +151,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       }
     },
     error: (err: Error) => {
+      console.log(err);
       if (!this.productToEdit) {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر اضافة المنتج!',

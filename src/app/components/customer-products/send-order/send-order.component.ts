@@ -84,6 +84,7 @@ export class SendOrderComponent implements OnDestroy{
         this.dialogRef.close(true);
       },
       error:(err: Error) => {
+        console.log(err);
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: "تعذر إرسال الطلب. الرجاء المحاولة مرة أخرى",
           duration: this.notificationDurationInSeconds * 1000
