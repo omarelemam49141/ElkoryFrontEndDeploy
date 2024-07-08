@@ -1,11 +1,11 @@
-<p>products-wish-list works!</p>
 <div class="wish-list-container">
+  @if(!isProductsLoading) {
   <div *ngIf="wishListProducts.length === 0; else wishListContent">
     <p class="text-muted">قائمة الرغبات فارغة</p>
   </div>
   <ng-template #wishListContent>
-    <table class="table table-bordered">
-      <thead>
+    <table class="table table-hover table-bordered">
+      <thead class="thead-dark">
         <tr>
           <th scope="col">صورة المنتج</th>
           <th scope="col">اسم المنتج</th>
@@ -17,18 +17,19 @@
       <tbody>
         <tr *ngFor="let product of wishListProducts">
           <td>
-            <!-- Replace with actual image binding if available -->
             <img src="{{product.productImages?.[0]?.imageUri || ''}}" class="img-fluid rounded" alt="{{ product.name }}">
           </td>
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.finalPrice | currency: 'USD' }}</td>
-          
-          <td><a class="btn btn-outline-primary"routerLink="/customer-products/product-details/{{product.productId}}" >تفاصيل المنتج </a></td>
-
           <td>
-            <button class="btn btn-outline-success"  *ngIf="!isProductInCart(product.productId)"(click)="addToCart(product)">
-            إضافة قطعة واحدة إلى سلة المشتريات
+            <a class="btn btn-outline-primary" routerLink="/customer-products/product-details/{{product.productId}}">
+              تفاصيل المنتج
+            </a>
+          </td>
+          <td>
+            <button class="btn btn-outline-success" *ngIf="!isProductInCart(product.productId)" (click)="addToCart(product)">
+              إضافة قطعة واحدة إلى سلة المشتريات
             </button>
             <button class="btn btn-outline-danger" *ngIf="isProductInCart(product.productId)" (click)="removeFromCart(product)">
               إزالة المنتج من سلة المشتريات
@@ -43,4 +44,9 @@
       </tbody>
     </table>
   </ng-template>
+
+}
+ @else {
+  <app-secondary-spinner></app-secondary-spinner>
+  }
 </div>

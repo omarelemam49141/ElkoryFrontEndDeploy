@@ -9,11 +9,13 @@ import { IProduct } from '../../../Models/iproduct';
 import { ICart } from '../../../Models/icart';
 import { ProductService } from '../../../services/product.service';
 import { RouterLink } from '@angular/router';
+import { SecondarySpinnerComponent } from '../../secondary-spinner/secondary-spinner.component';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-products-wish-list',
   standalone: true,
-  imports: [RouterLink,CurrencyPipe,CommonModule],
+  imports: [RouterLink,CurrencyPipe,CommonModule,SecondarySpinnerComponent],
   templateUrl: './products-wish-list.component.html',
   styleUrl: './products-wish-list.component.scss'
 })
@@ -24,18 +26,20 @@ export class ProductsWishListComponent implements OnInit {
   snackBarDurationInSeconds = 5;
    product!:IProduct;
 
-  
+   isProductsLoading:boolean=true;
 
   constructor(
     private wishListService: WishListService,
     private accountService: AccountService,
     private snackBar: MatSnackBar,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService:CartService
 
   ) {}
 
 
   ngOnInit(): void {
+    this.isProductsLoading=true;
     this.userLoggedID=this.accountService.getTokenId();
     if(this.userLoggedID){
     this.loadWishList(this.userLoggedID);
@@ -47,11 +51,14 @@ export class ProductsWishListComponent implements OnInit {
     this.wishListService.getWishList(uerId!).subscribe(
       (data) => {
         this.wishListProducts = data;
+        this.isProductsLoading=false;
       },
       (error) => {
         console.error('Error fetching wishlist:', error);
+        this.isProductsLoading=false;
       }
     );
+   
   }
 
   removeFromWishList(productId: number): void {
@@ -114,7 +121,7 @@ export class ProductsWishListComponent implements OnInit {
 
     cart.finalPrice += (product.finalPrice);
     cart.numberOfProducts += 1;
-    
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts);
     localStorage.setItem('cart', JSON.stringify(cart));
     
   }
@@ -130,6 +137,7 @@ export class ProductsWishListComponent implements OnInit {
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
       this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+      this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
     }
   }
   isProductReachedMaxAmount(product:IProduct):boolean{

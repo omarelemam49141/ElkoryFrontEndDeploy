@@ -24,7 +24,8 @@ export class AccountService implements OnInit{
 
   constructor(private http: HttpClient,
               private genericService: GenericService<ISignUpModel>,
-              private router: Router
+              private router: Router,
+
   ) { }
 
   ngOnInit(): void {

@@ -7,11 +7,12 @@ import { EditProfileComponent } from '../../customer-account/edit-profile/edit-p
 import { ProductsWishListComponent } from '../../customer-products/products-wish-list/products-wish-list.component';
 import { AccountService } from '../../../services/account.service';
 import { Router } from '@angular/router';
+import { ProductOffersComponent } from '../../customer-products/product-offers/product-offers.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ProductsListComponent,AdminProductsListComponent,OfferComponent,ViewProfileComponent,EditProfileComponent,ProductsWishListComponent],
+  imports: [ProductsListComponent,AdminProductsListComponent,OfferComponent,ViewProfileComponent,EditProfileComponent,ProductsWishListComponent,ProductOffersComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

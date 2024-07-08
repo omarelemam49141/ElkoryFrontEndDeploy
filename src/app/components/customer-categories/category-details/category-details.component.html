@@ -1,7 +1,7 @@
 
 <div class="category-details">
     <div class="category-header">
-        <img [src]="'assets/images/no-image.png'" alt="">
+        <img src="{{category?.imageUri ||'assets/images/no-image.png'}}" alt="{{category?.name}}">
 
       <h1>{{ category?.name }}</h1>
 
@@ -12,8 +12,10 @@
         <h2>{{ subcategory.name }}</h2>
         <div class="values-container">
           <div class="value" *ngFor="let value of subcategory.values">
+            <a routerLink="/customer-products/subcategoryproducts/{{category.categoryId}}/{{subcategory.subCategoryId}}/{{value.value}}">
             <img [src]="value.imageUrl || 'assets/images/no-image.png'" alt="{{ value.value }}">
             <p>{{ value.value }}</p>
+          </a>
           </div>
         </div>
       </div>

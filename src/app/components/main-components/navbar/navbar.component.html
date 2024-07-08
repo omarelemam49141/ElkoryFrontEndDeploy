@@ -84,21 +84,27 @@
 
 
           <li *ngFor="let category of Categories" class="nav-item">
-            <p class="nav-link {{category.name}}" [routerLink]="['/categoryDetails/', category.categoryId]" [ngClass]="{'active-category': activeCategory === category.name}" (click)="setActiveCategory(category.name)" tabindex="0">{{category.name}}</p>
+            <p class="nav-link {{category.name}} " [routerLink]="['/categoryDetails/', category.categoryId]" [ngClass]="{'active-category': activeCategory === category.name}" (click)="setActiveCategory(category.name)" tabindex="0">{{category.name}}</p>
             <ul class="horizontal-list subcategories">
               <!-- <li><img src="assets/images/no-image.png" alt="" class="img-fluid rounded-3 image">
               </li> -->
-                  <li *ngFor="let subcategory of category.subCategories"><a >{{subcategory.name}}</a>
+                  <li *ngFor="let subcategory of category.subCategories">
+                    <a  class=" subcategorytitle">{{subcategory.name}}</a>
                   <!-- <hr/> -->
                 <ul class="vertical-list" >
-                  <li style="margin-left: -15px;"  *ngFor="let value of subcategory.values">
-                    {{value.value}}
+                  <li    *ngFor="let value of subcategory.values">
+                    <a routerLink="/customer-products/subcategoryproducts/{{category.categoryId}}/{{subcategory.subCategoryId}}/{{value.value}}">   
+                                        {{value.value}}
+                    </a>
+                    
                   </li>
                 </ul>
               </li>
                   <li >
-                    <img *ngIf="category.subCategories.length==3" style="margin-right: 60.0rem; margin-top: -150px; " src="assets/images/no-image.png" alt="" class="img-fluid rounded-3 image">
-                    <img *ngIf="category.subCategories.length==2" style="margin-right: 65.0rem; " src="assets/images/no-image.png" alt="" class="img-fluid rounded-3 image">
+                    <img *ngIf="category.subCategories.length==3" style="margin-right: 65.0rem; margin-top: -9.375rem;  " src="{{category.imageUri ||'assets/images/no-image.png'}}" alt="" class="img-fluid rounded-3 image">
+                    <img *ngIf="category.subCategories.length==2" style="margin-right: 65.0rem;  margin-top: -12.5rem;" src="{{category.imageUri ||'assets/images/no-image.png'}}"  alt="" class="img-fluid rounded-3 image">
+                    <img *ngIf="category.subCategories.length==1" style="margin-right: 65.0rem;  " src="{{category.imageUri ||'assets/images/no-image.png'}}"  alt="" class="img-fluid rounded-3 image">
+
                   </li>
 
             </ul>
@@ -123,3 +129,5 @@
  
 
   <!-- <h1>{{Categories|json}}</h1> -->
+
+  

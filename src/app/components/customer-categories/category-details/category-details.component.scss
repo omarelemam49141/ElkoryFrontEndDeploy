@@ -1,5 +1,5 @@
 .category-details {
-    padding: 2rem;
+    padding: 4rem;
     font-family: cairo;
     
     .category-header {
@@ -8,13 +8,13 @@
       h1 {
         font-size: 2rem;
         font-weight: bold;
-        margin-right: 80px;
+        margin-right: 9rem;
         margin-top: -90px;
       }
       img {
-        border-radius: 50%;
-        height: 4rem;
-        width: 4rem;
+        border-radius: 10%;
+        height: 8rem;
+        width: 8rem;
         object-fit: cover;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         //make the text near it under the image
@@ -27,6 +27,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 2rem;
+      //shadow
 
   
       .subcategory {
@@ -34,12 +35,16 @@
         flex-direction: column;
         width: 100%;
         background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
 
   
         h2 {
           font-size: 1.5rem;
           margin-bottom: 1rem;
           font-weight: normal;
+          padding: 1rem;
+          margin-top: -2rem;
         }
   
         .values-container {
@@ -62,10 +67,26 @@
               object-fit: cover;
               box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
+            img:hover {
+              cursor: pointer;
+              //scale the image when hover
+              transform: scale(1.1);
+              //make the image scale smoothly
+              transition: all 0.5s ease;
+              //shadow when hover
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
   
             p {
               margin: 0;
               font-size: 0.875rem;
+            }
+            a{
+              //remove the uderline 
+              text-decoration: none;
+              color: #000;
+              font-family: cairo;
+              font-size: 1rem;
             }
           }
         }

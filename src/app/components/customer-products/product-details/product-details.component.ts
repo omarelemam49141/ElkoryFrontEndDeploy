@@ -13,6 +13,10 @@ import { IUser } from '../../../Models/iuser';
 import { IAddWishListProduct } from '../../../Models/Iadd-wishListproduct';
 import { ICart } from '../../../Models/icart';
 import { AccountService } from '../../../services/account.service';
+import { AddReviewComponent } from '../../review/add-review/add-review.component';
+import { GetReviewComponent } from '../../review/get-review/get-review.component';
+import { ProductOffersComponent } from '../product-offers/product-offers.component';
+import { CartService } from '../../../services/cart.service';
 
 
 @Component({
@@ -20,7 +24,7 @@ import { AccountService } from '../../../services/account.service';
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.scss'],
   standalone: true,
-  imports: [RouterLink, CommonModule, CurrencyPipe,FormsModule],
+  imports: [RouterLink, CommonModule, CurrencyPipe,FormsModule,AddReviewComponent,GetReviewComponent,ProductOffersComponent],
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
   product: IProduct | undefined;
@@ -45,7 +49,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private snackBar: MatSnackBar, // Add MatSnackBar here
     private wishListService:WishListService,
-    private accountService:AccountService
+    private accountService:AccountService,
+    private cartService:CartService
   ) {}
 
   ngOnInit(): void {
@@ -76,13 +81,9 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     if (this.product?.categoryId) {
       const subscription = this.categoryService.getCategoryProducts(this.product.categoryId).subscribe({
         next: (products: IProduct[]) => {
+          products = products.filter(p => p.productId !== this.product?.productId);
           this.relatedProducts = this.getRandomSubset(products, 4);          
-          for (let i = 0; i < this.relatedProducts.length; i++) {
-            this.productService.getPictures(this.relatedProducts[i].productId).subscribe({
-              next: (images: string[]) => this.images[i] = images,
-              error: (err: any) => console.error('Error fetching product images:', err)
-            });
-          }
+       
         },
         error: (err: any) => console.error('Error fetching related products:', err)
       });
@@ -172,6 +173,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     cart.finalPrice +=( product.finalPrice* this.quantity);
     cart.numberOfProducts += this.quantity;
     
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
+
     localStorage.setItem('cart', JSON.stringify(cart));
     
   }
@@ -187,6 +190,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       cart.finalPrice -= product.finalPrice * productAmount;
       localStorage.setItem('cart', JSON.stringify(cart));
       this.snackBar.open('تم إزالة المنتج من السلة', 'إغلاق', { duration: this.snackBarDurationInSeconds * 1000 });
+      this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
+
     }
   }
 
@@ -236,4 +241,31 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     return cart.productsAmounts.some(p=>p.productId===productId);
   
   }
+
+
+  validateSelectedProductAmount(){ 
+    if (this.product === undefined || this.product.amount === undefined) {
+      console.warn("Product or product amount is undefined");
+      return;
+    }
+  
+    // Ensure this.quantity is not undefined (optional if already guaranteed)
+    if (this.quantity === undefined) {
+      this.quantity = 1;
+      return;
+    }
+    if( this.quantity< 1){
+      this.quantity = 1;
+      return 
+    }
+    else if(this.quantity> this.product.amount){
+      this.quantity = this.product.amount;
+      return 
+    }
+  
+}
+
+
+
+
 }

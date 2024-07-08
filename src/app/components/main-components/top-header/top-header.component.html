@@ -1,5 +1,7 @@
 <!-- Top Header -->
 <div class="container">
+  <!-- Modal Trigger Button -->
+
   <a class="navbar-brand arabic" routerLink="/">
     <img [src]="webInfo?.webLogoImageUrl || '../../../../assets/images/Elkory-Phone-Logo-High-Quality.png'" alt="Ashraf-Logo" class="logo">
     <span class="logo-text">{{ webInfo?.webName || 'الكورى فون' }}</span>
@@ -30,6 +32,9 @@
             <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
             تسجيل الخروج
           </a>
+
+        
+        
         }
         @if (accountService.getTokenRole().toLowerCase() == 'customer') {
           <a (click)="goToPreviousOrders()" class="nav-link arabic text-danger">
@@ -37,8 +42,10 @@
             <i class="fas fa-shipping-fast ms-2 fs-6"></i>
             طلباتى
           </a>
+         
         }
-
+          
+        
        
           
         
@@ -50,9 +57,16 @@
         <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon bell-icon"></fa-icon>
         <span *ngIf="cartService.getNumberOfItemsInCart() > 0" class="notification-badge">{{ cartService.getNumberOfItemsInCart() }}</span>
       </a>
+      
+     
     }
     
     @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+      <a routerLink="/customer-products/products-wish-list" class=" btn nav-link arabic cart-link " style="margin-right: 5px;"  >
+        قائمة الرغبات
+        <i class="fas fa-heart ms-2 fs-6"></i>
+
+      </a>
       <button (click)="goToPreviousOrders()" routerLinkActive="active" class="nav-link position-relative cart-link arabic text-primary">
         <span class="cart-title">طلباتى</span>
         <i class="fas fa-shipping-fast me-2 fs-6"></i>
@@ -69,46 +83,23 @@
         <span class="cart-title">تسجيل الخروج</span>
         <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
       </button>
-      <div class="cart-link arabic mx-2 "><app-notify-bell></app-notify-bell></div>
+
+
+
+      <div class="cart-link arabic mx-2 " ><app-notify-bell></app-notify-bell></div>
+
+
+    
     }
   </div>
+  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sidebarModal">
+    Open Sidebar Modal
+  </button> -->
+ 
+  
 </div>
 
 
-<!-- Top Header
-<div *ngIf="webInfo" class="container">
-  <a class="navbar-brand arabic" href="/">
-    <img [src]="webInfo.WebLogo" alt="{{webInfo.WebName}}" class="logo">
-    <span class="logo-text">{{ webInfo.WebName }}</span>
-  </a>
-  <a [href]="'tel:' + webInfo.WepPhone" class="phone">{{ webInfo.WepPhone }}</a>
-  <div class="search__container">
-    <input type="text" class="search__input" placeholder="ابحث">
-  </div>
-  <div class="menu flex navbar-nav ms-md-auto align-items-center flex-row-reverse flex-lg-row">
-    <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation" class="navbar-toggler">
-      <fa-icon [icon]="['fas', 'bars']"></fa-icon>
-    </button>
-    <div tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" class="offcanvas offcanvas-end">
-      <div class="navbar-nav ms-auto">
-        <a aria-controls="collapseExample" class="nav-link lang arabic" aria-expanded="false">
-          <span class="fi fi-eg"></span>
-          <fa-icon [icon]="['fas', 'chevron-down']" class="arrow"></fa-icon>
-        </a>
-        <a routerLink="/auth" routerLinkActive="active" class="nav-link arabic">
-          <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
-          تسجيل الدخول
-        </a>
-      </div>
-    </div>
-    <a routerLink="/carts" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
-      <span class="cart-title">عربة التسوق</span>
-      <fa-icon [icon]="['fas', 'shopping-cart']" class="me-2 fs-3 cart-icon"></fa-icon>
-    </a>
-      <button routerLink="/auth" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
-      <span class="cart-title">تسجيل الدخول</span>
-      <fa-icon [icon]="['fas', 'user-tie']" class="me-2 fs-3 fs-6"></fa-icon>
-    </button>
-  </div>
-</div> -->
 
+
+<!-- Sidebar Modal -->

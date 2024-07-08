@@ -135,7 +135,6 @@ let localstoragecart = this.getthecartfromlocalstorage();
 // If the server cart is empty, update the server cart with the local storage cart
         if ( cart.length==0&&localstoragecart && localstoragecart.productsAmounts.length > 0) 
           {
-    console.log("the server cart is empty, updating server cart with local storage cart");
     let cartObject: ICart = {
       userId: this.accountService.getTokenId(),
       productsAmounts: localstoragecart.productsAmounts,
@@ -149,7 +148,6 @@ let localstoragecart = this.getthecartfromlocalstorage();
     
     this.cartService.updateCart(cartObject).subscribe({
       next: (data) => {
-        console.log("the data",data);
         localStorage.removeItem("cart");
         this.cartService.changeNumberOfItemsInCart(cartObject.numberOfUniqueProducts);
       }
@@ -160,159 +158,15 @@ let localstoragecart = this.getthecartfromlocalstorage();
 
   // If the local storage cart is empty, set the cart from the server
   else if ((localstoragecart == null || localstoragecart.productsAmounts.length < 1) && cart.productsAmounts.length > 0) {
-    console.log("the local storage cart is empty");
     localStorage.setItem("cart", JSON.stringify(cart));
+    this.cartService.changeNumberOfItemsInCart(cart.numberOfUniqueProducts)
     return;
   }
 
-//   else{
-//     //covert the two carts to Icart objects
-//     console.log("converting the two carts to Icart objects");
-//     let cartObject=cart
-  
 
-//     //merge the two carts
-//     console.log("merging the two carts");
-//   let productsIncartfromlocalstorage = localstoragecart.productsAmounts;
-//   let productsIncartfromserver = cart.productsAmounts;
-// let resultCartOfMerge: ICart = {
-//   userId: this.accountService.getTokenId(),
-//   productsAmounts: [],
-//   finalPrice: 0,
-//   numberOfUniqueProducts: 0,
-//   numberOfProducts: 0
-// }
-
-
-//   if(productsIncartfromserver.length>productsIncartfromlocalstorage.length){
-
-
-//   productsIncartfromserver.forEach((productfromserver:any) => {
-
-//     productsIncartfromlocalstorage.forEach((productfromlocalstorage: any) => {
-//       if (productfromlocalstorage.productId == productfromserver.productId) {
-
-//         this.productService.getById(productfromserver.productId).subscribe({
-//           next: (product) => {
-//             console.log(product);
-//             if(product.amount<(productfromserver.amount+productfromlocalstorage.amount)){
-//               productfromserver.amount = product.amount;
-//               let newcartItem:IProduct={
-//                 productId:productfromserver.productId,
-//                 name:productfromserver.name,
-//                  discount:productfromserver.discount,
-//                  originalPrice:productfromserver.originalPrice,
-//                  amount:productfromserver.amount,
-//                  allAmount:productfromserver.allAmount,
-//                  description:productfromserver.description,
-//                  categoryName:productfromserver.categoryName,
-//                  finalPrice:productfromserver.finalPrice,
-//                  categoryId:productfromserver.categoryId,
-//               }
-//               resultCartOfMerge.productsAmounts.push(newcartItem);
-//               resultCartOfMerge.numberOfUniqueProducts++;
-//               resultCartOfMerge.numberOfProducts+=newcartItem.amount;
-//               resultCartOfMerge.finalPrice+=newcartItem.amount*newcartItem.finalPrice;
-//               // cartObject.numberOfProducts+=product.amount-productfromlocalstorage.amount;
-//               // cartObject.finalPrice+=product.amount*productfromserver.finalPrice-productfromlocalstorage.amount*productfromserver.finalPrice;
-
-//             }
-//             else {
-//               productfromserver.amount += productfromlocalstorage.amount;
-//               let newcartItem:IProduct={
-              
-//                 productId:productfromserver.productId,
-//                 name:productfromserver.name,
-//               discount:productfromserver.discount,
-//               originalPrice:productfromserver.originalPrice,
-//               amount:productfromserver.amount,
-//               allAmount:productfromserver.allAmount,
-//               description:productfromserver.description,
-//               categoryName:productfromserver.categoryName,
-//               finalPrice:productfromserver.finalPrice,
-//               categoryId:productfromserver.categoryId,
-//               productImages:productfromserver.productImages,
-//               categoryValues:productfromserver.categoryValues  
-//               }
-//               resultCartOfMerge.productsAmounts.push(newcartItem);  
-//               resultCartOfMerge.numberOfUniqueProducts++;
-//               resultCartOfMerge.numberOfProducts+=newcartItem.amount;
-//               resultCartOfMerge.finalPrice+=newcartItem.amount*newcartItem.finalPrice;
-
-
-//               // cartObject.numberOfProducts+=productfromlocalstorage.amount;
-//               // cartObject.finalPrice+=productfromlocalstorage.amount*productfromserver.finalPrice;
-//             }
-//           }
-//         })
-//       }
-//       else{
-
-
-
-//         let projectisaddbefore=productsIncartfromserver.findIndex((product:any) => product.productId == productfromlocalstorage.productId)
-//         if(projectisaddbefore==-1){
-//           let newcartItem:IProduct={
-//            productId:productfromlocalstorage.productId,
-//            name:productfromlocalstorage.name,
-//             discount:productfromlocalstorage.discount,
-//             originalPrice:productfromlocalstorage.originalPrice,
-//             amount:productfromlocalstorage.amount,
-//             allAmount:productfromlocalstorage.allAmount,
-//             description:productfromlocalstorage.description,
-//             categoryName:productfromlocalstorage.categoryName,
-//             finalPrice:productfromlocalstorage.finalPrice,
-//             categoryId:productfromlocalstorage.categoryId,
-//             productImages:productfromlocalstorage.productImages,
-//             categoryValues:productfromlocalstorage.categoryValues
-
-            
-//           }
-//           resultCartOfMerge.productsAmounts.push(newcartItem);
-//           resultCartOfMerge.numberOfUniqueProducts++;
-//           resultCartOfMerge.numberOfProducts+=newcartItem.amount;
-//           resultCartOfMerge.finalPrice+=newcartItem.amount*newcartItem.finalPrice;
-          
-//         // productsIncartfromserver.push(productfromlocalstorage);
-//         // cartObject.numberOfUniqueProducts++;
-//         // cartObject.numberOfProducts+=productfromlocalstorage.amount;
-//         // cartObject.finalPrice+=productfromlocalstorage.amount*productfromlocalstorage.finalPrice;
-        
-//         }
-        
-
-
-//       }
-
-//     })
-
-
-//   }
-//   )
-//   console.log("the cart object",resultCartOfMerge);
-//   for (let i = 0; i < resultCartOfMerge.productsAmounts.length; i++) {
-//     console.log(resultCartOfMerge["productsAmounts"][i]["amount"])
-//     console.log("the product amount",resultCartOfMerge.productsAmounts[i].amount)
-//   }
-  
-
-// // this.cartService.updateCart(cartObject).subscribe({
-// //   next: (data) => {
-// //     console.log("the data",data);
-// //     localStorage.removeItem("cart");
-// //     localStorage.setItem("cart", JSON.stringify(cartObject));
-// //     this.cartService.changeNumberOfItemsInCart(cartObject.numberOfUniqueProducts);
-
-// //   }})
- 
-// }
-
-
-
-
-// }
 
 else{
+  
   cart.productsAmounts.forEach((productfromserver:any) => {
   console.log("the product from the server",productfromserver);
   let locationOfProductInLocalCart=localstoragecart.productsAmounts.findIndex((p:any)=>p.productId==productfromserver.productId)

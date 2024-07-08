@@ -151,6 +151,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       }
     },
     error: (err: Error) => {
+      console.log(err);
       if (!this.productToEdit) {
         this.snackBar.openFromComponent(FailedSnackbarComponent, {
           data: 'تعذر اضافة المنتج!',
@@ -386,14 +387,14 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
 
   mapSubCategoryValueFieldsToproductCategorySubCategoryValue(
     productId:number, 
-    subCategoryId:number,
+    categoryId:number,
     subCategoryValue:string,
-    categoryId: number): IProductCategorySubValues {
+    subCategoryId: number): IProductCategorySubValues {
     let productCategorySubCategoryValue: IProductCategorySubValues = {
       productId: productId,
-      subCategoryId: subCategoryId,
+      subCategoryId: Number(subCategoryId),
       value: subCategoryValue,
-      categoryId: categoryId
+      categoryId: Number(categoryId)
     }
 
     return productCategorySubCategoryValue;
@@ -414,11 +415,18 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       },
       error: (err: Error) => {
         
-        this.snackBar.openFromComponent(FailedSnackbarComponent, {
-          data: "تعذر اضافة المنتج الى الأقسام الفرعية",
+        // console.log(err);
+        // this.snackBar.openFromComponent(FailedSnackbarComponent, {
+        //   data: "تعذر اضافة المنتج الى الأقسام الفرعية",
+        //   duration: this.snackBarDurationInSeconds * 1000
+        // })
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: 'تم اضافة المنتج بنجاح!',
           duration: this.snackBarDurationInSeconds * 1000
-        })
+        });
+
         this.isProductAddingOrUpdating = false;
+        this.router.navigate(["/admin-products"]);
       }
     })
   }

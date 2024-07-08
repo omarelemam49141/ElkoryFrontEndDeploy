@@ -4,6 +4,6 @@ export interface ICategoryDetails {
     categoryId: number;
     name: string;
     subCategories:ISubCategoryDetails[]
-    // imageUri: string;
-    // imageId:string;
+    imageUri: string;
+    imageId:string;
 }

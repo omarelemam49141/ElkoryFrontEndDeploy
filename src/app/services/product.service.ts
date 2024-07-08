@@ -83,6 +83,15 @@ export class ProductService {
     )
   }
 
+  
+public getproductsbycategorySubcategoryValue(categoryId:number,subCategoryId:number,subCategoryValue:string):Observable<IProduct[]>{
+  //  'http://localhost:5112/api/Product/CategorySubCategoryValue?categoryId=1&subCategoryId=1&value=%D8%A3%D8%A8%D9%84' 
+  return this.http.get<IProduct[]>(`${environment.apiUrl}/Product/CategorySubCategoryValue?categoryId=${categoryId}&subCategoryId=${subCategoryId}&value=${subCategoryValue}`)
+  .pipe(
+    retry(2),
+    catchError(this.genericService.handlingErrors)
+  )
+}
 
 
 

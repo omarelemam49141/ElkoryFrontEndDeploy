@@ -35,6 +35,7 @@ export class ViewProfileComponent implements OnInit, OnDestroy {
   profileObserver = {
     next: (profile: IEditProfile) => {
       this.profileInfo = profile;
+      console.log(this.profileInfo)
     },
     error: (err: any) => {
       this.snackBar.openFromComponent(FailedSnackbarComponent, {

@@ -5,11 +5,13 @@ import { NavbarComponent } from './components/main-components/navbar/navbar.comp
 import { NotFoundComponent } from './components/main-components/not-found/not-found.component';
 import { adminAuthGuard } from './guards/admin-auth.guard';
 import { CategoryDetailsComponent } from './components/customer-categories/category-details/category-details.component';
+import { ProductsListComponent } from './components/customer-products/products-list/products-list.component';
 
 export const routes: Routes = [
     {path: "", redirectTo: "/home", pathMatch: "full"},
     {path: "home", component: HomeComponent},
     {path:"categoryDetails/:categoryId", component: CategoryDetailsComponent},
+    {path:"Subcategory-value-products/:categoryID/:subCategoryID/:value",component:ProductsListComponent},
     {path: "top-header", component: TopHeaderComponent},
     {path: "navbar",component: NavbarComponent},
     {path: "admin-offers", loadChildren:()=>import('./components/admin-offers/adminOffers.routes').then(m=>m.routes)}, //canActivate: [adminAuthGuard]},

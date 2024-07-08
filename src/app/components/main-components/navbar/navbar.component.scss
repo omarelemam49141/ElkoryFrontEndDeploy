@@ -270,7 +270,7 @@
 
 }
 
-.categories .subcategories li a {
+.categories .subcategories li .subcategorytitle {
   color: #b51cb0;
   text-decoration: none;
   display: inline-block; /* Displays list items horizontally */
@@ -315,7 +315,7 @@ margin-right: 150px;
 
 .horizontal-list li {
   display: inline-block; /* Displays list items horizontally */
-  margin-right: 100px; /* Adjust spacing between items as needed */
+  margin-right: 6em; /* Adjust spacing between items as needed */
 float: right;
 
 }
@@ -329,15 +329,22 @@ float: right;
   flex-direction: column; /* Display items vertically */
   margin: 0;
   padding:0;
+  a{
+    text-decoration: none;
+// float: right;
+    
+  }
 }
 
 .vertical-list li {
   font-weight: 700;
   //make it align to right
-  text-align: right;
-  padding: -100px;
+  
+ 
   
   
 }
 
+img{ width: 20rem; height: 20rem;
+background-color: #00000023;}
 

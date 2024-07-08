@@ -110,7 +110,8 @@ h5 {
   display: flex;
   border-radius: 50%;
   position: absolute;
-  top: 10px; /* Adjust the value as needed */
+
+  top: 60px; /* Adjust the value as needed */
   right: 10px; /* Adjust the value as needed */
   background-color: rgba(255, 255, 255, 0.7); /* Optional: Add a semi-transparent background */
   border: none;
@@ -128,6 +129,7 @@ h5 {
   .image-container {
     position: relative;
     display: inline-block;
+    
   }
   
   .image {
@@ -160,13 +162,13 @@ h5 {
     color:green;
     font-size: 25px;
    float: left;
-    
+   top: 10px; /* Adjust the value as needed */
+   right: 10px; /* Adjust the value as needed */
     cursor: pointer;
     display: flex;
     border-radius: 50%;
     position: absolute;
-    top: 60px; /* Adjust the value as needed */
-    right: 10px; /* Adjust the value as needed */
+   
     background-color: rgba(255, 255, 255, 0.7); /* Optional: Add a semi-transparent background */
     border: none;
     padding: 10px;
@@ -252,5 +254,5 @@ margin-top: 5px;
 
 .add-to-cart-button:hover {
   color: #f8f9fa;
-  background-color: #b51cb0;
+  background-image: linear-gradient(125deg, #a72879, #064497);
 }
