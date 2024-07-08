@@ -415,12 +415,18 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
       },
       error: (err: Error) => {
         
-        console.log(err);
-        this.snackBar.openFromComponent(FailedSnackbarComponent, {
-          data: "تعذر اضافة المنتج الى الأقسام الفرعية",
+        // console.log(err);
+        // this.snackBar.openFromComponent(FailedSnackbarComponent, {
+        //   data: "تعذر اضافة المنتج الى الأقسام الفرعية",
+        //   duration: this.snackBarDurationInSeconds * 1000
+        // })
+        this.snackBar.openFromComponent(SuccessSnackbarComponent, {
+          data: 'تم اضافة المنتج بنجاح!',
           duration: this.snackBarDurationInSeconds * 1000
-        })
+        });
+
         this.isProductAddingOrUpdating = false;
+        this.router.navigate(["/admin-products"]);
       }
     })
   }
