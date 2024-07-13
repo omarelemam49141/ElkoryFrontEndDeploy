@@ -348,3 +348,9 @@ float: right;
 img{ width: 20rem; height: 20rem;
 background-color: #00000023;}
 
+// when the width gets 991 px the navbar will be hidden
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+      display: none;
+  }
+}

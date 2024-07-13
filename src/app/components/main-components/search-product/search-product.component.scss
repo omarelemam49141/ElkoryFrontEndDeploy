@@ -123,11 +123,11 @@ div {
 }
 
 @media (max-width: 991px) {
-    .search {
-        &__container {
-            display: none;
-        }
-    }
+    // .search {
+    //     &__container {
+    //         display: none;
+    //     }
+    // }
 
     .small-screen {
         display: block;

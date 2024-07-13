@@ -59,6 +59,5 @@ fetchCatogorieswithDetails():void{
     this.fetchCatogorieswithDetails();
     // this.fetchCategories();
     // console.log(this.oldCatogries)
-    console.log(this.Categories)
   }
 }
