@@ -181,7 +181,20 @@
   }
 
 
+  @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+    <a (click)="goToPreviousOrders()" class="nav-link arabic orderbtn text-primary">
+      <!--use an icon for orders-->
+      <i class="fas fa-shipping-fast ms-2 fs-6"></i>
+      طلباتى
+    </a>
+   
+    <a routerLink="/customer-products/products-wish-list" class="  nav-link arabic wishList " style="margin-right: 5px;"  >
+      <i class="fas fa-heart ms-2 fs-6"></i>
 
+      قائمة الرغبات
+
+    </a>
+  }
 
   
 

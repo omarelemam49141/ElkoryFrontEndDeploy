@@ -79,6 +79,7 @@ display: none;
   }
   @media (min-width: 992px) {
     .burger-button{display: none;}
+    .sidebar{display: none;}
 
     
   }
@@ -290,4 +291,17 @@ li .sideCategory li:hover {
 }
 .logOut{
   cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
+
+.orderbtn{
+  cursor: pointer;
+  margin: 10px 0;
+  padding: 10px;
+}
+ .wishList{
+  cursor: pointer;
+  color: pink;
+  margin: 10px 0;
+ }
