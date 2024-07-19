@@ -58,4 +58,15 @@ export class FooterComponent implements OnInit {
       this.router.navigate(["/customer-account/login"]);
     }
   }
+  gotoFacebook() {
+    var url="http://"
+   url += this.iwebInfo.facebookAccount;
+  window.open(url, '_blank');}
+
+
+  gotoInstagram() {
+    var url="http://"
+   url += this.iwebInfo.instagramAccount; 
+  window.open(url, '_blank');}
 }
+
