@@ -39,6 +39,9 @@ import { TooltipService } from '../../../services/tooltip.service';
   styleUrl: './products-list.component.scss'
 })
 export class ProductsListComponent implements OnInit, OnDestroy{
+
+  currencySymbol = 'ج.م'; // ج.م stands for جنيه مصري (Egyptian Pound)
+
   hovering = false;
   products!: IProduct[];
   /*pagination properties*/

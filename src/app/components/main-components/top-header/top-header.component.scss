@@ -60,14 +60,37 @@
     font-weight: bold;
    
   }
+
   /* Responsive styles */
+  @media (max-width: 991px) {
+    .cart-link{
+      display: none;
+    }
+    .burger-button{
+      display: inline-block;
+    }
+    
+  }
+  @media (max-width:550px) {
+    .logo-text {
+display: none; 
+   }
+    
+  }
+  @media (min-width: 992px) {
+    .burger-button{display: none;}
+    .sidebar{display: none;}
+
+    
+  }
   @media (max-width: 768px) {
     .navbar-toggler {
       display: block;
     }
-  .logo-text{
-    display: none;
-  }
+  // .logo-text{
+  //   display: none;
+  // }
+  .phone{display: none;}
     .menu {
       display: none;
     }
@@ -126,3 +149,159 @@
 }
 
 //end tooltip styles
+.burger-button {
+  // display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+.burger-button .burger-line {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px 0;
+  background-color: gray;
+  transition: background-color 0.3s;
+}
+
+.burger-button:hover .burger-line {
+  background-color: rgb(17, 16, 16);
+}
+
+.sidebar {
+  width: 250px;
+  position: fixed;
+  top: 0;
+right: 0;
+  height: 100%;
+  overflow-y: auto;
+  transition: transform 0.8s ease-in-out;
+  transform: translateX(0);
+  z-index: 1;
+  background-color: #333;
+  color: white;
+
+
+}
+
+.sidebar.collapsed {
+  transform: translateX(100%);
+
+
+
+
+}
+
+// .sidebar nav ul {
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+// }
+
+// .sidebar nav ul li {
+//   padding: 10px;
+// }
+
+// .sidebar nav ul li a {
+//   text-decoration: none;
+//   color: #333;
+//   display: block;
+// }
+
+// .sidebar nav ul li ul {
+//   padding-left: 20px;
+// }
+
+
+
+
+
+.sidebar nav {
+  margin-top: 100px;
+ 
+}
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  padding: 10px;
+}
+
+.sidebar nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: large;
+}
+
+
+
+.sidebar nav ul li ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.sidebar nav ul li ul li {
+  padding: 5px 15px;
+}
+
+.sidebar nav ul li ul li ul {
+  padding-left: 20px;
+}
+
+
+.close-btn {
+  background: none;
+  color: white;
+border: 1px solid white;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: red;
+  border: 1.5px solid red;
+  font-size: larger;
+  transition: all 0.1s;
+}
+
+.close-btn:focus {
+  outline: none;
+}
+.dropdown-container {
+  display: none;}
+
+  .fa-caret-down {
+    float: left;
+    padding-left: 8px;
+  }
+
+.sideCategory{
+  margin: 10px 0;
+}
+li .sideCategory li:hover {
+  background-color: gray;
+  color: white;
+}
+.logOut{
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.orderbtn{
+  cursor: pointer;
+  margin: 10px 0;
+  padding: 10px;
+}
+ .wishList{
+  cursor: pointer;
+  color: pink;
+  margin: 10px 0;
+ }

@@ -17,6 +17,7 @@
       <fa-icon [icon]="['fas', 'bars']"></fa-icon>
     </button>
     <div tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" class="offcanvas offcanvas-end">
+      <!--  -->
       <div class="navbar-nav ms-auto">
         <a aria-controls="collapseExample" class="nav-link lang arabic" aria-expanded="false" > 
           <span class="fi fi-eg"></span>
@@ -32,6 +33,7 @@
             <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
             تسجيل الخروج
           </a>
+          <!-- <div class=" arabic mx-2 " ><app-notify-bell></app-notify-bell></div> -->
 
         
         
@@ -50,6 +52,8 @@
           
         
       </div>
+
+      
     </div>
     @if (accountService.getTokenRole().toLowerCase() != 'admin') {
       <a routerLink="/customer-products/products-cart" routerLinkActive="active" class="nav-link position-relative cart-link arabic">
@@ -86,15 +90,23 @@
 
 
 
-      <div class="cart-link arabic mx-2 " ><app-notify-bell></app-notify-bell></div>
+      <!-- <div class=" arabic mx-2 " ><app-notify-bell></app-notify-bell></div> -->
 
 
     
     }
   </div>
-  <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sidebarModal">
-    Open Sidebar Modal
-  </button> -->
+  @if(accountService.isLoggedIn) {
+    <div class=" arabic mx-2 " ><app-notify-bell></app-notify-bell></div>
+  }
+
+
+  <button class="burger-button" aria-label="Menu" (click)="toggleSidebar()">
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+    <span class="burger-line"></span>
+  </button>
+  
  
   
 </div>
@@ -103,3 +115,88 @@
 
 
 <!-- Sidebar Modal -->
+
+<!-- Sidebar -->
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <button class=" btn close-btn" (click)="toggleSidebar()">إغلاق</button>
+
+  <nav>
+    <ul>
+      
+      <li>
+        <a [routerLink]="['/']" [ngClass]="{'active-category': activeCategory === 'home'}" (click)="setActiveCategory('home')">الرئيسية</a>
+      </li>
+      <li class="sideCategory" *ngFor="let category of Categories">
+        <!-- <a (click)="toggleDropdown($event)" [routerLink]="['/categoryDetails/', category.categoryId]" [ngClass]="{'active-category': activeCategory === category.name}  " class="dropdown-btn" (click)="setActiveCategory(category.name)"> -->
+         
+          <a  (click)="setActiveCategory(category.name)" [routerLink]="['/categoryDetails/', category.categoryId]" [ngClass]="{'active-category': activeCategory === category.name} " >
+
+          {{category.name}}
+          
+        </a>
+        <span (click)="toggleDropdown($event)"  class="dropdown-btn">
+          <i class="fa fa-caret-down"></i>
+
+        </span>
+
+
+        <ul  class="dropdown-container"  *ngIf="category.subCategories">
+          <li  class="sideCategory" *ngFor="let subcategory of category.subCategories">
+            <a >{{subcategory.name}}
+            </a>
+            <span (click)="toggleDropdown($event)"  class="dropdown-btn">
+              <i class="fa fa-caret-down"></i>
+
+            </span>
+
+            <ul class="dropdown-container">
+              <li  class="sideCategory" *ngFor="let value of subcategory.values">
+                <a [routerLink]="['/customer-products/subcategoryproducts', category.categoryId, subcategory.subCategoryId, value.value]">{{value.value}}</a>
+              </li>
+            </ul>
+          </li>
+        
+        </ul>
+      </li>
+   
+    </ul>
+    
+  </nav>
+  @if (!accountService.isLoggedIn) {
+    <a routerLink="/customer-account/login" routerLinkActive="active" class="nav-link arabic">
+      <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
+      تسجيل الدخول
+    </a>
+  } @else {
+    <a (click)="logOut()" class=" logOut nav-link arabic text-danger">
+      <fa-icon [icon]="['fas', 'user-tie']" class="ms-2 fs-6"></fa-icon>
+      تسجيل الخروج
+    </a>
+ 
+
+    
+  
+
+  
+  }
+
+
+  @if (accountService.getTokenRole().toLowerCase() == 'customer') {
+    <a (click)="goToPreviousOrders()" class="nav-link arabic orderbtn text-primary">
+      <!--use an icon for orders-->
+      <i class="fas fa-shipping-fast ms-2 fs-6"></i>
+      طلباتى
+    </a>
+   
+    <a routerLink="/customer-products/products-wish-list" class="  nav-link arabic wishList " style="margin-right: 5px;"  >
+      <i class="fas fa-heart ms-2 fs-6"></i>
+
+      قائمة الرغبات
+
+    </a>
+  }
+
+  
+
+</div>
+

@@ -34,10 +34,10 @@
       </ng-container>
       
       <p>
-        <span class="price"><strong>{{ product.finalPrice | currency: "USD" }}</strong></span>
+        <span class="price"><strong>{{ product.finalPrice  | currency: 'EGP' : 'symbol' : '1.2-2' : 'ar-EG'  }}</strong></span>
       </p>
       <p *ngIf="product.originalPrice !== product.finalPrice">
-        <span class="original-price">{{ product.originalPrice | currency: "USD" }}</span>
+        <span class="original-price">{{ product.originalPrice | currency: 'EGP' : 'symbol' : '1.2-2' : 'ar-EG'  }}</span>
       </p>
       <div class="d-flex align-items-center mb-3 quantity-section" *ngIf="!isProductInCart(product.productId)">
         <button class="btn btn-outline-secondary quantity-button" 
@@ -83,7 +83,7 @@
           <img src="{{relatedProduct.productImages?.[0]?.imageUri || 'assets/images/no-image.png'}}" class="card-img-top img-fluid rounded-3" alt="{{ relatedProduct.name }}">
           <div class="card-body">
             <h5 class="card-title">{{ relatedProduct.name }}</h5>
-            <p class="card-text">{{ relatedProduct.finalPrice | currency: 'USD' }}</p>
+            <p class="card-text">{{ relatedProduct.finalPrice |currency: 'EGP' : 'symbol' : '1.2-2' : 'ar-EG' }}</p>
             <a [routerLink]="['/customer-products/product-details', relatedProduct.productId]" class="btn btn-primary">عرض التفاصيل</a>
           </div>
         </div>

@@ -21,7 +21,7 @@
           </td>
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
-          <td>{{ product.finalPrice | currency: 'USD' }}</td>
+          <td>{{ product.finalPrice | currency: 'EGP' : 'symbol' : '1.2-2' : 'ar-EG'  }}</td>
           <td>
             <a class="btn btn-outline-primary" routerLink="/customer-products/product-details/{{product.productId}}">
               تفاصيل المنتج

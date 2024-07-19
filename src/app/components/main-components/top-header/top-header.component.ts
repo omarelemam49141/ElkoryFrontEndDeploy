@@ -10,6 +10,8 @@ import { AccountService } from '../../../services/account.service';
 import { SearchProductComponent } from '../search-product/search-product.component';
 import { CartService } from '../../../services/cart.service';
 import { NotifyBellComponent } from "../notify-bell/notify-bell.component";
+import { CategoryService } from '../../../services/category.service';
+import { ICategoryDetails } from '../../../Models/IcategoryDetails';
 
 @Component({
     selector: 'app-top-header',
@@ -23,13 +25,17 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
   webInfo: IWebInfo | undefined;
   isLogged!: boolean;
   cartCount: number = 0;
+  activeCategory: string = 'home';
+  isCollapsed = true;
+  Categories: ICategoryDetails[] = [];
 
 
   constructor(library: FaIconLibrary,
      private webInfoService: WebInfoService,
     public accountService: AccountService,
     private router: Router,
-    public cartService: CartService
+    public cartService: CartService,
+    private categoryService: CategoryService
   ) {
     library.addIcons(faBars, faChevronDown, faUserTie, faShoppingCart);
   }
@@ -51,8 +57,22 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
     this.subscriptions.push(subscription);
   }
 
+  
+fetchCatogorieswithDetails():void{
+  const subscription = this.categoryService.getAllCategory().subscribe({
+    next: (categories) => {
+      this.Categories = categories;
+      console.log('Fetched categories:', this.Categories);
+    },
+    error: (error: any) => console.error('Error fetching categories', error)
+  });
+  this.subscriptions.push(subscription);
+
+}
   ngOnInit(): void {
     this.fetchWebInfo();
+    this.fetchCatogorieswithDetails();
+
     this.accountService.loggedInSubject.subscribe({
       next: (data) => {
         
@@ -83,4 +103,25 @@ export class TopHeaderComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
+  setActiveCategory(categoryName: string) {
+    this.activeCategory = categoryName;
+  }
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  toggleDropdown(event: Event): void {
+    const target = event.currentTarget as HTMLElement;
+    target.classList.toggle("active");
+
+    const dropdownContent = target.nextElementSibling as HTMLElement;
+    if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+    } else {
+      dropdownContent.style.display = "block";
+    }
+  }
+  
 }

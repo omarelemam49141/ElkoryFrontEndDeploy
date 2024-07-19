@@ -95,7 +95,7 @@ export class AdminAddProductComponent implements OnDestroy, OnInit {
             duration: this.snackBarDurationInSeconds * 1000
           });
           this.isProductAddingOrUpdating = false;
-          this.populateEditForm();
+          // this.populateEditForm();
         },
         error: (err: Error) => {
           this.snackBar.openFromComponent(FailedSnackbarComponent, {
