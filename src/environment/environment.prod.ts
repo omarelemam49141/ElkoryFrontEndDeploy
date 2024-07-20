@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:5112/api',
+    apiUrl: 'http://elkoryphone.runasp.net/api',
     webInfoID:1,
 
 };
