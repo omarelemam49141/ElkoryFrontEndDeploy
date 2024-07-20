@@ -10,7 +10,7 @@ import { SignalrService } from './signalr.service';
   providedIn: 'root',
 })
 export class NotificationService {
-  private apiUrl = 'http://localhost:5112';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,
@@ -23,7 +23,7 @@ export class NotificationService {
       localStorage.getItem('token') || ''
     );
     return this.http.get<inotification[]>(
-      `${this.apiUrl}/api/Notification/getAllNotifications/${userId}`
+      `${this.apiUrl}/Notification/getAllNotifications/${userId}`
     );
   }
 
@@ -32,7 +32,7 @@ export class NotificationService {
       localStorage.getItem('token') || ''
     );
     return this.http.post(
-      `${this.apiUrl}/api/Notification/MarkAllAsRead/${userId}`,
+      `${this.apiUrl}/Notification/MarkAllAsRead/${userId}`,
       {}
     );
   }
